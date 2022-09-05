@@ -242,6 +242,9 @@ class AnnotatedPeptideSpectrum(Spectrum):
     @property
     def fragments(self) -> dict[str, AnnotatedIon]:
         if not hasattr(self, "_fragments"):
+            if len(self._annot_indices) == 0:
+                return {}
+
             labels = self.precursor_peptide.theoretical_ion_labels[self._annot_indices]
             intensities = self.intensity[self._mz_indices]
             mzs = self.mz[self._mz_indices]
@@ -262,7 +265,7 @@ class AnnotatedPeptideSpectrum(Spectrum):
         return self._fragments
 
     def __getitem__(self, index) -> float:
-        return self._fragment_intensities.get(index, 0.0)
+        return self.fragment_intensities.get(index, 0.0)
 
     @property
     def _indices(self) -> tuple[np.ndarray, np.ndarray]:

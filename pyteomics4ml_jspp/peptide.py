@@ -313,7 +313,7 @@ class Peptide(ProForma):
             if self.charge is None:
                 raise ValueError("Peptide charge is not set")
 
-            possible_charges = [x for x in self.config.ion_charges if x < self.charge]
+            possible_charges = [x for x in self.config.ion_charges if x <= self.charge]
             tmp = {}
             for ion_type in self.config.ion_series:
                 for charge in possible_charges:

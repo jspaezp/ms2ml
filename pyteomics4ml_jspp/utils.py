@@ -165,6 +165,9 @@ def sort_all(keys, *args):
     """
 
     index = np.argsort(keys)
+
+    # TODO make error message for the case where this fails
+    # due to a list being passed ...
     return (x[index] for x in args)
 
 

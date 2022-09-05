@@ -1,3 +1,6 @@
+from typing import Iterator
+
+import numpy as np
 from lark import Lark, Transformer
 
 _msp_grammar = r"""
@@ -128,7 +131,7 @@ class _MSPTransformer(Transformer):
             out["intensity"].append(item["intensity"])
             out["annotation"].append(item["annotation"])
 
-        return out
+        return {k: np.array(v) for k, v in out.items()}
 
 
 def chunk_msp(file):
@@ -193,7 +196,7 @@ class MSPParser:
 
         return out
 
-    def lazy_parse(self, file):
+    def lazy_parse(self, file) -> Iterator[dict]:
         """
         Parse an MSP file from a text file.
 

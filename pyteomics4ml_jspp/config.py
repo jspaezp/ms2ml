@@ -19,7 +19,7 @@ from .annotation_classes import AnnotatedIon
 # of the requirement for configurations to be defined
 # and passed
 
-# Dataclass that contains the configuration for the encoding of the data
+
 @dataclass
 class Config:
     """
