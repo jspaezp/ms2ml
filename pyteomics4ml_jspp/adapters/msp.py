@@ -10,9 +10,9 @@ from .base import BaseAdapter
 
 class MSPAdapter(MSPParser, BaseAdapter):
     def __init__(
-        self, config: Config, in_hook: Callable = None, out_hook: Callable = None
+        self, config: Config, in_hook: Callable = None, out_hook: Callable = None, collate_fn: Callable = None,
     ):
-        BaseAdapter.__init__(self, config=config, in_hook=in_hook, out_hook=out_hook)
+        BaseAdapter.__init__(self, config=config, in_hook=in_hook, out_hook=out_hook, collate_fn=collate_fn)
         MSPParser.__init__(self)
 
     @staticmethod

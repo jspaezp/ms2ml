@@ -7,11 +7,12 @@ from pyteomics4ml_jspp.spectrum import AnnotatedPeptideSpectrum
 
 class BaseAdapter(ABC):
     def __init__(
-        self, config: Config, in_hook: Callable = None, out_hook: Callable = None
+        self, config: Config, in_hook: Callable = None, out_hook: Callable = None, collate_fn: Callable = None,
     ):
         self.config = config
         self.in_hook = in_hook
         self.out_hook = out_hook
+        self.collate_fn = collate_fn
         super().__init__()
 
     def _process_spec(self, spec):
@@ -19,6 +20,10 @@ class BaseAdapter(ABC):
         spec = self._to_spec(spec, config=self.config)
         spec = spec if self.out_hook is None else self.out_hook(spec)
         return spec
+
+    def bundle(self, specs):
+        specs = specs if self.collate_fn is None else self.collate_fn(list(specs))
+        return specs
 
     @abstractmethod
     def _to_spec(spec: Any, config: Config) -> AnnotatedPeptideSpectrum:
