@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
-from typing import Iterator
 from os import PathLike
+from typing import Iterator
 
 
 class BaseParser(ABC):

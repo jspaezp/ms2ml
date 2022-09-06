@@ -10,14 +10,23 @@ from .base import BaseAdapter
 
 class MSPAdapter(MSPParser, BaseAdapter):
     def __init__(
-        self, config: Config, in_hook: Callable = None, out_hook: Callable = None, collate_fn: Callable = None,
+        self,
+        config: Config,
+        in_hook: Callable = None,
+        out_hook: Callable = None,
+        collate_fn: Callable = None,
     ):
-        BaseAdapter.__init__(self, config=config, in_hook=in_hook, out_hook=out_hook, collate_fn=collate_fn)
+        BaseAdapter.__init__(
+            self,
+            config=config,
+            in_hook=in_hook,
+            out_hook=out_hook,
+            collate_fn=collate_fn,
+        )
         MSPParser.__init__(self)
 
-    @staticmethod
-    def _to_spec(spec_dict, config: Config) -> AnnotatedPeptideSpectrum:
-        pep = Peptide.from_proforma_seq(spec_dict["header"]["Name"], config=config)
+    def _to_elem(self, spec_dict) -> AnnotatedPeptideSpectrum:
+        pep = Peptide.from_proforma_seq(spec_dict["header"]["Name"], config=self.config)
         spec = AnnotatedPeptideSpectrum(
             mz=spec_dict["peaks"]["mz"],
             intensity=spec_dict["peaks"]["intensity"],
@@ -28,6 +37,6 @@ class MSPAdapter(MSPParser, BaseAdapter):
 
         return spec
 
-    def parse_text(self, text):
+    def parse_text(self, text) -> AnnotatedPeptideSpectrum:
         for spec in super().parse_text(text):
-            yield self._process_spec(spec)
+            yield self._process_elem(spec)
