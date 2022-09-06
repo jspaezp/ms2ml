@@ -307,7 +307,7 @@ class Peptide(ProForma):
         >>> p = Peptide.from_sequence("PEPPINK/2")
         >>> p.ion_series_dict
         {'y1^1': AnnotatedIon(mass=array(147.11334, dtype=float32), ...
-         charge=1, position=6, ion_series='b', neutral_loss=None, intensity=None)}
+         charge=2, position=6, ion_series='b', neutral_loss=None, intensity=None)}
         """
         if not hasattr(self, "_ion_series_dict"):
             if self.charge is None:
@@ -477,17 +477,17 @@ class Peptide(ProForma):
         Examples:
         >>> foo = Peptide.from_sequence("AMC")
         >>> foo.aa_to_vector()
-        [0, 1, 13, 3, 27]
+        array([ 0,  1,  13,  3, 27])
         """
         aas = [x[0] for x in self]
-        vector = [self.config.encoding_aa_order.index(x) for x in aas]
+        vector = np.array([self.config.encoding_aa_order.index(x) for x in aas])
         return vector
 
     def mod_to_vector(self):
         """
         >>> foo = Peptide.from_sequence("AMC") # Implicit Carbamido
         >>> foo.mod_to_vector()
-        [0, 0, 0, 1, 0]
+        array([0, 0, 0, 1, 0])
         """
         mods = [x[1] for x in self]
         vector = []
@@ -505,7 +505,7 @@ class Peptide(ProForma):
                 x = x[0]
             vector.append(self.config.encoding_mod_order.index(x))
 
-        return vector
+        return np.array(vector)
 
     @classmethod
     def from_vector(cls, aa_vector: list[int], mod_vector, config: Config):

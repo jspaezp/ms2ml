@@ -3,6 +3,8 @@ from typing import Iterator
 import numpy as np
 from lark import Lark, Transformer
 
+from .base import BaseParser
+
 _msp_grammar = r"""
     start: spectrum+
 
@@ -134,7 +136,7 @@ class _MSPTransformer(Transformer):
         return {k: np.array(v) for k, v in out.items()}
 
 
-def chunk_msp(file):
+def _chunk_msp(file):
     """
     Chunk an MSP file into spectra
 
@@ -158,7 +160,7 @@ def chunk_msp(file):
             yield chunk
 
 
-class MSPParser:
+class MSPParser(BaseParser):
     """
     Implements a reader and parser for MSP files
     (and some other formats, such as .sptxt)
@@ -175,36 +177,36 @@ class MSPParser:
             debug=True,
         )
 
-    def parse(self, text):
+    def parse_text(self, text: str) -> Iterator[dict]:
         """
         Parse an MSP file from a text input (string)
         """
         return self.parser.parse(text)
 
-    def parse_file(self, file):
+    def greedy_parse_file(self, file) -> Iterator[dict]:
         """
         Parse an MSP file from a text file.
 
         This option reads the whole file and parses it in
         memory, so it is not recommended for large files.
 
-        Check the lazy_parse method for a more memory efficient
+        Check the parse_file method for a more memory efficient
         approach.
         """
         with open(file) as f:
-            out = self.parse(f.read())
+            out = self.parse_text(f.read())
 
         return out
 
-    def lazy_parse(self, file) -> Iterator[dict]:
+    def parse_file(self, file) -> Iterator[dict]:
         """
         Parse an MSP file from a text file.
 
         This option reads the file line by line and parses
         each spectrum individually, so it is more memory efficient
-        than the parse_file method.
+        than the greedy_parse_file method.
         """
-        for chunk in chunk_msp(file):
-            tmp = self.parse("".join(chunk))
+        for chunk in _chunk_msp(file):
+            tmp = self.parse_text("".join(chunk))
             for spec in tmp:
                 yield spec

@@ -16,7 +16,7 @@ def test_parsing_basic_msp_generates_tree():
     )
 
     msp_parser = MSPParser()
-    msp_parser.parse(text)
+    msp_parser.parse_text(text)
 
 
 def test_parsing_complex_msp():
@@ -49,7 +49,7 @@ def test_parsing_complex_msp():
     )
 
     msp_parser = MSPParser()
-    parsed = msp_parser.parse(text)
+    parsed = list(msp_parser.parse_text(text))
 
     assert isinstance(parsed, list)
     assert isinstance(parsed[0], dict)
@@ -106,7 +106,7 @@ def test_parsing_mgf_with_comments():
         "\n"
     )
     msp_parser = MSPParser()
-    parsed = msp_parser.parse(text)
+    parsed = list(msp_parser.parse_text(text))
 
     assert parsed[0]["header"]["Name"] == "ASTSDYQVISDR/2"
 
@@ -129,7 +129,7 @@ def test_parsing_mgf_from_prosit():
     )
 
     msp_parser = MSPParser()
-    parsed = msp_parser.parse(text)
+    parsed = list(msp_parser.parse_text(text))
 
     assert parsed[0]["header"]["Name"] == "AFLYEIIDIGK/2"
     comment_section = parsed[0]["header"]["Comment"]
@@ -142,33 +142,9 @@ def test_parsing_mgf_from_file(shared_datadir):
     msp_parser = MSPParser()
 
     parsed = msp_parser.parse_file(my_file)
-    assert len(parsed[0]["peaks"]["mz"]) == 24
+    elem = next(parsed)
+    assert len(elem["peaks"]["mz"]) == 24
 
     my_file = shared_datadir / "only_matches_small_proteome_spectrast2.sptxt"
     parsed = msp_parser.parse_file(my_file)
-    assert len(parsed[0]["peaks"]["mz"]) == 129
-
-
-def test_lazy_parsing_mgf_from_file(shared_datadir):
-    my_file = shared_datadir / "head_FTMS_HCD_20_annotated_2019-11-12_filtered.msp"
-
-    msp_parser = MSPParser()
-    spec_iter = msp_parser.lazy_parse(my_file)
-
-    for i, spec in enumerate(spec_iter):
-        pass
-
-    # Check that the number of spectra is correct
-    assert i == 5
-
-    # Check that the number of peaks is correct for the last spectrum
-    # This also checks that the last spectrum is correctly read and yielded
-    assert len(spec["peaks"]["mz"]) == 31
-
-    my_file = shared_datadir / "only_matches_small_proteome_spectrast2.sptxt"
-    spec_iter = msp_parser.lazy_parse(my_file)
-
-    for spec in spec_iter:
-        # Check that the number of peaks is correct for the first spectrum
-        assert len(spec["peaks"]["mz"]) == 129
-        break
+    assert len(next(parsed)["peaks"]["mz"]) == 129

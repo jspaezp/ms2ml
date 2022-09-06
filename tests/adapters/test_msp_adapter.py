@@ -1,3 +1,5 @@
+import numpy as np
+
 from pyteomics4ml_jspp.adapters.msp import MSPAdapter
 from pyteomics4ml_jspp.config import Config
 from pyteomics4ml_jspp.spectrum import AnnotatedPeptideSpectrum
@@ -45,9 +47,9 @@ def test_parsing_mgf_with_comments():
     )
 
     msp_adapter = MSPAdapter(config=Config())
-    parsed = msp_adapter.parse(text)
+    parsed = msp_adapter.parse_text(text)
 
-    elem = parsed[0]
+    elem = next(parsed)
     assert isinstance(elem, AnnotatedPeptideSpectrum)
     assert isinstance(elem.fragment_intensities, dict)
     assert len(elem.fragment_intensities) == 0
@@ -67,9 +69,9 @@ def test_parsing_mgf_from_prosit():
     )
 
     msp_adapter = MSPAdapter(config=Config())
-    parsed = msp_adapter.parse(text)
+    parsed = msp_adapter.parse_text(text)
 
-    elem = parsed[0]
+    elem = next(parsed)
     assert isinstance(elem, AnnotatedPeptideSpectrum)
     assert isinstance(elem.fragment_intensities, dict)
     assert len(elem.fragment_intensities) == 2
@@ -81,9 +83,43 @@ def test_parsing_mgf_from_file(shared_datadir):
 
     msp_adapter = MSPAdapter(config=Config())
 
-    parsed = msp_adapter.lazy_parse(my_file)
+    parsed = msp_adapter.parse_file(my_file)
     elem = next(parsed)
     assert isinstance(elem, AnnotatedPeptideSpectrum)
     assert isinstance(elem.fragment_intensities, dict)
     assert len(elem.fragment_intensities) == 19
     assert round(elem["y5^1"]) == 321534
+
+    def post_hook(spec):
+        return {
+            "aa": spec.precursor_peptide.aa_to_vector(),
+            "mods": spec.precursor_peptide.mod_to_vector(),
+        }
+
+    msp_adapter = MSPAdapter(config=Config(), out_hook=post_hook)
+
+    parsed = msp_adapter.parse_file(my_file)
+    elem = next(parsed)
+    assert isinstance(elem, dict)
+    assert isinstance(elem["aa"], np.ndarray)
+    assert len(elem["aa"]) == 13
+
+    # assert len(elem['aa'][0]) == 13
+    assert len(elem["mods"]) == 13
+
+    def post_hook(spec):
+        return {
+            "aa": spec.precursor_peptide.aa_to_onehot(),
+            "mods": spec.precursor_peptide.mod_to_vector(),
+        }
+
+    msp_adapter = MSPAdapter(config=Config(), out_hook=post_hook)
+
+    parsed = msp_adapter.parse_file(my_file)
+    elem = next(parsed)
+    assert isinstance(elem, dict)
+    assert isinstance(elem["aa"], np.ndarray)
+    assert len(elem["aa"]) == 13
+    assert len(elem["aa"][0]) == 29
+    assert len(elem["mods"]) == 13
+    # assert len(elem['mods'][0]) == 13
