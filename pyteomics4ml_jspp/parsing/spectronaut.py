@@ -9,7 +9,7 @@ from .base import BaseParser
 
 class SpectronautLibraryParser(BaseParser):
     def __init__(self) -> None:
-        super().__init__()
+        BaseParser.__init__(self)
 
     def parse_file(self, file: PathLike) -> Iterator:
         self.df = pd.read_csv(file)
@@ -17,10 +17,15 @@ class SpectronautLibraryParser(BaseParser):
             ["ModifiedPeptide", "PrecursorCharge", "PrecursorMz"]
         ):
 
-            out = x.to_dict("tight")
+            out = x.to_dict("list")
             out.update(
                 {"ModifiedPeptide": i[0], "PrecursorCharge": i[1], "PrecursorMz": i[2]}
             )
+            # The keys are ...
+            # ['FragmentMz', 'RelativeIntensity', 'ModifiedPeptide',
+            # 'LabeledPeptide', 'StrippedPeptide', 'PrecursorCharge',
+            # 'PrecursorMz', 'iRT', 'FragmentNumber', 'FragmentType',
+            # 'FragmentCharge', 'FragmentLossType']
             yield out
 
     def parse_text(self, text: str) -> Iterator:

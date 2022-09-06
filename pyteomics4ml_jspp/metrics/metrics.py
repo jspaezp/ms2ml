@@ -2,9 +2,10 @@ from math import pi as PI
 
 import torch
 from torch import Tensor
+from torch.nn import CosineSimilarity
 
 
-class CosineLoss(torch.nn.CosineSimilarity):
+class CosineLoss(CosineSimilarity):
     """
     CosineLoss Implements a simple cosine similarity based loss.
     """
