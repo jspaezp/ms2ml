@@ -2,12 +2,15 @@ from abc import ABC, abstractmethod
 from typing import Any, Callable
 
 from pyteomics4ml_jspp.config import Config
-from pyteomics4ml_jspp.spectrum import AnnotatedPeptideSpectrum
 
 
 class BaseAdapter(ABC):
     def __init__(
-        self, config: Config, in_hook: Callable = None, out_hook: Callable = None, collate_fn: Callable = None,
+        self,
+        config: Config,
+        in_hook: Callable = None,
+        out_hook: Callable = None,
+        collate_fn: Callable = None,
     ):
         self.config = config
         self.in_hook = in_hook
@@ -15,17 +18,28 @@ class BaseAdapter(ABC):
         self.collate_fn = collate_fn
         super().__init__()
 
-    def _process_spec(self, spec):
-        spec = spec if self.in_hook is None else self.in_hook(spec)
-        spec = self._to_spec(spec, config=self.config)
-        spec = spec if self.out_hook is None else self.out_hook(spec)
-        return spec
+    def _process_elem(self, elem):
+        elem = elem if self.in_hook is None else self.in_hook(elem)
+        elem = self._to_elem(elem)
+        elem = elem if self.out_hook is None else self.out_hook(elem)
+        return elem
 
-    def bundle(self, specs):
-        specs = specs if self.collate_fn is None else self.collate_fn(list(specs))
-        return specs
+    def bundle(self, elems):
+        elems = elems if self.collate_fn is None else self.collate_fn(list(elems))
+        return elems
+
+    def batch(self, elems, batch_size):
+        batch = []
+        for i, e in enumerate(elems):
+            batch.append(e)
+            if (i + 1) % batch_size == 0:
+                yield self.bundle(batch)
+                batch = []
+
+        if len(batch) > 0:
+            yield self.bundle(batch)
 
     @abstractmethod
-    def _to_spec(spec: Any, config: Config) -> AnnotatedPeptideSpectrum:
-        """Implements conversion to AnnotatedPeptideSpectrum"""
+    def _to_elem(self, elem: Any) -> Any:
+        """Implements conversion to the intermediate object representation"""
         pass

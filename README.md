@@ -7,6 +7,23 @@ Since ML applications do not take MS data as input directly, it is necessary to 
 
 This project is meant to be opinionated but not arbitrary. By that I mean that it should attempt to enforce the "better way" of doing things (not give flexibility to do everything every way) but all design decisions are open to discussion (ideally though github).
 
+
+## Core design
+
+1. Unified configuration
+    - All configuration should be explicit or immediately visible upon request
+2. Consistent API
+    - It should feel similar to process the data inernally regardless of the input.
+3. Flexible output
+    - Every research need is different, therefore requesting different data from the API should be straightforward.
+4. Extensibility.
+    - It should be easy to adapt workflows to new and unexpected input data types.
+    - This is achieved with the addition of hooks that allow an additional slim layer of compatibility
+5. Abstract the loops away
+    - I do not like writting boilerplate code, neither should you. Ideally you will not need to write loops when using the user-facing API
+    - Therefore I try my best to abstract all the `[f(spec) for spec in file]` within reason.
+
+
 ## Target audience
 
 People who want to train ML models from peptide/proteomics data instead of figuring out ways to encode their tensors and write parsers.

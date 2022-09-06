@@ -137,7 +137,9 @@ def test_parsing_mgf_from_prosit():
 
 
 def test_parsing_mgf_from_file(shared_datadir):
-    my_file = shared_datadir / "head_FTMS_HCD_20_annotated_2019-11-12_filtered.msp"
+    my_file = (
+        shared_datadir / "msp" / "head_FTMS_HCD_20_annotated_2019-11-12_filtered.msp"
+    )
 
     msp_parser = MSPParser()
 
@@ -145,6 +147,6 @@ def test_parsing_mgf_from_file(shared_datadir):
     elem = next(parsed)
     assert len(elem["peaks"]["mz"]) == 24
 
-    my_file = shared_datadir / "only_matches_small_proteome_spectrast2.sptxt"
+    my_file = shared_datadir / "msp" / "only_matches_small_proteome_spectrast2.sptxt"
     parsed = msp_parser.parse_file(my_file)
     assert len(next(parsed)["peaks"]["mz"]) == 129

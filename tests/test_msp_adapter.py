@@ -1,11 +1,11 @@
 import numpy as np
+from torch import Tensor
+from torch.utils.data import default_collate
 
 from pyteomics4ml_jspp.adapters.msp import MSPAdapter
 from pyteomics4ml_jspp.config import Config
 from pyteomics4ml_jspp.spectrum import AnnotatedPeptideSpectrum
 
-from torch.utils.data import default_collate
-from torch import Tensor
 
 def test_parsing_mgf_with_comments():
     text = (
@@ -81,7 +81,9 @@ def test_parsing_mgf_from_prosit():
 
 
 def test_parsing_mgf_from_file(shared_datadir):
-    my_file = shared_datadir / "head_FTMS_HCD_20_annotated_2019-11-12_filtered.msp"
+    my_file = (
+        shared_datadir / "msp" / "head_FTMS_HCD_20_annotated_2019-11-12_filtered.msp"
+    )
 
     msp_adapter = MSPAdapter(config=Config())
 
@@ -126,16 +128,21 @@ def test_parsing_mgf_from_file(shared_datadir):
     assert len(elem["mods"]) == 13
     # assert len(elem['mods'][0]) == 13
 
-    
 
 def test_collating_MSPAdapter(shared_datadir):
-    my_file = shared_datadir / "head_FTMS_HCD_20_annotated_2019-11-12_filtered.msp"
+    my_file = (
+        shared_datadir / "msp" / "head_FTMS_HCD_20_annotated_2019-11-12_filtered.msp"
+    )
+
     def post_hook(spec):
         return {
             "aa": spec.precursor_peptide.aa_to_onehot(),
             "mods": spec.precursor_peptide.mod_to_vector(),
         }
-    msp_adapter = MSPAdapter(config=Config(), out_hook=post_hook, collate_fn=default_collate)
+
+    msp_adapter = MSPAdapter(
+        config=Config(), out_hook=post_hook, collate_fn=default_collate
+    )
     parsed = msp_adapter.parse_file(my_file)
     bundled = msp_adapter.bundle(parsed)
 
