@@ -12,6 +12,22 @@ class BaseAdapter(ABC):
         out_hook: Callable = None,
         collate_fn: Callable = None,
     ):
+        """
+        Base class for adapters.
+
+        Args:
+            config (Config): Configuration object.
+            in_hook (Callable): Function to be applied to each element before
+                processing.
+            out_hook (Callable): Function to be applied to each element after
+                processing. This function can also be used as a filter, where
+                you can make it return None if the element should be removed
+                form the dataset.
+            collate_fn (Callable): Function to be applied to a batch of
+                elements before returning it. This function combines a list of
+                (possibly nested) elements into a single element.
+
+        """
         self.config = config
         self.in_hook = in_hook
         self.out_hook = out_hook
@@ -19,20 +35,39 @@ class BaseAdapter(ABC):
         super().__init__()
 
     def _process_elem(self, elem):
+        """
+        Process an element.
+        Not meant to be called directly.
+        """
         elem = elem if self.in_hook is None else self.in_hook(elem)
         elem = self._to_elem(elem)
+
+        # TODO implement here a way to filter out elements that are not
+        #  compatible with the model
         elem = elem if self.out_hook is None else self.out_hook(elem)
         return elem
 
     def bundle(self, elems):
-        elems = elems if self.collate_fn is None else self.collate_fn(list(elems))
+        """
+        Bundle a list of elements into a single element.
+
+        It removes all elements that are `None` from being combined
+        """
+        elems = [e for e in elems if e is not None]
+        elems = elems if self.collate_fn is None else self.collate_fn(elems)
         return elems
 
     def batch(self, elems, batch_size):
+        """
+        Split a list of elements into batches of size `batch_size`.
+
+        It internally removes elments that are `None` from being combined
+        """
         batch = []
-        for i, e in enumerate(elems):
-            batch.append(e)
-            if (i + 1) % batch_size == 0:
+        for e in elems:
+            if e is not None:
+                batch.append(e)
+            if len(batch) >= batch_size:
                 yield self.bundle(batch)
                 batch = []
 
@@ -41,5 +76,10 @@ class BaseAdapter(ABC):
 
     @abstractmethod
     def _to_elem(self, elem: Any) -> Any:
-        """Implements conversion to the intermediate object representation"""
-        pass
+        """
+        Implements conversion to the intermediate object representation
+
+        This element will typically be an AnnotatedPeptideSpectrum object.
+        But there is no real implementation reason by which it could not be
+        something else.
+        """

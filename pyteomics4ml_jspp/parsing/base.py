@@ -23,7 +23,6 @@ class BaseParser(ABC):
         Iterator
             Iterator over the parsed spectra
         """
-        pass
 
     @abstractmethod
     def parse_text(self, text: str) -> Iterator:
@@ -40,4 +39,3 @@ class BaseParser(ABC):
         Iterator
             Iterator over the parsed spectra
         """
-        pass
