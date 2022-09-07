@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import Any, Callable
 
-from pyteomics4ml_jspp.config import Config
+from ms2ml.config import Config
 
 
 class BaseAdapter(ABC):
@@ -12,10 +12,10 @@ class BaseAdapter(ABC):
         out_hook: Callable = None,
         collate_fn: Callable = None,
     ):
-        """
-        Base class for adapters.
+        """Provides a base class for adapters.
 
-        Args:
+        Args
+        ----
             config (Config): Configuration object.
             in_hook (Callable): Function to be applied to each element before
                 processing.
@@ -26,7 +26,6 @@ class BaseAdapter(ABC):
             collate_fn (Callable): Function to be applied to a batch of
                 elements before returning it. This function combines a list of
                 (possibly nested) elements into a single element.
-
         """
         self.config = config
         self.in_hook = in_hook
@@ -35,8 +34,8 @@ class BaseAdapter(ABC):
         super().__init__()
 
     def _process_elem(self, elem):
-        """
-        Process an element.
+        """Process an element.
+
         Not meant to be called directly.
         """
         elem = elem if self.in_hook is None else self.in_hook(elem)
@@ -48,8 +47,7 @@ class BaseAdapter(ABC):
         return elem
 
     def bundle(self, elems):
-        """
-        Bundle a list of elements into a single element.
+        """Bundle a list of elements into a single element.
 
         It removes all elements that are `None` from being combined
         """
@@ -58,8 +56,7 @@ class BaseAdapter(ABC):
         return elems
 
     def batch(self, elems, batch_size):
-        """
-        Split a list of elements into batches of size `batch_size`.
+        """Split a list of elements into batches of size `batch_size`.
 
         It internally removes elments that are `None` from being combined
         """
@@ -76,8 +73,7 @@ class BaseAdapter(ABC):
 
     @abstractmethod
     def _to_elem(self, elem: Any) -> Any:
-        """
-        Implements conversion to the intermediate object representation
+        """Implements conversion to the intermediate object representation.
 
         This element will typically be an AnnotatedPeptideSpectrum object.
         But there is no real implementation reason by which it could not be

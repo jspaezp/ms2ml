@@ -137,8 +137,7 @@ class _MSPTransformer(Transformer):
 
 
 def _chunk_msp(file):
-    """
-    Chunk an MSP file into spectra
+    """Chunk an MSP file into spectra.
 
     It uses newlines as separators, so it is not very robust.
     """
@@ -161,8 +160,8 @@ def _chunk_msp(file):
 
 
 class MSPParser(BaseParser):
-    """
-    Implements a reader and parser for MSP files
+    """Implements a reader and parser for MSP files.
+
     (and some other formats, such as .sptxt)
     """
 
@@ -178,14 +177,11 @@ class MSPParser(BaseParser):
         )
 
     def parse_text(self, text: str) -> Iterator[dict]:
-        """
-        Parse an MSP file from a text input (string)
-        """
+        """Parse an MSP file from a text input (string)."""
         return self.parser.parse(text)
 
     def greedy_parse_file(self, file) -> Iterator[dict]:
-        """
-        Parse an MSP file from a text file.
+        """Parse an MSP file from a text file.
 
         This option reads the whole file and parses it in
         memory, so it is not recommended for large files.
@@ -199,8 +195,7 @@ class MSPParser(BaseParser):
         return out
 
     def parse_file(self, file) -> Iterator[dict]:
-        """
-        Parse an MSP file from a text file.
+        """Parse an MSP file from a text file.
 
         This option reads the file line by line and parses
         each spectrum individually, so it is more memory efficient

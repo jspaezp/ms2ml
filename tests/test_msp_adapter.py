@@ -2,9 +2,9 @@ import numpy as np
 from torch import Tensor
 from torch.utils.data import default_collate
 
-from pyteomics4ml_jspp.adapters.msp import MSPAdapter
-from pyteomics4ml_jspp.config import Config
-from pyteomics4ml_jspp.spectrum import AnnotatedPeptideSpectrum
+from ms2ml.adapters.msp import MSPAdapter
+from ms2ml.config import Config
+from ms2ml.spectrum import AnnotatedPeptideSpectrum
 
 
 def test_parsing_mgf_with_comments():

@@ -15,20 +15,16 @@ def get_tolerance(
     theoretical: Optional[float] = None,
     unit: MassError = "ppm",
 ) -> float:
-    """
-    Calculates the toleranc in daltons from either a dalton tolerance or a ppm.
+    """Calculates the toleranc in daltons from either a dalton tolerance or a ppm.
 
     tolerance.
 
-    Args:
-      tolerance: Tolerance value to be used (Default value = 25.0)
-      theoretical: Theoretical m/z to be used (only used for ppm)
-      unit: Lietrally da for daltons or ppm for ... ppm (Default value = "ppm")
-
-    Returns:
+    Returns
+    -------
         float, the tolerance value in daltons
 
-    Examples:
+    Examples
+    --------
         >>> get_tolerance(25.0, 2000.0, "ppm")
         0.05
         >>> get_tolerance(0.02, 2000.0, "da")
@@ -37,6 +33,12 @@ def get_tolerance(
         25.0
         >>> get_tolerance(25.0, np.array([1000.0, 1500.0, 2000.0]), "ppm")
         array([0.025 , 0.0375, 0.05  ])
+
+    Args
+    ----
+      tolerance: Tolerance value to be used (Default value = 25.0)
+      theoretical: Theoretical m/z to be used (only used for ppm)
+      unit: Lietrally da for daltons or ppm for ... ppm (Default value = "ppm")
     """
     if unit == "ppm":
         return theoretical * tolerance / 10**6
@@ -52,19 +54,14 @@ def is_in_tolerance(
     tolerance: float = 25.0,
     unit: MassError = "ppm",
 ) -> bool:
-    """
-    Checks wether an observed mass is close enough to a theoretical mass.
+    """Checks wether an observed mass is close enough to a theoretical mass.
 
-    Args:
-      theoretical: Theoretical m/z
-      observed: Observed m/z
-      tolerance: Tolerance value to be used (Default value = 25.0)
-      unit: Lietrally da for daltons or ppm for ... ppm (Default value = "ppm")
-
-    Returns:
+    Returns
+    -------
         bool, Wether the value observed is within the tolerance of the theoretical value
 
-    Examples:
+    Examples
+    --------
         >>> is_in_tolerance(2000.0, 2000.0, 25.0, "ppm")
         True
         >>> is_in_tolerance(2000.0, 2000.0, 25.0, "da")
@@ -75,6 +72,13 @@ def is_in_tolerance(
         >>> theo = np.array([1000.001, 1500.001, 2000.2])
         >>> is_in_tolerance(theo, obs, 25.0, "ppm")
         array([ True,  True, False])
+
+    Args
+    ----
+      theoretical: Theoretical m/z
+      observed: Observed m/z
+      tolerance: Tolerance value to be used (Default value = 25.0)
+      unit: Lietrally da for daltons or ppm for ... ppm (Default value = "ppm")
     """
     mz_tolerance = get_tolerance(
         theoretical=theoretical, tolerance=tolerance, unit=unit
@@ -89,25 +93,27 @@ def is_sorted(
     lst: Iterable,
     key: Callable = lambda x: x,
 ) -> bool:
-    """
-    Is_sorted Checks if a list is sorted.
+    """Is_sorted Checks if a list is sorted.
 
-    Args:
-        lst (List): List to check if it is sorted
-        key (Callable, optional):
-            Function to use as the key to compare.
-            Defaults to lambda x:x.
-
-    Returns:
+    Returns
+    -------
         bool: Wether at least 1 element is out of order
 
-    Examples:
+    Examples
+    --------
         >>> is_sorted([1,2,3,4])
         True
         >>> is_sorted([1,2,2,3])
         True
         >>> is_sorted([4,2,2,3])
         False
+
+    Args
+    ----
+        lst (List): List to check if it is sorted
+        key (Callable, optional):
+            Function to use as the key to compare.
+            Defaults to lambda x:x.
     """
     for i, el in enumerate(lst[1:]):
         if key(el) < key(lst[i]):  # i is the index of the previous element
@@ -119,15 +125,10 @@ def sort_if_needed(
     lst: list,
     key: Callable = lambda x: x,
 ) -> list:
-    """
-    Sorts a list IN PLACE if it is not already sorted.
+    """Sorts a list IN PLACE if it is not already sorted.
 
-    Args:
-        lst : List to be sorted
-        key (Callable, optional): Function to use as the key for sorting.
-            Defaults to lambda x:x.
-
-    Examples:
+    Examples
+    --------
     >>> foo = [1,16,3,4]
     >>> sort_if_needed(foo)
     >>> foo
@@ -138,6 +139,12 @@ def sort_if_needed(
     [[1, 'A'], [3, 'C'], [4, 'D'], [16, 'B']]
     >>> foo = np.array([1,16,3,4])
     >>> # sort_if_needed(foo) # breaks for arrays
+
+    Args
+    ----
+        lst : List to be sorted
+        key (Callable, optional): Function to use as the key for sorting.
+            Defaults to lambda x:x.
     """
 
     # TODO benchmark if this is faster than just sorting
@@ -146,14 +153,10 @@ def sort_if_needed(
 
 
 def sort_all(keys, *args):
-    """
-    Sorts all the arrays in args by ordered version of the array in keys.
+    """Sorts all the arrays in args by ordered version of the array in keys.
 
-    Args:
-        keys: Array to be used as the key for sorting
-        *args: Arrays to be sorted
-
-    Examples:
+    Examples
+    --------
         >>> keys = np.array([1, 3, 2, 4])
         >>> foo = np.array([1, 2, 3, 4])
         >>> bar = np.array([5, 6, 7, 8])
@@ -162,6 +165,11 @@ def sort_all(keys, *args):
         array([1, 3, 2, 4])
         >>> bar
         array([5, 7, 6, 8])
+
+    Args
+    ----
+        keys: Array to be used as the key for sorting
+        *args: Arrays to be sorted
     """
 
     index = np.argsort(keys)
@@ -177,27 +185,16 @@ def annotate_peaks(
     tolerance: float = 25.0,
     unit: MassError = "ppm",
 ) -> dict[str, float]:
-    """
-    Annotate_peaks Assigns m/z peaks to annotations.
+    """Annotate_peaks Assigns m/z peaks to annotations.
 
-    Args:
-        theoretical_peaks:
-            Dictionary specifying the names and masses of theoretical peaks
-        mzs:
-            Array of the masses to be annotated.
-        tolerance:
-            Tolerance to be used to count an observed and a theoretical m/z as a match.
-            Defaults to 25.
-        unit:
-            The unit of the formerly specified tolerance (da or ppm).
-            Defaults to "ppm".
-
-    Returns:
+    Returns
+    -------
         Dict[str, float]:
             A dictionary with the keys being the names of the ions and the values being
             the intensities that were asigned to such ion.
 
-    Examples:
+    Examples
+    --------
         >>> theoretical_peaks = np.array([100.0, 200.0, 300.0, 500.0])
         >>> theoretical_labels = np.array(["a", "b", "c", "d"])
         >>> mzs = np.array([10, 100.0, 100.001, 150., 200.0, 300.0, 400.0])
@@ -211,6 +208,19 @@ def annotate_peaks(
         array(['a', 'a', 'b', 'c'], dtype='<U1')
         >>> ints[x]
         array([ 1. ,  0.2, 31. ,  2. ])
+
+    Args
+    ----
+        theoretical_peaks:
+            Dictionary specifying the names and masses of theoretical peaks
+        mzs:
+            Array of the masses to be annotated.
+        tolerance:
+            Tolerance to be used to count an observed and a theoretical m/z as a match.
+            Defaults to 25.
+        unit:
+            The unit of the formerly specified tolerance (da or ppm).
+            Defaults to "ppm".
     """
     max_delta = get_tolerance(tolerance=tolerance, theoretical=max(mz), unit=unit)
 

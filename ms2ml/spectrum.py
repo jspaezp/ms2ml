@@ -13,10 +13,10 @@ from .utils import annotate_peaks
 
 @dataclass
 class Spectrum:
-    """
-    Class to store the spectrum information.
+    """Class to store the spectrum information.
 
-    Examples:
+    Examples
+    _
     >>> spectrum = Spectrum(
     ...     mz = np.array([1000.0, 1500.0, 2000.0]),
     ...     intensity = np.array([1.0, 2.0, 3.0]),
@@ -54,8 +54,7 @@ class Spectrum:
         relative=False,
         offset: Optional[float] = 0,
     ) -> np.ndarray:
-        """
-        Bins the spectrum.
+        """Bins the spectrum.
 
         Args:
             mz: The m/z values of the spectrum.
@@ -88,9 +87,7 @@ class Spectrum:
 
     @property
     def base_peak(self) -> float:
-        """
-        Returns the base peak intensity of the spectrum.
-        """
+        """Returns the base peak intensity of the spectrum."""
         return np.max(self.intensity)
 
 
@@ -102,8 +99,7 @@ def _bin_spectrum(
     binsize=None,
     n_bins=None,
 ) -> np.ndarray:
-    """
-    Bins the spectrum.
+    """Bins the spectrum.
 
     Args:
         mz: The m/z values of the spectrum.
@@ -135,10 +131,10 @@ def _bin_spectrum(
 
 @dataclass
 class LCMSSpectrum(Spectrum):
-    """
-    Class to store the spectrum information with retention time
+    """Class to store the spectrum information with retention time.
 
-    Examples:
+    Examples
+    --------
     >>> spectrum = LCMSSpectrum(
     ...     mz = np.array([1000.0, 1500.0, 2000.0]),
     ...     intensity = np.array([1.0, 2.0, 3.0]),
@@ -159,12 +155,13 @@ class LCMSSpectrum(Spectrum):
 
 @dataclass
 class AnnotatedPeptideSpectrum(Spectrum):
-    """
-    Class to store the spectrum information.
+    """Class to store the spectrum information.
+
     In combination with the peptide information, it can be used to
     annotate the spectrum.
 
-    Examples:
+    Examples
+    --------
     >>> config = Config()
     >>> peptide = Peptide.from_sequence("PEPPINK/2", config)
     >>> spectrum = AnnotatedPeptideSpectrum(

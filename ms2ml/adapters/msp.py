@@ -1,9 +1,9 @@
 from typing import Callable
 
-from pyteomics4ml_jspp.config import Config
-from pyteomics4ml_jspp.parsing.msp import MSPParser
-from pyteomics4ml_jspp.peptide import Peptide
-from pyteomics4ml_jspp.spectrum import AnnotatedPeptideSpectrum
+from ms2ml.config import Config
+from ms2ml.parsing.msp import MSPParser
+from ms2ml.peptide import Peptide
+from ms2ml.spectrum import AnnotatedPeptideSpectrum
 
 from .base import BaseAdapter
 

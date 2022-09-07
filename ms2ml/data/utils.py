@@ -5,10 +5,10 @@ import numpy as np
 
 
 def pad_to_shape(x, shape):
-    """
-    Pad a numpy array to a given shape.
+    """Pad a numpy array to a given shape.
 
-    Examples:
+    Examples
+    --------
     >>> x = np.array([[1, 2, 3], [4, 5, 6]])
     >>> pad_to_shape(x, (3, 3))
     array([[1, 2, 3],
@@ -29,10 +29,10 @@ def pad_to_shape(x, shape):
 
 
 def default_collate(x):
-    """
-    Collate function for the default adapter.
+    """Collate function for the default adapter.
 
-    Examples:
+    Examples
+    --------
     >>> x = [{'aa': np.array([[1, 2, 3], [4, 5, 6]]),
     ...      'mods': np.array([[1, 2, 3], [4, 5, 6]])},
     ...      {'aa': np.array([[1, 2, 3], [4, 5, 6]]),
@@ -55,7 +55,7 @@ def default_collate(x):
     elem_type = type(elem)
 
     if isinstance(elem, np.ndarray):
-        shapes = set([e.shape for e in x])
+        shapes = {e.shape for e in x}
         if len(shapes) != 1:
             max_shape = tuple(max(s) for s in zip(*shapes))
             warnings.warn(
@@ -78,10 +78,10 @@ def default_collate(x):
 
 
 def hook_collate(x, hooks: Union[Callable, List[Callable], Dict[str, Callable]]):
-    """
-    Collate function that applies functions to elements.
+    """Collate function that applies functions to elements.
 
-    Examples:
+    Examples
+    --------
     >>> x = [{'aa': np.array([[1, 2, 3], [4, 5, 6]]),
     ...      'mods': np.array([[1, 2, 3], [4, 5, 6]])},
     ...      {'aa': np.array([[1, 2, 3], [4, 5, 6]]),
@@ -126,7 +126,7 @@ def hook_collate(x, hooks: Union[Callable, List[Callable], Dict[str, Callable]])
 
     if isinstance(elem, np.ndarray):
         x = [hooks(e) for e in x]
-        shapes = set([e.shape for e in x])
+        shapes = {e.shape for e in x}
         if len(shapes) != 1:
             raise ValueError("All arrays must have the same shape")
         else:

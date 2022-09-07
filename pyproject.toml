@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "pyteomics4ml_jspp"
+name = "ms2ml"
 version = "0.1.0"
 description = "Provides an intermediate layer between mass spec data and ML applications, such as encoding."
 authors = ["J. Sebastian Paez <jspaezp@users.noreply.github.com>"]
@@ -25,6 +25,9 @@ Flake8-pyproject = "^1.1.0"
 tox = "^3.25.1"
 pydocstringformatter = "^0.7.2"
 autoflake = "^1.5.3"
+flake8-docstrings = "^1.6.0"
+flake8-bugbear = "^22.8.23"
+pyright = "^1.1.269"
 
 
 [tool.poetry.group.docs.dependencies]
@@ -70,8 +73,9 @@ ban-relative-imports = true
 # flake8-use-fstring: https://github.com/MichaelKim0407/flake8-use-fstring#--percent-greedy-and---format-greedy
 format-greedy = 1
 inline-quotes = "double"
-ignore = "E203,W503"
+ignore = "E203,W503,D212,D200,D100,D104"
 per-file-ignores = "*/__init__.py: F401"
+docstring-convention = "numpy"
 
 [tool.pytest.ini_options]
 minversion = "6.0"
@@ -80,5 +84,11 @@ doctest_plus = "enabled"
 doctest_optionflags = "ELLIPSIS NORMALIZE_WHITESPACE FLOAT_CMP"
 testpaths = [
     "tests",
-    "pyteomics4ml_jspp",
+    "ms2ml",
 ]
+
+
+[tool.pydocstringformatter]
+style = "numpydoc"
+exclude = [".tox/**"]
+max-line-length = 88

@@ -6,30 +6,29 @@ from torch.nn import CosineSimilarity
 
 
 class CosineLoss(CosineSimilarity):
-    """
-    CosineLoss Implements a simple cosine similarity based loss.
-    """
+    """CosineLoss Implements a simple cosine similarity based loss."""
 
     def __init__(self, dim=1, eps=1e-8) -> None:
-        """
-        __init__ Instantiates the class.
+        """__init__ Instantiates the class.
 
         All arguments are passed to `torch.nn.CosineSimilarity`
         """
         super().__init__(dim=dim, eps=eps)
 
     def forward(self, truth: Tensor, prediction: Tensor) -> Tensor:
-        """
-        Forward calculates the loss.
+        """Forward calculates the loss.
 
         Parameters:
+        -----------
             truth : Tensor
             prediction : Tensor
 
         Returns:
+        --------
             Tensor
 
         Examples:
+        ---------
             >>> loss = CosineLoss(dim=1, eps=1e-4)
 
             >>> x = torch.ones([1,2,5])
@@ -81,17 +80,19 @@ class SpectralAngle(torch.nn.CosineSimilarity):
         super().__init__(dim=dim, eps=eps)
 
     def forward(self, truth, prediction):
-        """
-        Forward calculates the similarity.
+        """Forward calculates the similarity.
 
         Parameters:
+        -----------
             truth : Tensor
             prediction : Tensor
 
         Returns:
+        --------
             Tensor
 
         Examples:
+        ---------
             >>> loss = SpectralAngle(dim=1, eps=1e-4)
 
             >>> x = torch.ones([1,2,5])
@@ -131,7 +132,6 @@ class SpectralAngle(torch.nn.CosineSimilarity):
             >>> y = torch.tensor(y)
             >>> loss(x, y).round(decimals = 2).abs()
             tensor([[nan, 0.7100]])
-
         """
         out = super().forward(truth, prediction)
         out = 2 * (torch.acos(out) / PI)
@@ -145,17 +145,19 @@ class SpectralAngleLoss(SpectralAngle):
         super().__init__(*args, **kwargs)
 
     def forward(self, truth, prediction):
-        """
-        Forward calculates the loss.
+        """Forward calculates the loss.
 
         Parameters:
+        -----------
             truth : Tensor
             prediction : Tensor
 
         Returns:
+        --------
             Tensor
 
         Examples:
+        ---------
             >>> loss = SpectralAngleLoss(dim=1, eps=1e-4)
 
             >>> x = torch.ones([1,2,5])
@@ -200,13 +202,10 @@ class SpectralAngleLoss(SpectralAngle):
 
 
 class PearsonCorrelation(torch.nn.Module):
-    """
-    PearsonCorrelation Implements a simple pearson correlation.
-    """
+    """PearsonCorrelation Implements a simple pearson correlation."""
 
     def __init__(self, axis=1, eps=1e-4):
-        """
-        __init__ Instantiates the class.
+        """__init__ Instantiates the class.
 
         Creates a callable object to calculate the pearson correlation on an axis
 
@@ -225,8 +224,7 @@ class PearsonCorrelation(torch.nn.Module):
         self.eps = eps
 
     def forward(self, x, y):
-        """
-        Forward calculates the loss.
+        """Forward calculates the loss.
 
         Parameters
         ----------

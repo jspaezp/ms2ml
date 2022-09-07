@@ -1,7 +1,7 @@
-from pyteomics4ml_jspp.adapters.spectronaut import SpectronautAdapter
-from pyteomics4ml_jspp.config import Config
-from pyteomics4ml_jspp.data.utils import default_collate
-from pyteomics4ml_jspp.parsing.spectronaut import SpectronautLibraryParser
+from ms2ml.adapters.spectronaut import SpectronautAdapter
+from ms2ml.config import Config
+from ms2ml.data.utils import default_collate
+from ms2ml.parsing.spectronaut import SpectronautLibraryParser
 
 
 def test_spectronaut_parsing_works(shared_datadir):

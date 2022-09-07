@@ -10,8 +10,7 @@ from .utils import mz
 
 
 class MemoizedUnimodResolver:
-    """
-    Memoized Unimod resolver.
+    """Memoized Unimod resolver.
 
     Uses the UnimodResolver from pyteomics but stores the results in a dictionary
     internally, so when the same query is made, the result is MUCH FASTER.
@@ -20,6 +19,7 @@ class MemoizedUnimodResolver:
     class methods, instead of generating an instance of the object.
 
     Examples:
+    ---------
     >>> MemoizedUnimodResolver.resolve("Phospho")
     {'composition': Composition({'H': 1, 'O': 3, 'P': 1}),
      'name': 'Phospho', 'id': 21, 'mass': 79.966331, 'provider': 'unimod'}
@@ -47,8 +47,10 @@ class MemoizedUnimodResolver:
 
 
 class Peptide(ProForma):
-    """
+    """Represents a peptide sequence with modifications.
+
     Examples:
+    ---------
     >>> p = Peptide.from_sequence("MYPEPTIDE")
     >>> p.mass
     1093.46377747225
@@ -81,9 +83,7 @@ class Peptide(ProForma):
 
     @staticmethod
     def pre_parse_mods(seq, config) -> str:
-        """
-        Parse the modifications in the sequence.
-        """
+        """Parse the modifications in the sequence."""
         if config.mod_fixed_mods:
             fixed_mods = config.mod_fixed_mods
         else:
@@ -98,8 +98,8 @@ class Peptide(ProForma):
     def from_proforma_seq(
         cls, seq, config: Optional[Config] = None, extras=None
     ) -> "Peptide":
-        """
-        Examples:
+        """Examples:
+
         >>> p = Peptide.from_proforma_seq("PEPTIDE")
         >>> p.mass
         799.3599640267099
@@ -115,13 +115,12 @@ class Peptide(ProForma):
 
     @classmethod
     def from_sequence(cls, *args, **kwargs):
-        """Alias for from_proforma_seq"""
+        """Alias for from_proforma_seq."""
         return cls.from_proforma_seq(*args, **kwargs)
 
     @classmethod
     def from_ProForma(cls, proforma: ProForma, config, extras=None) -> "Peptide":
-        """
-        Creates a peptide from a pyteomics.proforma.ProForma object
+        """Creates a peptide from a pyteomics.proforma.ProForma object.
 
         Examples:
         >>> from pyteomics.proforma import ProForma, parse
@@ -136,8 +135,7 @@ class Peptide(ProForma):
         return cls(proforma.sequence, proforma.properties, config, extras=extras)
 
     def to_proforma(self):
-        """
-        Converts the peptide to a string following the proforma specifications
+        """Converts the peptide to a string following the proforma specifications.
 
         Examples:
         >>> p = Peptide.from_sequence("AMC")
@@ -156,6 +154,7 @@ class Peptide(ProForma):
 
     @property
     def mass(self) -> float:
+        """Returns the mass of the peptide."""
         # TODO see if this can be optimized
         mass = super().mass
         return mass
@@ -177,12 +176,12 @@ class Peptide(ProForma):
         return self.from_ProForma(out, config=self.config, extras=self.extras)
 
     def __len__(self) -> int:
+        """Returns the length of the peptide sequence."""
         return len(self.sequence)
 
     @property
     def _position_masses(self) -> np.float32:
-        """
-        Calculates the masses of each termini and aminoacid in a peptide sequence
+        """Calculates the masses of each termini and aminoacid in a peptide sequence.
 
         It is used as a basis to calculate the mass of ion series.
         """
@@ -213,14 +212,13 @@ class Peptide(ProForma):
 
     @property
     def _forward(self):
-        """
-        Calculates the masses of all fragments of the peptide in the forward
+        """Calculates the masses of all fragments of the peptide in the forward.
+
         direction.
 
         For instance, for the peptide "AMC" the forward fragments are:
             [mass_of_n, mass_of_nA, mass_of_nAM, mass_of_nAMCc]
             Where n and c are the n- and c-terminal masses.
-
 
         The forward series is used as a basis for the a, b anc c ion series
         The backwards series is used as a basis for the x, y and z ion series
@@ -232,20 +230,20 @@ class Peptide(ProForma):
 
     @property
     def _backward(self):
-        """
-        See the forward property
-        """
+        """See the forward property."""
         if not hasattr(self, "_backward_cache"):
             self._backward_cache = self._position_masses[::-1].cumsum()
 
         return self._backward_cache
 
     def ion_series(self, ion_type: str, charge: int) -> np.float32:
-        """
-        Calculates the masses of all fragments of the peptide for a given ion type
+        """Calculates all the masses of an ion type.
+
+        Calculates the masses of all fragments of the peptide for a given ion type.
         and charge.
 
         Examples:
+        ---------
         >>> p = Peptide.from_sequence("AMC")
         >>> p.ion_series("a", 1)
         array([ 44.05003, 175.0905 ], dtype=float32)
@@ -266,8 +264,10 @@ class Peptide(ProForma):
         return out
 
     def annotated_ion_series(self, ion_type: str, charge: int) -> list[AnnotatedIon]:
-        """
+        """Returns a list of annotated ions.
+
         Examples:
+        ---------
         >>> p = Peptide.from_sequence("AMC")
         >>> p.annotated_ion_series("b", 1)
         [AnnotatedIon(mass=array(72.044939, dtype=float32), charge=1,
@@ -299,9 +299,11 @@ class Peptide(ProForma):
 
     @property
     def ion_series_dict(self) -> Dict[str, AnnotatedIon]:
-        """
+        """Returns a dictionary of all ion series for the peptide.
+
         Raises:
-            ValueError: If peptide does not have a charge state
+        -------
+            ValueError: If peptide does not have a charge state.
 
         Examples:
         >>> p = Peptide.from_sequence("PEPPINK/2")
@@ -346,8 +348,7 @@ class Peptide(ProForma):
         return self._theoretical_ion_masses
 
     def aa_to_onehot(self):
-        """
-        Converts the peptide sequence to a one-hot encoding.
+        """Converts the peptide sequence to a one-hot encoding.
 
         Returns a binary array of shape:
             (nterm + peptide_length + cterm, len(self.config.encoding_aa_order))
@@ -367,6 +368,7 @@ class Peptide(ProForma):
             ]
 
         Examples:
+        ---------
         >>> foo = Peptide.from_sequence("AMC")
         >>> foo.aa_to_onehot()
         array([[1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -391,8 +393,7 @@ class Peptide(ProForma):
         return out
 
     def mod_to_onehot(self):
-        """
-        Converts the peptide sequence to a one-hot encoding.
+        """Converts the peptide sequence to a one-hot encoding.
 
         Returns a binary array of shape:
             (nterm + peptide_length + cterm, len(self.config.encoding_mod_order))
@@ -414,6 +415,7 @@ class Peptide(ProForma):
         carbamidomethylation of C.
 
         Examples:
+        ---------
         >>> foo = Peptide.from_sequence("AMC")
         >>> foo.mod_to_onehot()
         array([[1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -421,7 +423,6 @@ class Peptide(ProForma):
           [1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
           [0, 1, 0, 0, 0, 0, 0, 0, 0, 0],
           [1, 0, 0, 0, 0, 0, 0, 0, 0, 0]], dtype=int32)
-
         """
         vector = self.mod_to_vector()
 
@@ -434,8 +435,7 @@ class Peptide(ProForma):
         return out
 
     def aa_to_count(self):
-        """
-        Converts the peptide sequence to a one-hot encoding.
+        """Converts the peptide sequence to a one-hot encoding.
 
         Returns a binary array of shape:
             (nterm + peptide_length + cterm, len(self.config.encoding_aa_order))
@@ -460,8 +460,7 @@ class Peptide(ProForma):
         return self.mod_to_onehot().sum(axis=0)
 
     def aa_to_vector(self):
-        """
-        Converts the peptide sequence to a vector encoding.
+        """Converts the peptide sequence to a vector encoding.
 
         Returns a binary array of length:
             (nterm + peptide_length + cterm)
@@ -475,6 +474,7 @@ class Peptide(ProForma):
             [0, 1, 2, 1, 3]
 
         Examples:
+        ---------
         >>> foo = Peptide.from_sequence("AMC")
         >>> foo.aa_to_vector()
         array([ 0,  1,  13,  3, 27])
@@ -484,8 +484,14 @@ class Peptide(ProForma):
         return vector
 
     def mod_to_vector(self):
-        """
-        >>> foo = Peptide.from_sequence("AMC") # Implicit Carbamido
+        """Converts modifications to vectors
+
+        Converts the modifications peptide sequence to a vector encoding.
+
+        Examples
+        --------
+
+        >>> foo = Peptide.from_sequence("AMC") # Implicit Carbamido.
         >>> foo.mod_to_vector()
         array([0, 0, 0, 1, 0])
         """
@@ -509,10 +515,10 @@ class Peptide(ProForma):
 
     @classmethod
     def from_vector(cls, aa_vector: list[int], mod_vector, config: Config):
-        """
-        Converts vectors back to peptides.
+        """Converts vectors back to peptides.
 
         Examples:
+        ---------
         >>> foo = Peptide.from_vector([0, 1, 13, 3, 27], [0, 0, 0, 1, 0], Config())
         >>> foo.to_proforma()
         '<[UNIMOD:4]@C>AMC'
@@ -538,14 +544,14 @@ class Peptide(ProForma):
         return peptide
 
     def __iter__(self) -> Iterator[Tuple[str, Optional[List[str]]]]:
-        """
-        Iterates over the peptide sequence.
+        """Iterates over the peptide sequence.
 
         Yields:
+        -------
             (aa, mod) tuples
 
-
         Examples:
+        ---------
         >>> foo = Peptide.from_sequence("AMC")
         >>> [x for x in foo]
         [('n_term', None), ('A', None), ('M', None),
@@ -557,7 +563,7 @@ class Peptide(ProForma):
         """
 
         def resolve_mod_list(x):
-            """Resolves the names in a list of modifications to unimod Ids"""
+            """Resolves the names in a list of modifications to unimod Ids."""
             if x is None:
                 return None
             else:

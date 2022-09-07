@@ -4,14 +4,11 @@ from typing import Iterator
 
 
 class BaseParser(ABC):
-    """
-    Base class for parsers
-    """
+    """Base class for parsers."""
 
     @abstractmethod
     def parse_file(self, file: PathLike) -> Iterator:
-        """
-        Parse a file
+        """Parse a file.
 
         Parameters
         ----------
@@ -26,8 +23,7 @@ class BaseParser(ABC):
 
     @abstractmethod
     def parse_text(self, text: str) -> Iterator:
-        """
-        Parse a chunk of text
+        """Parse a chunk of text.
 
         Parameters
         ----------

@@ -1,4 +1,4 @@
-# Pyteomics4ml_jspp
+# ms2ml
 
 The idea of this package is to have an intermeiate layer between the pyteomics package and ML applications.
 
@@ -31,12 +31,6 @@ People who want to train ML models from peptide/proteomics data instead of figur
 - `c_term` = denotes the c-terminus of a peptide
 - `__missing__` = denotes missing/empty elements in a tensor
 
-## Why the \_jspp
-
-I have that suffix (my initials) to prevent taking over the pyteomics4ml name (for now).
-Since I am not part of the consortium, nor related to the pyteomics team, I do not want to take over a name they might use.
-If this package becomes used and stable I might take it over.
-
 ## Peptide sequence notation
 
 When possible I will attempt to allow 'Proforma' based sequence annotations.
@@ -66,8 +60,10 @@ Check:
   - [ ] Peptide Dataset
   - [ ] Spectrum Dataset
   - [ ] Annotated Spectrum Dataset
-    \[ \] HDF5/sqlite caching
-    \[ \] Documentation, Documentation, Documentation
+    - [ ] HDF5/sqlite caching
+    - [ ] Documentation, Documentation, Documentation
+      - [ ] remove D100 from the exclusions in linting (missing docstring in module)
+      - [ ] remove D104 (missing docstring in package)
 
 # Contribution
 

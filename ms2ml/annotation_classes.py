@@ -1,5 +1,5 @@
-"""
-Implements data classes that provide a consistent interface for
+"""Implements data classes that provide a consistent interface for.
+
 annotated data.
 """
 
@@ -18,11 +18,11 @@ class AnnotatedIon:
 
     @property
     def fragment_positions(self):
-        """Alias so the name corresponds to the config"""
+        """Alias so the name corresponds to the config."""
         return self.position
 
     def asdict(self):
-        """Return a dictionary representation of the object"""
+        """Return a dictionary representation of the object."""
         out = self.__dict__
         out.update(
             {"fragment_positions": self.fragment_positions, "ion_charges": self.charge}
@@ -30,10 +30,10 @@ class AnnotatedIon:
         return out
 
     def label(self, convention: str):
-        """
-        Generates the label for the ion based on the convention being passed.
+        """Generates the label for the ion based on the convention being passed.
 
-        Examples:
+        Examples
+        --------
         >>> ion = AnnotatedIon(mass = 123.2, charge= 2, position = 3, ion_series= "z")
         >>> convention = "{ion_series}{fragment_positions}^{ion_charges}"
         >>> ion.label(convention)

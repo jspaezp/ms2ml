@@ -1,4 +1,4 @@
-from pyteomics4ml_jspp.parsing.msp import MSPParser
+from ms2ml.parsing.msp import MSPParser
 
 
 def test_parsing_basic_msp_generates_tree():

@@ -1,5 +1,4 @@
-"""
-Defines the constants that are used in the rest of the project.
+"""Defines the constants that are used in the rest of the project.
 
 Such as the masses of aminoacids, supported modifications, length of the encodings,
 maximum length supported, labels and order of the encoded ions ...
@@ -22,8 +21,7 @@ from .annotation_classes import AnnotatedIon
 
 @dataclass
 class Config:
-    """
-    General class to set and store the configuration of the project.
+    """General class to set and store the configuration of the project.
 
     Ideally every project will make one AND ONLY ONE of these.
     The provided defaults are meant to be reasonable for most projects
@@ -33,6 +31,7 @@ class Config:
     to work.
 
     Examples:
+    ---------
     >>> config = Config()
     >>> config
     Config(g_tolerances=(50, 50), ... mod_ambiguity_threshold=0.99,
@@ -137,7 +136,8 @@ class Config:
         return labels
 
     def ion_labeller(self, ion: AnnotatedIon) -> str:
-        """
+        """Provided an ion, returns the label for that ion.
+
         Examples:
         >>> ion = AnnotatedIon(mass = 123.2, charge= 2, position = 3, ion_series= "z")
         >>> config = Config()
@@ -151,9 +151,9 @@ class Config:
 
 
 class _PermissiveMapper(dict):
-    """
-    This class is a helper to allow the bypass of missing keys in the generation of
-    the ion labels
+    """This class is a helper to allow the bypass of missing keys in the generation of.
+
+    the ion labels.
     """
 
     def __missing__(self, key):
