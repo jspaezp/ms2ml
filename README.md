@@ -20,6 +20,8 @@ This project is meant to be opinionated but not arbitrary. By that I mean that i
 1. Abstract the loops away
    - I do not like writting boilerplate code, neither should you. Ideally you will not need to write loops when using the user-facing API
    - Therefore I try my best to abstract all the `[f(spec) for spec in file]` within reason.
+1. Fail loudly
+   - It is already hard to debug ML models, lets make it easier by having **sensical** error messages and checks. They should also contain suggestions to fix the bug. Explicit is better than implicit. Errors are better than bugs.
 
 ## Target audience
 

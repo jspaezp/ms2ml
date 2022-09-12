@@ -28,6 +28,7 @@ autoflake = "^1.5.3"
 flake8-docstrings = "^1.6.0"
 flake8-bugbear = "^22.8.23"
 pyright = "^1.1.269"
+pylint = "^2.15.2"
 
 
 [tool.poetry.group.docs.dependencies]
@@ -92,3 +93,7 @@ testpaths = [
 style = "numpydoc"
 exclude = [".tox/**"]
 max-line-length = 88
+
+[tool.pylint]
+load-plugins= 'pylint.extensions.docparams'
+# disable = "C0103"

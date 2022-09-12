@@ -30,11 +30,13 @@ def test_spectronaut_adapter_works(shared_datadir):
             "mods": spec.precursor_peptide.mod_to_vector(),
         }
 
+    collate_fn = lambda x: default_collate(x, pad_shapes=True)
+
     spec_adapter = SpectronautAdapter(
         config=Config(),
         in_hook=pre_hook,
         out_hook=post_hook,
-        collate_fn=default_collate,
+        collate_fn=collate_fn,
     )
     parsed = spec_adapter.parse_file(file)
     elem = next(parsed)

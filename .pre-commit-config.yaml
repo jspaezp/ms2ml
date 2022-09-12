@@ -6,8 +6,9 @@ repos:
   - id: check-yaml
     exclude: "mkdocs.yml"
   - id: end-of-file-fixer
-    exclude: ".*.svg"
+    exclude: "(.*.svg)|(tests/data/mgf/.*.mgf)"
   - id: trailing-whitespace
+    exclude: "(tests/data/mgf/.*.mgf)"
 - repo: https://github.com/asottile/pyupgrade
   rev: v2.37.3
   hooks:
