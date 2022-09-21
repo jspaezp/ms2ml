@@ -1,10 +1,30 @@
 # ms2ml
 
+**This package is in early development, I am actively taking ideas and requests**
+
 The idea of this package is to have an intermeiate layer between the pyteomics package and ML applications.
 
 Since ML applications do not take MS data as input directly, it is necessary to convert/encode it. This package is meant to handle that aspect.
 
 This project is meant to be opinionated but not arbitrary. By that I mean that it should attempt to enforce the "better way" of doing things (not give flexibility to do everything every way) but all design decisions are open to discussion (ideally though github).
+
+## Core parts
+
+(subject to change...)
+
+1. Parsers for external data are in ./ms2ml/data/parsing
+   1. Parsers should only be able to read data and return a base python representation, dict/list etc.
+1. Adapters are located in ./ms2ml/adapters, they should build on parsers (usually) but yield ms2ml representation objects (Spectrum, Peptide, AnnotatedSpectrum, LCMSSpectrum).
+   1. Behavior can be modified/extended using hooks.
+1. ms2ml representation objects have methods that converts them into tensor representations (Peptide.aa_to_onehot for instance)
+1. As much configuration as possible should be stored in the config.Config class.
+   1. It should contain information on the project and the way everything is getting encoded, so hypothetically one could just pass a config to a different data source adapter and get compatible results.
+   1. Is our retention time in seconds or minutes?
+      1. look at the config
+   1. What position of the onehot is alanine?
+      1. look at the config
+   1. WHat order are our ions encoded in?
+      1. Look at the config.
 
 ## Core design
 
@@ -55,7 +75,8 @@ Check:
   - [x] One hot
   - [x] Numeric encoding
   - [ ] Peptide Tensor Batch
-- [ ] Readers from mass spec data
+- [x] Readers from mass spec data
+  - [ ] Decide which other to implement/have available
 - [ ] Dataset Objects (torch dataset objects)
   - [ ] In disk caching
   - [ ] In mem caching
@@ -63,9 +84,12 @@ Check:
   - [ ] Spectrum Dataset
   - [ ] Annotated Spectrum Dataset
     - [ ] HDF5/sqlite caching
-    - [ ] Documentation, Documentation, Documentation
-      - [ ] remove D100 from the exclusions in linting (missing docstring in module)
-      - [ ] remove D104 (missing docstring in package)
+- [ ] *Documentation, Documentation, Documentation*
+  - De cide what doc engine to use (mkdocs?) and how will auto api-documentaiton will be written.
+- [ ] Style
+  - [ ] remove D100 from the exclusions in linting (missing docstring in module)
+  - [ ] remove D104 (missing docstring in package)
+  - [ ] Fix all flake8/pylint complains ...
 
 # Contribution
 
