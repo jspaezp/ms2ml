@@ -31,14 +31,28 @@ class Config:
     All annotation and endoding functionality should require one of this objects
     to work.
 
+    Parameters:
+        g_tolerances:
+        g_tolerance_units:
+        g_isotopes:
+        peptide_max_length:
+        precursor_charges:
+        fragment_positions:
+        ion_series:
+        ion_charges:
+        ion_neutral_losses:
+        ion_encoding_nesting:
+        ion_naming_convention:
+        mod_ambiguity_threshold:
+        mod_fixed_mods:
+
     Examples:
-    ---------
-    >>> config = Config()
-    >>> config
-    Config(g_tolerances=(50, 50), ... mod_ambiguity_threshold=0.99,
-     mod_fixed_mods=('[U:4]@C',))
-    >>> config.fragment_labels
-    ['y1^1', 'y1^2', ... 'b30^2']
+        >>> config = Config()
+        >>> config
+        Config(g_tolerances=(50, 50), ... mod_ambiguity_threshold=0.99,
+        mod_fixed_mods=('[U:4]@C',))
+        >>> config.fragment_labels
+        ['y1^1', 'y1^2', ... 'b30^2']
     """
 
     # General Configs
@@ -111,6 +125,14 @@ class Config:
 
     @property
     def fragment_labels(self) -> list[str]:
+        """
+        Returns a list of the labels that are used to encode the fragments.
+
+        Examples:
+            >>> config = Config()
+            >>> config.fragment_labels
+            ['y1^1', 'y1^2', ... 'b30^2']
+        """
         if not hasattr(self, "_fragment_labels_cache"):
             self._fragment_labels_cache = self._framgnet_labels()
 
@@ -140,10 +162,10 @@ class Config:
         """Provided an ion, returns the label for that ion.
 
         Examples:
-        >>> ion = AnnotatedIon(mass=123.2, charge=2, position=3, ion_series="z")
-        >>> config = Config()
-        >>> config.ion_labeller(ion)
-        'z3^2'
+            >>> ion = AnnotatedIon(mass=123.2, charge=2, position=3, ion_series="z")
+            >>> config = Config()
+            >>> config.ion_labeller(ion)
+            'z3^2'
         """
         return self.ion_naming_convention.format_map(ion.asdict())
 

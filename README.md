@@ -42,6 +42,9 @@ This project is meant to be opinionated but not arbitrary. By that I mean that i
    - Therefore I try my best to abstract all the `[f(spec) for spec in file]` within reason.
 1. Fail loudly
    - It is already hard to debug ML models, lets make it easier by having **sensical** error messages and checks. They should also contain suggestions to fix the bug. Explicit is better than implicit. Errors are better than bugs.
+1. Api documentation.
+   - Documentation is critical, if it is not documented, It will be deleted (because nobody will use it ...)
+   - Within reason, all external api should be documented, typed, in-code commented, have a docstring, check that it renders well using mkdocs and an example.
 
 ## Target audience
 
