@@ -2,7 +2,6 @@ from ms2ml.parsing.msp import MSPParser
 
 
 def test_parsing_basic_msp_generates_tree():
-
     text = (
         "Name: ASDASD/2\n"
         "MW: 1234\n"
@@ -20,7 +19,6 @@ def test_parsing_basic_msp_generates_tree():
 
 
 def test_parsing_complex_msp():
-
     text = (
         "Name: ASTSDYQVISDR/2\n"
         "LibID: 0\n"

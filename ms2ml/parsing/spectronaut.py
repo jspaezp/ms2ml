@@ -16,7 +16,6 @@ class SpectronautLibraryParser(BaseParser):
         for i, x in self.df.groupby(
             ["ModifiedPeptide", "PrecursorCharge", "PrecursorMz"]
         ):
-
             out = x.to_dict("list")
             out.update(
                 {"ModifiedPeptide": i[0], "PrecursorCharge": i[1], "PrecursorMz": i[2]}
