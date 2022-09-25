@@ -1,4 +1,4 @@
-from typing import Callable
+from typing import Callable, Iterator
 
 from ms2ml.config import Config
 from ms2ml.parsing.msp import MSPParser
@@ -26,6 +26,13 @@ class MSPAdapter(MSPParser, BaseAdapter):
         MSPParser.__init__(self)
 
     def _to_elem(self, spec_dict) -> AnnotatedPeptideSpectrum:
+        """
+        Converts a dictionary to an AnnotatedPeptideSpectrum object.
+
+        Args:
+            spec_dict (dict): A dictionary containing the information for a spectrum.
+                usually the result of parsing an msp file using their MSP parser.
+        """
         pep = Peptide.from_proforma_seq(spec_dict["header"]["Name"], config=self.config)
         spec = AnnotatedPeptideSpectrum(
             mz=spec_dict["peaks"]["mz"],
@@ -37,6 +44,6 @@ class MSPAdapter(MSPParser, BaseAdapter):
 
         return spec
 
-    def parse_text(self, text) -> AnnotatedPeptideSpectrum:
+    def parse_text(self, text) -> Iterator[AnnotatedPeptideSpectrum]:
         for spec in super().parse_text(text):
             yield self._process_elem(spec)

@@ -13,6 +13,7 @@ import warnings
 from dataclasses import dataclass
 
 from .annotation_classes import AnnotatedIon
+from .types import MassError
 
 # TODO cosnsider wether we want a more strict enforcement
 # of the requirement for configurations to be defined
@@ -45,7 +46,7 @@ class Config:
     # = For instance, in tolerances, the first tolerance is for MS1
     # = and the second for MS2
     g_tolerances: tuple[float, ...] = (50, 50)
-    g_tolerance_units: tuple[str, ...] = ("ppm", "ppm")
+    g_tolerance_units: tuple[MassError, ...] = ("ppm", "ppm")
 
     # = Number of isotopes to check for each ion, 0 means that only
     # = the monoisotopic peak us used
@@ -66,9 +67,9 @@ class Config:
     ion_series: str = "yb"
     ion_charges: tuple[int, ...] = (1, 2)
     # = Neutral Losss Configs
-    ion_neutral_losses: tuple[str] = ()
+    ion_neutral_losses: tuple[str, ...] = ()
 
-    ion_encoding_nesting: tuple[int, ...] = (
+    ion_encoding_nesting: tuple[str, ...] = (
         "ion_charges",
         "fragment_positions",
         "ion_series",
@@ -76,7 +77,7 @@ class Config:
     ion_naming_convention: str = "{ion_series}{fragment_positions}^{ion_charges}"
 
     # Modifications
-    mod_ambiguity_threshold: int = 0.99
+    mod_ambiguity_threshold: float = 0.99
     mod_fixed_mods: tuple[str] = ("[U:4]@C",)
 
     # Encoding Configs
@@ -120,7 +121,7 @@ class Config:
         return len(self.fragment_labels)
 
     def _framgnet_labels(self) -> list[str]:
-        labels = []
+        labels: list[str] = []
         for field in self.ion_encoding_nesting:
             _labels = labels
             labels = []
@@ -139,7 +140,7 @@ class Config:
         """Provided an ion, returns the label for that ion.
 
         Examples:
-        >>> ion = AnnotatedIon(mass = 123.2, charge= 2, position = 3, ion_series= "z")
+        >>> ion = AnnotatedIon(mass=123.2, charge=2, position=3, ion_series="z")
         >>> config = Config()
         >>> config.ion_labeller(ion)
         'z3^2'

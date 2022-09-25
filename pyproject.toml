@@ -13,6 +13,7 @@ numpy = "^1.23.2"
 psims = { version = "^1.2.0", python = ">3.8,<3.11" }
 lark = "^1.1.2"
 pandas = "^1.4.4"
+pandas-stubs = "^1.4.4.220919"
 
 [tool.poetry.group.dev.dependencies]
 black = "^22.8.0"

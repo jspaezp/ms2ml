@@ -18,23 +18,23 @@ class Spectrum:
     Examples
     _
     >>> spectrum = Spectrum(
-    ...     mz = np.array([1000.0, 1500.0, 2000.0]),
-    ...     intensity = np.array([1.0, 2.0, 3.0]),
-    ...     ms_level = 2,
-    ...     extras = {"EXTRAS": ["extra1", "extra2"]}
+    ...     mz=np.array([1000.0, 1500.0, 2000.0]),
+    ...     intensity=np.array([1.0, 2.0, 3.0]),
+    ...     ms_level=2,
+    ...     extras={"EXTRAS": ["extra1", "extra2"]},
     ... )
     >>> spectrum
     Spectrum(mz=array([1000., 1500., 2000.]),
-             ... extras={'EXTRAS': ['extra1', 'extra2']})
+    ... extras={'EXTRAS': ['extra1', 'extra2']})
     """
 
-    mz: float
-    intensity: float
+    mz: np.ndarray
+    intensity: np.ndarray
     ms_level: int
-    precursor_mz: Optional[float] = np.nan
-    precursor_charge: Optional[int] = np.nan
-    instrument: str = None
-    analyzer: str = None
+    precursor_mz: float = 0.0
+    precursor_charge: int = 0
+    instrument: str | None = None
+    analyzer: str | None = None
     extras: Optional[dict] = None
     config: Optional[Config] = field(repr=False, default=None)
 
@@ -49,10 +49,10 @@ class Spectrum:
         self,
         start,
         end,
-        binsize=None,
-        n_bins=None,
-        relative=False,
-        offset: Optional[float] = 0,
+        binsize: float = None,
+        n_bins: int = None,
+        relative: bool = False,
+        offset: float = 0,
     ) -> np.ndarray:
         """Bins the spectrum.
 
@@ -94,8 +94,8 @@ class Spectrum:
 def _bin_spectrum(
     mz: np.ndarray,
     weights: np.ndarray,
-    start,
-    end,
+    start: float,
+    end: float,
     binsize=None,
     n_bins=None,
 ) -> np.ndarray:
@@ -136,11 +136,11 @@ class LCMSSpectrum(Spectrum):
     Examples
     --------
     >>> spectrum = LCMSSpectrum(
-    ...     mz = np.array([1000.0, 1500.0, 2000.0]),
-    ...     intensity = np.array([1.0, 2.0, 3.0]),
-    ...     retention_time = RetentionTime(rt = 100.0, units = "min"),
-    ...     ms_level = 2,
-    ...     extras = {"EXTRAS": ["extra1", "extra2"]}
+    ...     mz=np.array([1000.0, 1500.0, 2000.0]),
+    ...     intensity=np.array([1.0, 2.0, 3.0]),
+    ...     retention_time=RetentionTime(rt=100.0, units="min"),
+    ...     ms_level=2,
+    ...     extras={"EXTRAS": ["extra1", "extra2"]},
     ... )
     >>> spectrum
     LCMSSpectrum(mz=array([1000., 1500., 2000.]), ...)
@@ -165,22 +165,21 @@ class AnnotatedPeptideSpectrum(Spectrum):
     >>> config = Config()
     >>> peptide = Peptide.from_sequence("PEPPINK/2", config)
     >>> spectrum = AnnotatedPeptideSpectrum(
-    ...     mz = np.array([50.0, 147.11333, 1000.0, 1500.0, 2000.0]),
-    ...     intensity = np.array([50.0, 200., 1.0, 2.0, 3.0]),
-    ...     ms_level = 2,
-    ...     extras = {"EXTRAS": ["extra1", "extra2"]},
-    ...     precursor_peptide = peptide
+    ...     mz=np.array([50.0, 147.11333, 1000.0, 1500.0, 2000.0]),
+    ...     intensity=np.array([50.0, 200.0, 1.0, 2.0, 3.0]),
+    ...     ms_level=2,
+    ...     extras={"EXTRAS": ["extra1", "extra2"]},
+    ...     precursor_peptide=peptide,
     ... )
     >>> spectrum
     AnnotatedPeptideSpectrum(mz=array([  50. ... precursor_isotope=0)
     >>> spectrum.fragment_intensities
     {'y1^1': 200.0}
-    >>> spectrum['y1^1']
+    >>> spectrum["y1^1"]
     200.0
     >>> spectrum.fragments
     {'y1^1': AnnotatedIon(mass=array(147.11334, dtype=float32),
-     charge=1, position=1, ion_series='y', neutral_loss=None,
-     intensity=200.0)}
+     charge=1, position=1, ion_series='y', intensity=200.0, neutral_loss=None)}
     """
 
     # TODO find a way to not make this optional ...
@@ -209,8 +208,16 @@ class AnnotatedPeptideSpectrum(Spectrum):
         raise NotImplementedError
 
     def _annotate_peaks(self) -> tuple[np.ndarray, np.ndarray]:
+        if self.precursor_peptide is None:
+            raise ValueError(
+                "No precursor peptide provided. Which is required to annotate the peaks"
+            )
         theo_mzs = self.precursor_peptide.theoretical_ion_masses
 
+        if self.config is None:
+            raise ValueError(
+                "No config provided. Which is required to annotate the peaks"
+            )
         tolerance = self.config.g_tolerances[self.ms_level - 1]
         tolerance_unit = self.config.g_tolerance_units[self.ms_level - 1]
 
@@ -229,6 +236,24 @@ class AnnotatedPeptideSpectrum(Spectrum):
 
     @property
     def fragment_intensities(self) -> dict[str, float]:
+        """
+        Returs a dictionary with the fragment ion names as keys and the
+        corresponding intensities as values.
+
+        Examples:
+        --------
+        >>> config = Config()
+        >>> peptide = Peptide.from_sequence("PEPPINK/2", config)
+        >>> spectrum = AnnotatedPeptideSpectrum(
+        ...     mz=np.array([50.0, 147.11333, 1000.0, 1500.0, 2000.0]),
+        ...     intensity=np.array([50.0, 200.0, 1.0, 2.0, 3.0]),
+        ...     ms_level=2,
+        ...     extras={"EXTRAS": ["extra1", "extra2"]},
+        ...     precursor_peptide=peptide,
+        ... )
+        >>> spectrum.fragment_intensities
+        {'y1^1': 200.0}
+        """
         if not hasattr(self, "_fragment_intensities"):
             self._fragment_intensities = {
                 label: v.intensity for label, v in self.fragments.items()
@@ -238,6 +263,33 @@ class AnnotatedPeptideSpectrum(Spectrum):
 
     @property
     def fragments(self) -> dict[str, AnnotatedIon]:
+        """
+        Returs a dictionary with the fragment ion names as keys and the
+        corresponding AnnotatedIon objects as values.
+
+        Examples:
+        ---------
+        >>> config = Config()
+        >>> peptide = Peptide.from_sequence("PEPPINK/2", config)
+        >>> spectrum = AnnotatedPeptideSpectrum(
+        ...     mz=np.array([50.0, 147.11333, 1000.0, 1500.0, 2000.0]),
+        ...     intensity=np.array([50.0, 200.0, 1.0, 2.0, 3.0]),
+        ...     ms_level=2,
+        ...     extras={"EXTRAS": ["extra1", "extra2"]},
+        ...     precursor_peptide=peptide,
+        ... )
+        >>> spectrum.fragments
+        {'y1^1': AnnotatedIon(mass=array(147.11334, dtype=float32),
+         charge=1, position=1, ion_series='y', intensity=200.0,
+         neutral_loss=None)}
+
+        """
+        if self.precursor_peptide is None:
+            raise ValueError(
+                "No precursor peptide provided. Which is required to annotate the"
+                " fragments"
+            )
+
         if not hasattr(self, "_fragments"):
             if len(self._annot_indices) == 0:
                 return {}
@@ -246,7 +298,7 @@ class AnnotatedPeptideSpectrum(Spectrum):
             intensities = self.intensity[self._mz_indices]
             mzs = self.mz[self._mz_indices]
 
-            frags = {}
+            frags: dict[str, AnnotatedIon] = {}
 
             for label, i, _ in zip(labels, intensities, mzs):
                 # TODO implement ambiguity resoluitions
@@ -262,6 +314,9 @@ class AnnotatedPeptideSpectrum(Spectrum):
         return self._fragments
 
     def __getitem__(self, index) -> float:
+        """
+        Returns the intensity of the fragment ion with the given name.
+        """
         return self.fragment_intensities.get(index, 0.0)
 
     @property

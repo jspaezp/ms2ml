@@ -13,8 +13,8 @@ class AnnotatedIon:
     charge: int
     position: int
     ion_series: str
+    intensity: float = 0
     neutral_loss: Optional[str] = None
-    intensity: Optional[float] = None
 
     @property
     def fragment_positions(self):
@@ -34,7 +34,7 @@ class AnnotatedIon:
 
         Examples
         --------
-        >>> ion = AnnotatedIon(mass = 123.2, charge= 2, position = 3, ion_series= "z")
+        >>> ion = AnnotatedIon(mass=123.2, charge=2, position=3, ion_series="z")
         >>> convention = "{ion_series}{fragment_positions}^{ion_charges}"
         >>> ion.label(convention)
         'z3^2'

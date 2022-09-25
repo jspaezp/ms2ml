@@ -1,4 +1,4 @@
-from typing import Callable, Iterable, Optional
+from typing import Callable, Optional, Sequence
 
 import numpy as np
 
@@ -41,6 +41,8 @@ def get_tolerance(
       unit: Lietrally da for daltons or ppm for ... ppm (Default value = "ppm")
     """
     if unit == "ppm":
+        if theoretical is None:
+            raise ValueError("Theoretical m/z must be provided for ppm")
         return theoretical * tolerance / 10**6
     elif unit == "da":
         return tolerance
@@ -90,7 +92,7 @@ def is_in_tolerance(
 
 
 def is_sorted(
-    lst: Iterable,
+    lst: Sequence,
     key: Callable = lambda x: x,
 ) -> bool:
     """Is_sorted Checks if a list is sorted.
@@ -101,11 +103,11 @@ def is_sorted(
 
     Examples
     --------
-        >>> is_sorted([1,2,3,4])
+        >>> is_sorted([1, 2, 3, 4])
         True
-        >>> is_sorted([1,2,2,3])
+        >>> is_sorted([1, 2, 2, 3])
         True
-        >>> is_sorted([4,2,2,3])
+        >>> is_sorted([4, 2, 2, 3])
         False
 
     Args
@@ -129,15 +131,15 @@ def sort_if_needed(
 
     Examples
     --------
-    >>> foo = [1,16,3,4]
-    >>> sort_if_needed(foo)
+    >>> foo = [1, 16, 3, 4]
+    >>> _ = sort_if_needed(foo)
     >>> foo
     [1, 3, 4, 16]
-    >>> foo = [[1, "A"],[16, "B"],[3, "C"],[4, "D"]]
-    >>> sort_if_needed(foo, key=lambda x: x[0])
+    >>> foo = [[1, "A"], [16, "B"], [3, "C"], [4, "D"]]
+    >>> _ = sort_if_needed(foo, key=lambda x: x[0])
     >>> foo
     [[1, 'A'], [3, 'C'], [4, 'D'], [16, 'B']]
-    >>> foo = np.array([1,16,3,4])
+    >>> foo = np.array([1, 16, 3, 4])
     >>> # sort_if_needed(foo) # breaks for arrays
 
     Args
@@ -150,6 +152,8 @@ def sort_if_needed(
     # TODO benchmark if this is faster than just sorting
     if not is_sorted(lst, key):
         lst.sort(key=key)
+
+    return lst
 
 
 def sort_all(keys, *args):
@@ -184,43 +188,43 @@ def annotate_peaks(
     mz,
     tolerance: float = 25.0,
     unit: MassError = "ppm",
-) -> dict[str, float]:
+) -> tuple[np.ndarray, np.ndarray]:
     """Annotate_peaks Assigns m/z peaks to annotations.
 
     Returns
     -------
-        Dict[str, float]:
-            A dictionary with the keys being the names of the ions and the values being
-            the intensities that were asigned to such ion.
+    Dict[str, float]:
+        A dictionary with the keys being the names of the ions and the values being
+        the intensities that were asigned to such ion.
 
     Examples
     --------
-        >>> theoretical_peaks = np.array([100.0, 200.0, 300.0, 500.0])
-        >>> theoretical_labels = np.array(["a", "b", "c", "d"])
-        >>> mzs = np.array([10, 100.0, 100.001, 150., 200.0, 300.0, 400.0])
-        >>> ints = np.array([0.1, 1., 0.2, 5., 31., 2., 3.])
-        >>> x, y = annotate_peaks(theoretical_peaks, mzs)
-        >>> x
-        array([1, 2, 4, 5])
-        >>> y
-        array([0, 0, 1, 2])
-        >>> theoretical_labels[y]
-        array(['a', 'a', 'b', 'c'], dtype='<U1')
-        >>> ints[x]
-        array([ 1. ,  0.2, 31. ,  2. ])
+    >>> theoretical_peaks = np.array([100.0, 200.0, 300.0, 500.0])
+    >>> theoretical_labels = np.array(["a", "b", "c", "d"])
+    >>> mzs = np.array([10, 100.0, 100.001, 150.0, 200.0, 300.0, 400.0])
+    >>> ints = np.array([0.1, 1.0, 0.2, 5.0, 31.0, 2.0, 3.0])
+    >>> x, y = annotate_peaks(theoretical_peaks, mzs)
+    >>> x
+    array([1, 2, 4, 5])
+    >>> y
+    array([0, 0, 1, 2])
+    >>> theoretical_labels[y]
+    array(['a', 'a', 'b', 'c'], dtype='<U1')
+    >>> ints[x]
+    array([ 1. ,  0.2, 31. ,  2. ])
 
     Args
     ----
-        theoretical_peaks:
-            Dictionary specifying the names and masses of theoretical peaks
-        mzs:
-            Array of the masses to be annotated.
-        tolerance:
-            Tolerance to be used to count an observed and a theoretical m/z as a match.
-            Defaults to 25.
-        unit:
-            The unit of the formerly specified tolerance (da or ppm).
-            Defaults to "ppm".
+    theoretical_peaks:
+        Dictionary specifying the names and masses of theoretical peaks
+    mzs:
+        Array of the masses to be annotated.
+    tolerance:
+        Tolerance to be used to count an observed and a theoretical m/z as a match.
+        Defaults to 25.
+    unit:
+        The unit of the formerly specified tolerance (da or ppm).
+        Defaults to "ppm".
     """
     max_delta = get_tolerance(tolerance=tolerance, theoretical=max(mz), unit=unit)
 

@@ -36,6 +36,9 @@ class BaseAdapter(ABC):
     def _process_elem(self, elem):
         """Process an element.
 
+        Combines the `in_hook` and `out_hook` functions.
+        while using _to_elem in the middle to convert the element to a
+        "package-internal" datatype.
         Not meant to be called directly.
         """
         elem = elem if self.in_hook is None else self.in_hook(elem)

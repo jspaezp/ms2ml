@@ -156,6 +156,9 @@ numpy==1.23.3 ; python_version > "3.8" and python_version < "3.11" \
     --hash=sha256:efd9d3abe5774404becdb0748178b48a218f1d8c44e0375475732211ea47c67e \
     --hash=sha256:f8c02ec3c4c4fcb718fdf89a6c6f709b14949408e8cf2a2be5bfa9c49548fd85 \
     --hash=sha256:ffcf105ecdd9396e05a8e58e81faaaf34d3f9875f137c7372450baa5d77c9a54
+pandas-stubs==1.4.4.220919 ; python_version > "3.8" and python_version < "3.11" \
+    --hash=sha256:562cd423054095f49294aa39672c413b0d81b3e8850b808ede663369bcad223c \
+    --hash=sha256:cf90cf2d167f199cb2eb2826278271360eee5d5f975834096437105a7048e6da
 pandas==1.5.0 ; python_version > "3.8" and python_version < "3.11" \
     --hash=sha256:0d8d7433d19bfa33f11c92ad9997f15a902bda4f5ad3a4814a21d2e910894484 \
     --hash=sha256:1642fc6138b4e45d57a12c1b464a01a6d868c0148996af23f72dde8d12486bbc \
@@ -240,6 +243,9 @@ torch==1.12.1 ; python_version > "3.8" and python_version < "3.11" \
     --hash=sha256:e9c8f4a311ac29fc7e8e955cfb7733deb5dbe1bdaabf5d4af2765695824b7e0d \
     --hash=sha256:f00c721f489089dc6364a01fd84906348fe02243d0af737f944fddb36003400d \
     --hash=sha256:f3b52a634e62821e747e872084ab32fbcb01b7fa7dbb7471b6218279f02a178a
+types-pytz==2022.2.1.0 ; python_version > "3.8" and python_version < "3.11" \
+    --hash=sha256:47cfb19c52b9f75896440541db392fd312a35b279c6307a531db71152ea63e2b \
+    --hash=sha256:50ead2254b524a3d4153bc65d00289b66898060d2938e586170dce918dbaf3b3
 typing-extensions==4.3.0 ; python_version > "3.8" and python_version < "3.11" \
     --hash=sha256:25642c956049920a5aa49edcdd6ab1e06d7e5d467fc00e0506c44ac86fbfca02 \
     --hash=sha256:e6d2677a32f47fc7eb2795db1dd15c1f34eff616bcaf2cfb5e997f854fa1c4a6

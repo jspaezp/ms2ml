@@ -188,10 +188,16 @@ def default_collate(x, pad_shapes=False):
 
     Examples
     --------
-    >>> x = [{'aa': np.array([[1, 2, 3], [4, 5, 6]]),
-    ...      'mods': np.array([[1, 2, 3], [4, 5, 6]])},
-    ...      {'aa': np.array([[1, 2, 3], [4, 5, 6]]),
-    ...      'mods': np.array([[1, 2, 3], [4, 5, 6]])}]
+    >>> x = [
+    ...     {
+    ...         "aa": np.array([[1, 2, 3], [4, 5, 6]]),
+    ...         "mods": np.array([[1, 2, 3], [4, 5, 6]]),
+    ...     },
+    ...     {
+    ...         "aa": np.array([[1, 2, 3], [4, 5, 6]]),
+    ...         "mods": np.array([[1, 2, 3], [4, 5, 6]]),
+    ...     },
+    ... ]
     >>> {k: v.shape for k, v in x[0].items()}
     {'aa': (2, 3), 'mods': (2, 3)}
     >>> out = default_collate(x)
@@ -326,10 +332,16 @@ def hook_collate(
 
     Examples
     --------
-    >>> x = [{'aa': np.array([[1, 2, 3], [4, 5, 6]]),
-    ...      'mods': np.array([[1, 2, 3], [4, 5, 6]])},
-    ...      {'aa': np.array([[1, 2, 3], [4, 5, 6]]),
-    ...      'mods': np.array([[1, 2, 3], [4, 5, 6]])}]
+    >>> x = [
+    ...     {
+    ...         "aa": np.array([[1, 2, 3], [4, 5, 6]]),
+    ...         "mods": np.array([[1, 2, 3], [4, 5, 6]]),
+    ...     },
+    ...     {
+    ...         "aa": np.array([[1, 2, 3], [4, 5, 6]]),
+    ...         "mods": np.array([[1, 2, 3], [4, 5, 6]]),
+    ...     },
+    ... ]
     >>> out = default_collate(x)
     >>> out
     {'aa': array([[[1, 2, 3],
@@ -339,7 +351,7 @@ def hook_collate(
             [4, 5, 6]],
            [[1, 2, 3],
             [4, 5, 6]]])}
-    >>> hook_collate(x, lambda x: x+1)
+    >>> hook_collate(x, lambda x: x + 1)
         {'aa': array([[[2, 3, 4],
             [5, 6, 7]],
            [[2, 3, 4],
@@ -347,7 +359,7 @@ def hook_collate(
             [5, 6, 7]],
            [[2, 3, 4],
             [5, 6, 7]]])}
-    >>> hook_collate(x, {'aa': lambda x: x+1, 'mods': lambda x: x+10})
+    >>> hook_collate(x, {"aa": lambda x: x + 1, "mods": lambda x: x + 10})
     {'aa': array([[[2, 3, 4],
             [5, 6, 7]],
            [[2, 3, 4],

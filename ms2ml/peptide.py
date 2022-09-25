@@ -270,10 +270,10 @@ class Peptide(ProForma):
         ---------
         >>> p = Peptide.from_sequence("AMC")
         >>> p.annotated_ion_series("b", 1)
-        [AnnotatedIon(mass=array(72.044939, dtype=float32), charge=1,
-         position=1, ion_series='b', neutral_loss=None, intensity=None),
-         AnnotatedIon(mass=array(203.085424, dtype=float32), charge=1,
-          position=2, ion_series='b', neutral_loss=None, intensity=None)]
+        [AnnotatedIon(mass=array(72.044945, dtype=float32), charge=1,
+         position=1, ion_series='b', intensity=0, neutral_loss=None),
+         AnnotatedIon(mass=array(203.08542, dtype=float32),
+         charge=1, position=2, ion_series='b', intensity=0, neutral_loss=None)]
         """
         # TODO: Add neutral loss
         if hasattr(self, "ion_series_cache"):
@@ -309,7 +309,7 @@ class Peptide(ProForma):
         >>> p = Peptide.from_sequence("PEPPINK/2")
         >>> p.ion_series_dict
         {'y1^1': AnnotatedIon(mass=array(147.11334, dtype=float32), ...
-         charge=2, position=6, ion_series='b', neutral_loss=None, intensity=None)}
+         charge=2, position=6, ion_series='b', intensity=0, neutral_loss=None)}
         """
         if not hasattr(self, "_ion_series_dict"):
             if self.charge is None:
@@ -491,7 +491,7 @@ class Peptide(ProForma):
         Examples
         --------
 
-        >>> foo = Peptide.from_sequence("AMC") # Implicit Carbamido.
+        >>> foo = Peptide.from_sequence("AMC")  # Implicit Carbamido.
         >>> foo.mod_to_vector()
         array([0, 0, 0, 1, 0])
         """
