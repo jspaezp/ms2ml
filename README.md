@@ -13,39 +13,39 @@ This project is meant to be opinionated but not arbitrary. By that I mean that i
 (subject to change...)
 
 1. Parsers for external data are in ./ms2ml/data/parsing
-   1. Parsers should only be able to read data and return a base python representation, dict/list etc.
+    1. Parsers should only be able to read data and return a base python representation, dict/list etc.
 1. Adapters are located in ./ms2ml/adapters, they should build on parsers (usually) but yield ms2ml representation objects (Spectrum, Peptide, AnnotatedSpectrum, LCMSSpectrum).
-   1. Behavior can be modified/extended using hooks.
+    1. Behavior can be modified/extended using hooks.
 1. ms2ml representation objects have methods that converts them into tensor representations (Peptide.aa_to_onehot for instance)
 1. As much configuration as possible should be stored in the config.Config class.
-   1. It should contain information on the project and the way everything is getting encoded, so hypothetically one could just pass a config to a different data source adapter and get compatible results.
-   1. Is our retention time in seconds or minutes?
-      1. look at the config
-   1. What position of the onehot is alanine?
-      1. look at the config
-   1. WHat order are our ions encoded in?
-      1. Look at the config.
+    1. It should contain information on the project and the way everything is getting encoded, so hypothetically one could just pass a config to a different data source adapter and get compatible results.
+    1. Is our retention time in seconds or minutes?
+        1. look at the config
+    1. What position of the onehot is alanine?
+        1. look at the config
+    1. WHat order are our ions encoded in?
+        1. Look at the config.
 
 ## Core design
 
 1. Unified configuration
-   - All configuration should be explicit or immediately visible upon request
+    - All configuration should be explicit or immediately visible upon request
 1. Consistent API
-   - It should feel similar to process the data inernally regardless of the input.
+    - It should feel similar to process the data inernally regardless of the input.
 1. Flexible output
-   - Every research need is different, therefore requesting different data from the API should be straightforward.
+    - Every research need is different, therefore requesting different data from the API should be straightforward.
 1. Extensibility.
-   - It should be easy to adapt workflows to new and unexpected input data types.
-   - This is achieved with the addition of hooks that allow an additional slim layer of compatibility
+    - It should be easy to adapt workflows to new and unexpected input data types.
+    - This is achieved with the addition of hooks that allow an additional slim layer of compatibility
 1. Abstract the loops away
-   - I do not like writting boilerplate code, neither should you. Ideally you will not need to write loops when using the user-facing API
-   - Therefore I try my best to abstract all the `[f(spec) for spec in file]` within reason.
+    - I do not like writting boilerplate code, neither should you. Ideally you will not need to write loops when using the user-facing API
+    - Therefore I try my best to abstract all the `[f(spec) for spec in file]` within reason.
 1. Fail loudly
-   - It is already hard to debug ML models, lets make it easier by having **sensical** error messages and checks. They should also contain suggestions to fix the bug. Explicit is better than implicit. Errors are better than bugs.
+    - It is already hard to debug ML models, lets make it easier by having **sensical** error messages and checks. They should also contain suggestions to fix the bug. Explicit is better than implicit. Errors are better than bugs.
 1. Api documentation.
-   - Documentation is critical, if it is not documented, It will be deleted (because nobody will use it ...)
-   - Within reason, all external api should be documented, typed, in-code commented, have a docstring, check that it renders well using mkdocs and an example.
-   - All classes should have a static `_sample` static method that gives a sample of that object, and its docstring shoudl include an example on how to generate it.
+    - Documentation is critical, if it is not documented, It will be deleted (because nobody will use it ...)
+    - Within reason, all external api should be documented, typed, in-code commented, have a docstring, check that it renders well using mkdocs and an example.
+    - All classes should have a static `_sample` static method that gives a sample of that object, and its docstring shoudl include an example on how to generate it.
 
 ## Target audience
 
@@ -70,27 +70,27 @@ Check:
 # TODO
 
 - [x] Spectrum converter (extended object that allow to go from spectrum to ms encodings)
-  - [x] Spectrum Tensor batch
-  - [x] Annotation option (adding a peptide object).
-    - [ ] sum/max combination
-    - [ ] decimal precision
-- [x] Peptide converter (extended object that allows going from peptide to encodings)
-  - [x] One hot
-  - [x] Numeric encoding
-  - [ ] Peptide Tensor Batch
+    - [x] Spectrum Tensor batch
+    - [x] Annotation option (adding a peptide object).
+        - [ ] sum/max combination
+        - [ ] decimal precision
+- [x] Peptide converter
+    - [x] One hot
+    - [x] Numeric encoding
+    - [ ] Peptide Tensor Batch
 - [x] Readers from mass spec data
-  - [ ] Decide which other to implement/have available
+    - [ ] Decide which other to implement/have available
 - [ ] Dataset Objects (torch dataset objects)
-  - [ ] In disk caching
-  - [ ] In mem caching
-  - [ ] Peptide Dataset
-  - [ ] Spectrum Dataset
-  - [ ] Annotated Spectrum Dataset
-    - [ ] HDF5/sqlite caching
+    - [ ] In disk caching
+    - [ ] In mem caching
+    - [ ] Peptide Dataset
+    - [ ] Spectrum Dataset
+    - [ ] Annotated Spectrum Dataset
+        - [ ] HDF5/sqlite caching
 - [ ] *Documentation, Documentation, Documentation*
-  - [ ] Spectrum Class and subclasses
-  - [ ] Peptide Class and subclasses
-  - [ ] Helper Annotation classes
+    - [ ] Spectrum Class and subclasses
+    - [ ] Peptide Class and subclasses
+    - [ ] Helper Annotation classes
 
 
 - [ ] Style
