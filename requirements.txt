@@ -156,9 +156,9 @@ numpy==1.23.3 ; python_version > "3.8" and python_version < "3.11" \
     --hash=sha256:efd9d3abe5774404becdb0748178b48a218f1d8c44e0375475732211ea47c67e \
     --hash=sha256:f8c02ec3c4c4fcb718fdf89a6c6f709b14949408e8cf2a2be5bfa9c49548fd85 \
     --hash=sha256:ffcf105ecdd9396e05a8e58e81faaaf34d3f9875f137c7372450baa5d77c9a54
-pandas-stubs==1.4.4.220919 ; python_version > "3.8" and python_version < "3.11" \
-    --hash=sha256:562cd423054095f49294aa39672c413b0d81b3e8850b808ede663369bcad223c \
-    --hash=sha256:cf90cf2d167f199cb2eb2826278271360eee5d5f975834096437105a7048e6da
+pandas-stubs==1.5.0.220926 ; python_version > "3.8" and python_version < "3.11" \
+    --hash=sha256:490b71dfa15eb862d8e0c2dc3af50dbb59546e3878a67822ec35f3ce0bc342c4 \
+    --hash=sha256:e0f69466cbd8cf1da137b5899e69d9d150648dd5f0398db0e6aeaefe3b2c7a76
 pandas==1.5.0 ; python_version > "3.8" and python_version < "3.11" \
     --hash=sha256:0d8d7433d19bfa33f11c92ad9997f15a902bda4f5ad3a4814a21d2e910894484 \
     --hash=sha256:1642fc6138b4e45d57a12c1b464a01a6d868c0148996af23f72dde8d12486bbc \

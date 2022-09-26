@@ -42,8 +42,8 @@ class Spectrum:
     ms_level: int
     precursor_mz: float = 0.0
     precursor_charge: int = 0
-    instrument: str | None = None
-    analyzer: str | None = None
+    instrument: Optional[str] = None
+    analyzer: Optional[str] = None
     extras: Optional[dict] = None
     config: Optional[Config] = field(repr=False, default=None)
 

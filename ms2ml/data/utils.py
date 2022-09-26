@@ -4,6 +4,19 @@ from typing import Callable, Dict, List, Union
 import numpy as np
 
 
+# zip taking strict=true is not supported in python 3.9
+# pre Py3.10
+def _strictzip(*args, strict=True):
+    if strict:
+        lengths = [len(y) for y in args]
+        if not all(length == lengths[0] for length in lengths):
+            err = f"zip() argument {lengths.index(min(lengths))}"
+            err += f" is shorter than argument {lengths.index(max(lengths))}"
+            raise ValueError(err)
+
+    return zip(*args)
+
+
 def _is_nested_numeric_list(x):
     if isinstance(x, (list, tuple)):
         return all(_is_nested_numeric_list(e) for e in x)
@@ -82,7 +95,7 @@ def pad_to_max_shape(x):
     shapes = {e.shape for e in x}
     if len(shapes) != 1:
         try:
-            max_shape = tuple(max(s) for s in zip(*shapes, strict=True))
+            max_shape = tuple(max(s) for s in _strictzip(*shapes))
         except ValueError as e:
             if "zip() argument" in str(e) and "than argument" in str(e):
                 error_msg = "Could not get the maximum length of the dimensions"
@@ -134,7 +147,7 @@ def _check_list_lengths(*args, context=""):
 
 def _transpose_list(x):
     try:
-        x = list(zip(*x, strict=True))
+        x = list(_strictzip(*x, strict=True))
     except ValueError:
         _check_list_lengths(*x, context="when trying to transpose the list")
         raise
@@ -217,7 +230,7 @@ def default_collate(x, pad_shapes=False):
 
 def _zip_hooks(hooks, x):
     try:
-        zipped = list(zip(hooks, x, strict=True))
+        zipped = list(_strictzip(hooks, x, strict=True))
     except ValueError as err:
         zip_error = "zip() argument" in str(err)
         shorter_longer = ("is shorter than" in str(err)) or (
