@@ -45,6 +45,7 @@ This project is meant to be opinionated but not arbitrary. By that I mean that i
 1. Api documentation.
    - Documentation is critical, if it is not documented, It will be deleted (because nobody will use it ...)
    - Within reason, all external api should be documented, typed, in-code commented, have a docstring, check that it renders well using mkdocs and an example.
+   - All classes should have a static `_sample` static method that gives a sample of that object, and its docstring shoudl include an example on how to generate it.
 
 ## Target audience
 
@@ -68,7 +69,6 @@ Check:
 
 # TODO
 
-- [x] Config Object, Object that stores the configuration of the encodings
 - [x] Spectrum converter (extended object that allow to go from spectrum to ms encodings)
   - [x] Spectrum Tensor batch
   - [x] Annotation option (adding a peptide object).
@@ -88,7 +88,11 @@ Check:
   - [ ] Annotated Spectrum Dataset
     - [ ] HDF5/sqlite caching
 - [ ] *Documentation, Documentation, Documentation*
-  - De cide what doc engine to use (mkdocs?) and how will auto api-documentaiton will be written.
+  - [ ] Spectrum Class and subclasses
+  - [ ] Peptide Class and subclasses
+  - [ ] Helper Annotation classes
+
+
 - [ ] Style
   - [ ] remove D100 from the exclusions in linting (missing docstring in module)
   - [ ] remove D104 (missing docstring in package)

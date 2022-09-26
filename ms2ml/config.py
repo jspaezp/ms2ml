@@ -1,10 +1,9 @@
-"""Defines the constants that are used in the rest of the project.
+"""Provides a place to define the project's configuration.
+
+Defines the constants that are used in the rest of the project.
 
 Such as the masses of aminoacids, supported modifications, length of the encodings,
 maximum length supported, labels and order of the encoded ions ...
-
-Greatly inspired/copied from:
-https://github.com/kusterlab/prosit/blob/master/prosit/constants.py
 """
 
 
@@ -33,7 +32,13 @@ class Config:
 
     Parameters:
         g_tolerances:
+            A tuple of floats,
+            where each float is the tolerance of that corresponding ms level.
+            For instance (10, 20) means that the tolerance for ms1 is 10, 20 for ms2.
         g_tolerance_units:
+            A tuple of strings, that denote what tolerance unit to use for each ms
+            level. For instance ("ppm", "Da") means that the tolerance for ms1 is
+            in ppm, and for ms2 in Da.
         g_isotopes:
         peptide_max_length:
         precursor_charges:
@@ -60,6 +65,7 @@ class Config:
     # = For instance, in tolerances, the first tolerance is for MS1
     # = and the second for MS2
     g_tolerances: tuple[float, ...] = (50, 50)
+
     g_tolerance_units: tuple[MassError, ...] = ("ppm", "ppm")
 
     # = Number of isotopes to check for each ion, 0 means that only
@@ -159,7 +165,9 @@ class Config:
         return labels
 
     def ion_labeller(self, ion: AnnotatedIon) -> str:
-        """Provided an ion, returns the label for that ion.
+        """Labels an ion
+
+        Provided an ion, returns the label for that ion.
 
         Examples:
             >>> ion = AnnotatedIon(mass=123.2, charge=2, position=3, ion_series="z")
@@ -190,9 +198,3 @@ def get_default_config() -> Config:
 
 class ConfigNotSetError(Exception):
     """Raised when a config is not set but is required."""
-
-
-if __name__ == "__main__":
-    foo = Config()
-    print(foo)
-    print(foo.fragment_labels)

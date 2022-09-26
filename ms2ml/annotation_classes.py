@@ -1,5 +1,6 @@
-"""Implements data classes that provide a consistent interface for.
+"""Simple classes to annotate data.
 
+Implements data classes that provide a consistent interface for.
 annotated data.
 """
 
@@ -45,6 +46,8 @@ class AnnotatedIon:
 
 @dataclass
 class RetentionTime:
+    """Simple dataclass to hold retention time information."""
+
     rt: float
     units: str
     run: Optional["str"] = None

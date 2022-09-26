@@ -1,3 +1,11 @@
+"""Landmark peptide information.
+
+This module contains information on peptides that can be used as "landmarks"
+for the testing of models.
+
+By definition they should not be used for training.
+"""
+
 IRT_PEPTIDES = {
     "LGGNEQVTR": {"vendor": "biognosys", "irt": -24.92},
     "GAGSSEPVTGLDAK": {"vendor": "biognosys", "irt": 0},

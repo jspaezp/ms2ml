@@ -249,3 +249,5 @@ types-pytz==2022.2.1.0 ; python_version > "3.8" and python_version < "3.11" \
 typing-extensions==4.3.0 ; python_version > "3.8" and python_version < "3.11" \
     --hash=sha256:25642c956049920a5aa49edcdd6ab1e06d7e5d467fc00e0506c44ac86fbfca02 \
     --hash=sha256:e6d2677a32f47fc7eb2795db1dd15c1f34eff616bcaf2cfb5e997f854fa1c4a6
+uniplot==0.7.0 ; python_version > "3.8" and python_version < "3.11" \
+    --hash=sha256:b0700717f7d088e51c5ca31c00642a21718c2381bad30828fc77c2de4f8c78a9
