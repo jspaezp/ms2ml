@@ -1,33 +1,64 @@
 site_name: ms2ml Docs
+site_url: https://jspaezp.github.io/ms2ml/
+site_author: J. Sebastian Paez
+
+repo_name: jspaezp/ms2ml
+repo_url: https://github.com/jspaezp/ms2ml
 
 theme:
   name: material
   features:
-  - navigation.tabs
-  - navigation.tabs.sticky
-  - navigation.top
+    - navigation.tabs
+    - navigation.tabs.sticky
+    - navigation.top
   palette:
-  - media: "(prefers-color-scheme: light)"
-    scheme: default
-    primary: deep purple
-    accent: indigo
-    toggle:
-      icon: material/weather-sunny
-      name: Switch to dark mode
-  - media: "(prefers-color-scheme: dark)"
-    scheme: slate
-    primary: black
-    accent: deep purple
-    toggle:
-      icon: material/weather-night
-      name: Switch to light mode
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: deep purple
+      accent: indigo
+      toggle:
+        icon: material/weather-sunny
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: black
+      accent: deep purple
+      toggle:
+        icon: material/weather-night
+        name: Switch to light mode
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/jspaezp/ms2ml
+  consent:
+    title: Cookie consent
+    description: >-
+      We use cookies to recognize your repeated visits and preferences, as well
+      as to measure the effectiveness of our documentation and whether users
+      find what they're searching for. With your consent, you're helping us to
+      make our documentation better.
+  analytics:
+    provider: google
+    property: !ENV GOOGLE_ANALYTICS_KEY
+    feedback:
+      title: Was this page helpful?
+      ratings:
+        - icon: material/thumb-up-outline
+          name: Yes
+          data: 1
+          note: >-
+            Thanks for your!
+        - icon: material/thumb-down-outline
+          name: There is room for improvement
+          data: 0
+          note: >-
+            Thanks for your feedback! Help us improve this page by
+            using our <a href="https://github.com/jspaezp/ms2ml/issues/new/?title=[Feedback]+{title}+-+{url}" target="_blank" rel="noopener">Feedback in github</a>
+
 
 markdown_extensions:
-
-extra_javascript:
-  - javascripts/config.js
-  - https://polyfill.io/v3/polyfill.min.js?features=es6
-  - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
+  - admonition
 
 watch:
   - ms2ml
