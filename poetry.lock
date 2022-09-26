@@ -622,23 +622,6 @@ optional = false
 python-versions = ">=3.6"
 
 [[package]]
-name = "linkify-it-py"
-version = "1.0.3"
-description = "Links recognition library with FULL unicode support."
-category = "dev"
-optional = false
-python-versions = ">=3.6"
-
-[package.dependencies]
-uc-micro-py = "*"
-
-[package.extras]
-benchmark = ["pytest", "pytest-benchmark"]
-dev = ["black", "flake8", "isort", "pre-commit"]
-doc = ["myst-parser", "sphinx", "sphinx-book-theme"]
-test = ["coverage", "pytest", "pytest-cov"]
-
-[[package]]
 name = "lxml"
 version = "4.9.1"
 description = "Powerful and Pythonic XML processing library combining libxml2/libxslt with the ElementTree API."
@@ -675,7 +658,6 @@ optional = false
 python-versions = ">=3.7"
 
 [package.dependencies]
-linkify-it-py = {version = ">=1.0,<2.0", optional = true, markers = "extra == \"linkify\""}
 mdurl = ">=0.1,<1.0"
 
 [package.extras]
@@ -758,43 +740,15 @@ dev = ["pre-commit"]
 test = ["coverage", "pytest (>=6.0,<7.0)", "pytest-cov"]
 
 [[package]]
-name = "mdformat-gfm"
-version = "0.3.5"
-description = "Mdformat plugin for GitHub Flavored Markdown compatibility"
-category = "dev"
-optional = false
-python-versions = ">=3.7,<4.0"
-
-[package.dependencies]
-markdown-it-py = {version = "*", extras = ["linkify"]}
-mdformat = ">=0.7.5,<0.8.0"
-mdformat-tables = ">=0.4.0"
-mdit-py-plugins = ">=0.2.0,<0.4.0"
-
-[[package]]
 name = "mdformat-sentencebreak"
-version = "0.1.0"
+version = "0.4.0"
 description = "Adds a really simple and naive sentence breaking scheme to mdformat"
 category = "dev"
 optional = false
-python-versions = ">=3.7,<4.0"
+python-versions = ">=3.8,<4.0"
 
 [package.dependencies]
 mdformat = ">=0.7.16,<0.8.0"
-
-[[package]]
-name = "mdformat-tables"
-version = "0.4.1"
-description = "An mdformat plugin for rendering tables."
-category = "dev"
-optional = false
-python-versions = ">=3.6.1"
-
-[package.dependencies]
-mdformat = ">=0.7.5,<0.8.0"
-
-[package.extras]
-test = ["coverage", "pytest (>=6.0,<7.0)", "pytest-cov"]
 
 [[package]]
 name = "mdit-py-plugins"
@@ -1799,17 +1753,6 @@ optional = false
 python-versions = ">=3.7"
 
 [[package]]
-name = "uc-micro-py"
-version = "1.0.1"
-description = "Micro subset of unicode data files for linkify-it-py projects."
-category = "dev"
-optional = false
-python-versions = ">=3.6"
-
-[package.extras]
-test = ["coverage", "pytest", "pytest-cov"]
-
-[[package]]
 name = "urllib3"
 version = "1.26.12"
 description = "HTTP library with thread-safe connection pooling, file post, and more."
@@ -1897,7 +1840,7 @@ testing = ["func-timeout", "jaraco-itertools", "pytest (>=6)", "pytest-black (>=
 [metadata]
 lock-version = "1.1"
 python-versions = ">3.8,<3.11"
-content-hash = "7d360aedf460f8ab96aeacf29b16a7e4f407e2faec7a8e6f570b5d236d51b7d3"
+content-hash = "2e442ae3c6ea68cc3990f14dbd4a5a89dd4c94eb8e6f0b78c1716802475c5e24"
 
 [metadata.files]
 appnope = [
@@ -2298,10 +2241,6 @@ lazy-object-proxy = [
     {file = "lazy_object_proxy-1.7.1-cp39-cp39-win_amd64.whl", hash = "sha256:677ea950bef409b47e51e733283544ac3d660b709cfce7b187f5ace137960d61"},
     {file = "lazy_object_proxy-1.7.1-pp37.pp38-none-any.whl", hash = "sha256:d66906d5785da8e0be7360912e99c9188b70f52c422f9fc18223347235691a84"},
 ]
-linkify-it-py = [
-    {file = "linkify-it-py-1.0.3.tar.gz", hash = "sha256:2b3f168d5ce75e3a425e34b341a6b73e116b5d9ed8dbbbf5dc7456843b7ce2ee"},
-    {file = "linkify_it_py-1.0.3-py3-none-any.whl", hash = "sha256:11e29f00150cddaa8f434153f103c14716e7e097a8fd372d9eb1ed06ed91524d"},
-]
 lxml = [
     {file = "lxml-4.9.1-cp27-cp27m-macosx_10_15_x86_64.whl", hash = "sha256:98cafc618614d72b02185ac583c6f7796202062c41d2eeecdf07820bad3295ed"},
     {file = "lxml-4.9.1-cp27-cp27m-manylinux_2_5_i686.manylinux1_i686.whl", hash = "sha256:c62e8dd9754b7debda0c5ba59d34509c4688f853588d75b53c3791983faa96fc"},
@@ -2444,17 +2383,9 @@ mdformat-frontmatter = [
     {file = "mdformat_frontmatter-0.4.1-py3-none-any.whl", hash = "sha256:9c13f6b7a53de7b401af3c95e66735237545bd174e6619392153b296135ffd49"},
     {file = "mdformat_frontmatter-0.4.1.tar.gz", hash = "sha256:15d3eed1543849d4fe72b1f75b8dffd8b49750c5149186591a1b9617178e2aa2"},
 ]
-mdformat-gfm = [
-    {file = "mdformat-gfm-0.3.5.tar.gz", hash = "sha256:5ee5f0de1d3b56d5edfced023bfff0aeed958be328e5460dac3221ac1b61ce7c"},
-    {file = "mdformat_gfm-0.3.5-py3-none-any.whl", hash = "sha256:1e627edc7665b59e008b3b9e5decc18c40cbd625c196d77e5ea3bc624e80ac8a"},
-]
 mdformat-sentencebreak = [
-    {file = "mdformat-sentencebreak-0.1.0.tar.gz", hash = "sha256:b70826732fc7dc62ab3870dd8562948030bd4c377d218a2de14ed146e3f572bb"},
-    {file = "mdformat_sentencebreak-0.1.0-py3-none-any.whl", hash = "sha256:b50b6ead18e7737e16176c0806118e83106565195c52ed1b561a83eb2de900e9"},
-]
-mdformat-tables = [
-    {file = "mdformat_tables-0.4.1-py3-none-any.whl", hash = "sha256:981f3dc7350027f78e3fd6a5fe8a16e123eec423af2d140e588d855751501019"},
-    {file = "mdformat_tables-0.4.1.tar.gz", hash = "sha256:3024e88e9d29d7b8bb07fd6b59c9d5dcf14d2060122be29e30e72d27b65d7da9"},
+    {file = "mdformat-sentencebreak-0.4.0.tar.gz", hash = "sha256:a3bf5c28957d9f6c7aa74c663291024131f416d5d2e23339af6fcf408fa6ad31"},
+    {file = "mdformat_sentencebreak-0.4.0-py3-none-any.whl", hash = "sha256:699e876c4e8cf2b0078a9345b3d30b437a74409287457dbafd6da70655fef64d"},
 ]
 mdit-py-plugins = [
     {file = "mdit-py-plugins-0.3.0.tar.gz", hash = "sha256:ecc24f51eeec6ab7eecc2f9724e8272c2fb191c2e93cf98109120c2cace69750"},
@@ -3092,10 +3023,6 @@ types-pytz = [
 typing-extensions = [
     {file = "typing_extensions-4.3.0-py3-none-any.whl", hash = "sha256:25642c956049920a5aa49edcdd6ab1e06d7e5d467fc00e0506c44ac86fbfca02"},
     {file = "typing_extensions-4.3.0.tar.gz", hash = "sha256:e6d2677a32f47fc7eb2795db1dd15c1f34eff616bcaf2cfb5e997f854fa1c4a6"},
-]
-uc-micro-py = [
-    {file = "uc-micro-py-1.0.1.tar.gz", hash = "sha256:b7cdf4ea79433043ddfe2c82210208f26f7962c0cfbe3bacb05ee879a7fdb596"},
-    {file = "uc_micro_py-1.0.1-py3-none-any.whl", hash = "sha256:316cfb8b6862a0f1d03540f0ae6e7b033ff1fa0ddbe60c12cbe0d4cec846a69f"},
 ]
 urllib3 = [
     {file = "urllib3-1.26.12-py2.py3-none-any.whl", hash = "sha256:b930dd878d5a8afb066a637fbb35144fe7901e3b209d1cd4f524bd0e9deee997"},
