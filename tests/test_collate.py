@@ -13,12 +13,12 @@ from ms2ml.data.utils import (
 hook_collate2 = pytest.param(lambda x: hook_collate(x, lambda x: x), id="hook_collate")
 default_collate_pad = pytest.param(
     lambda x: default_collate(x, pad_shapes=True), id="default_collate_pad"
-)
+)  # noqa E731
 default_collate_no_pad = pytest.param(
     lambda x: default_collate(x, pad_shapes=False), id="default_collate_no_pad"
 )
 
-as_is = lambda x: x
+as_is = lambda x: x  # noqa E731
 
 
 def test_is_numeric_nested():
@@ -302,4 +302,4 @@ def n_test_hook_collate_dict(array_fun, hooks):
     assert allclose(batch["a"][0][1], [7, 8, 9])
     assert allclose(batch["b"][0][0], [4, 5])
     assert allclose(batch["b"][0][1], [10, 11])
-    raise NotImplemented
+    raise NotImplementedError

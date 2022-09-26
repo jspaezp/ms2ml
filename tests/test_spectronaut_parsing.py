@@ -30,7 +30,7 @@ def test_spectronaut_adapter_works(shared_datadir):
             "mods": spec.precursor_peptide.mod_to_vector(),
         }
 
-    collate_fn = lambda x: default_collate(x, pad_shapes=True)
+    collate_fn = lambda x: default_collate(x, pad_shapes=True)  # noqa E731
 
     spec_adapter = SpectronautAdapter(
         config=Config(),
