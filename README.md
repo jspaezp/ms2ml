@@ -98,6 +98,18 @@ Check:
   - [ ] remove D104 (missing docstring in package)
   - [ ] Fix all flake8/pylint complains ...
 
+
+# Simial projects:
+
+- https://matchms.readthedocs.io/en/latest/:
+    - Matchms is an open-access Python package to import, process, clean,
+      and compare mass spectrometry data (MS/MS). It allows to implement
+      and run an easy-to-follow, easy-to-reproduce workflow from raw mass
+      spectra to pre- and post-processed spectral data.
+    - Tailored for small molecule data
+
+
+
 # Contribution
 
 Right not this is a proof of concept package, I would be happy to make it something more stable if there is interest.

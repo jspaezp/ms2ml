@@ -54,10 +54,10 @@ class Spectrum:
         if self.config is None:
             self.config = get_default_config()
 
-    def _bin_spectrum(
+    def bin_spectrum(
         self,
-        start,
-        end,
+        start: float,
+        end: float,
         binsize: float = None,
         n_bins: int = None,
         relative: bool = False,
@@ -66,12 +66,14 @@ class Spectrum:
         """Bins the spectrum.
 
         Args:
-            mz: The m/z values of the spectrum.
             start: The start of the binning range.
+                If missing will use the lowest mz value.
             end: The end of the binning range.
-            binsize: The size of the bins.
-            n_bins: The number of bins.
+                If missing will use the highest mz value.
+            binsize: The size of the bins. Cannot be used in conjunction with n_bins.
+            n_bins: The number of bins. Cannot be used in conjunction with binsize.
             relative: Whether to use binning relative to the precursor mass.
+            offset: The offset to use for relative binning.
 
         Returns:
             An array of binned intensities.
@@ -82,6 +84,11 @@ class Spectrum:
             mz_arr = mz_arr - self.precursor_mz + offset
             start = start - self.precursor_mz
             end = end - self.precursor_mz
+        elif offset:
+            msg = "Cannot use offset without relative binning."
+            msg += " (relative=True) in bin_spectrum"
+
+            raise ValueError(msg)
 
         binned = _bin_spectrum(
             mz=mz_arr,
@@ -128,7 +135,9 @@ def _bin_spectrum(
         n_bins = math.ceil((end - start) / binsize)
         bins = np.linspace(start, end, num=n_bins)
     else:
-        raise ValueError("Either binsize or n_bins must be provided.")
+        msg = "Either binsize or n_bins must"
+        msg += " be provided to bin_spectrum. Not both."
+        raise ValueError(msg)
 
     bins = np.linspace(start, end, num=n_bins)
     return np.histogram(

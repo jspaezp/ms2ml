@@ -138,7 +138,7 @@ class Peptide(ProForma):
             raise NotImplementedError
 
     def __str__(self) -> str:
-        return f"Peptide({self.seq})"
+        return f"Peptide.from_sequence('{self.ProForma}')"
 
     def __getitem__(self, i):
         out = self.ProForma[i]

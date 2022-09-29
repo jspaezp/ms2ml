@@ -67,6 +67,8 @@ watch:
 plugins:
   - search
   - autorefs
+  - mkquartodocs:
+      keep_output: false
   - mkdocstrings:
       default_handler: python
       handlers:

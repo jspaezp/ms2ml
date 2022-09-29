@@ -1,0 +1,73 @@
+
+# Encodings to tensors
+
+When getting the data into your model, you usually will have to process it to some form
+of structured numeric input.
+
+There is a plethora fo ways to encode information.
+And I will show a couple (and how to get them using ms2ml)
+
+## Encoding Peptides
+
+```{python}
+import numpy as np
+from ms2ml.peptide import Peptide
+
+p = Peptide.from_sequence("MYPEPTIDE")
+print(p)
+```
+
+### Counting
+
+```{python}
+count = p.aa_to_count()
+print(count)
+```
+
+
+### One-hot encoding
+
+```{python}
+oh = p.aa_to_onehot()
+# Note that there is an equivalent method for the modifications
+# p.mod_to_onehot()
+print(oh)
+```
+
+### Vectorizing
+
+```{python}
+vec = p.aa_to_vector()
+print(vec)
+```
+
+
+## Encoding Spectra
+
+```{python}
+from ms2ml.spectrum import Spectrum
+from ms2ml.config import Config
+
+spectrum = Spectrum(
+    mz=np.array([1000.0, 1500.0, 2000.0]),
+    intensity=np.array([1.0, 2.0, 3.0]),
+    ms_level=2,
+)
+print(spectrum)
+```
+
+## Encoding annotated spectra
+
+```{python}
+from ms2ml.spectrum import AnnotatedPeptideSpectrum
+config = Config()
+peptide = Peptide.from_sequence("PEPPINK/2", config)
+spectrum = AnnotatedPeptideSpectrum(
+    mz=np.array([50.0, 147.11333, 1000.0, 1500.0, 2000.0]),
+    intensity=np.array([50.0, 200.0, 1.0, 2.0, 3.0]),
+    ms_level=2,
+    precursor_peptide=peptide,
+)
+spectrum
+print(spectrum)
+```
