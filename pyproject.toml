@@ -6,7 +6,7 @@ authors = ["J. Sebastian Paez <jspaezp@users.noreply.github.com>"]
 license = "Apache 2.0"
 
 [tool.poetry.dependencies]
-python = ">3.8,<3.11"
+python = ">=3.8,<3.11"
 pyteomics = "^4.5.5"
 torch = "^1.12.1"
 numpy = "^1.23.2"
@@ -68,7 +68,7 @@ commands =
     poetry run pytest
 
 [tox]
-envlist = py{39,310}
+envlist = py{38,39,310}
 isolated_build = true
 """
 

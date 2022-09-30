@@ -1,9 +1,8 @@
 import numpy as np
-from torch import Tensor
-from torch.utils.data import default_collate
 
 from ms2ml.adapters.msp import MSPAdapter
 from ms2ml.config import Config
+from ms2ml.data.utils import pad_collate
 from ms2ml.spectrum import AnnotatedPeptideSpectrum
 
 
@@ -85,9 +84,9 @@ def test_parsing_mgf_from_file(shared_datadir):
         shared_datadir / "msp" / "head_FTMS_HCD_20_annotated_2019-11-12_filtered.msp"
     )
 
-    msp_adapter = MSPAdapter(config=Config())
-
+    msp_adapter = MSPAdapter(config=Config(), file=my_file)
     parsed = msp_adapter.parse_file(my_file)
+
     elem = next(parsed)
     assert isinstance(elem, AnnotatedPeptideSpectrum)
     assert isinstance(elem.fragment_intensities, dict)
@@ -129,7 +128,7 @@ def test_parsing_mgf_from_file(shared_datadir):
     # assert len(elem['mods'][0]) == 13
 
 
-def test_collating_MSPAdapter(shared_datadir):
+def test_collating_hooked_MSPAdapter(shared_datadir):
     my_file = (
         shared_datadir / "msp" / "head_FTMS_HCD_20_annotated_2019-11-12_filtered.msp"
     )
@@ -141,13 +140,15 @@ def test_collating_MSPAdapter(shared_datadir):
         }
 
     msp_adapter = MSPAdapter(
-        config=Config(), out_hook=post_hook, collate_fn=default_collate
+        file=my_file, config=Config(), out_hook=post_hook, collate_fn=pad_collate
     )
-    parsed = msp_adapter.parse_file(my_file)
+    parsed = msp_adapter.parse()
+    parsed = [x for x in parsed]
+
     bundled = msp_adapter.bundle(parsed)
 
     assert isinstance(bundled, dict)
-    assert isinstance(bundled["aa"], Tensor)
+    assert isinstance(bundled["aa"], np.ndarray)
 
     assert len(bundled["aa"][0]) == 13
     assert len(bundled["aa"][0][0]) == 29

@@ -165,36 +165,26 @@ class MSPParser(BaseParser):
     (and some other formats, such as .sptxt)
     """
 
-    def __init__(self):
-        self.transformer = _MSPTransformer()
-        self.parser = Lark(
-            _msp_grammar,
-            start="start",
-            parser="lalr",
-            lexer="contextual",
-            transformer=self.transformer,
-            debug=True,
-        )
+    transformer = _MSPTransformer()
+    parser = Lark(
+        _msp_grammar,
+        start="start",
+        parser="lalr",
+        lexer="contextual",
+        transformer=transformer,
+        debug=True,
+    )
 
-    def parse_text(self, text: str) -> Iterator[dict]:
+    def __init__(self, file=None):
+        self.file = file
+
+    @classmethod
+    def parse_text(cls, text: str) -> Iterator[dict]:
         """Parse an MSP file from a text input (string)."""
-        return self.parser.parse(text)
+        return cls.parser.parse(text)
 
-    def greedy_parse_file(self, file) -> Iterator[dict]:
-        """Parse an MSP file from a text file.
-
-        This option reads the whole file and parses it in
-        memory, so it is not recommended for large files.
-
-        Check the parse_file method for a more memory efficient
-        approach.
-        """
-        with open(file) as f:
-            out = self.parse_text(f.read())
-
-        return out
-
-    def parse_file(self, file) -> Iterator[dict]:
+    @staticmethod
+    def parse_file(file) -> Iterator[dict]:
         """Parse an MSP file from a text file.
 
         This option reads the file line by line and parses
@@ -202,6 +192,14 @@ class MSPParser(BaseParser):
         than the greedy_parse_file method.
         """
         for chunk in _chunk_msp(file):
-            tmp = self.parse_text("".join(chunk))
+            tmp = MSPParser.parse_text("".join(chunk))
             for spec in tmp:
                 yield spec
+
+    def parse(self) -> Iterator[dict]:
+        """Parse an MSP file."""
+        if self.file is None:
+            msg = "No file specified when initializing the parser."
+            msg += f" {type(self)}"
+            raise ValueError()
+        return self.parse_file(self.file)

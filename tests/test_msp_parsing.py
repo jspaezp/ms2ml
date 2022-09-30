@@ -14,7 +14,7 @@ def test_parsing_basic_msp_generates_tree():
         "\n"
     )
 
-    msp_parser = MSPParser()
+    msp_parser = MSPParser(None)
     msp_parser.parse_text(text)
 
 

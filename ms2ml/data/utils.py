@@ -121,6 +121,7 @@ def _get_elem_info(x):
         type(x)
         elem = x[0]
     except KeyError as e:
+        breakpoint()
         error_msg = "Cannot get the elements of the batch at position"
         error_msg += f" 0: {e}, Try to wrap the elements in a list"
         error_msg += " (`default_collate([...])`)"
@@ -194,6 +195,10 @@ def _default_collate(x, pad_shapes, level):
         }
     else:
         raise TypeError(f"default_collate found invalid type: {elem_type}")
+
+
+def pad_collate(x):
+    return _default_collate(x, pad_shapes=True, level=0)
 
 
 def default_collate(x, pad_shapes=False):

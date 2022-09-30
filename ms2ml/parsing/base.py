@@ -6,6 +6,7 @@ from typing import Iterator
 class BaseParser(ABC):
     """Base class for parsers."""
 
+    @classmethod
     @abstractmethod
     def parse_file(self, file: PathLike) -> Iterator:
         """Parse a file.
@@ -21,17 +22,13 @@ class BaseParser(ABC):
             Iterator over the parsed spectra
         """
 
-    @abstractmethod
-    def parse_text(self, text: str) -> Iterator:
-        """Parse a chunk of text.
-
-        Parameters
-        ----------
-        text : str
-            Chunk of text to parse
+    def __iter__(self) -> Iterator:
+        """Parse the database.
 
         Returns
         -------
         Iterator
             Iterator over the parsed spectra
         """
+        for item in self.parse_file(self.file):
+            yield item

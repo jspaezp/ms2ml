@@ -1,6 +1,7 @@
-from typing import Callable, Iterator
+from typing import Callable, Iterator, Optional
 
 from ms2ml.config import Config
+from ms2ml.data.utils import pad_collate
 from ms2ml.parsing.msp import MSPParser
 from ms2ml.peptide import Peptide
 from ms2ml.spectrum import AnnotatedPeptideSpectrum
@@ -8,13 +9,14 @@ from ms2ml.spectrum import AnnotatedPeptideSpectrum
 from .base import BaseAdapter
 
 
-class MSPAdapter(MSPParser, BaseAdapter):
+class MSPAdapter(BaseAdapter):
     def __init__(
         self,
         config: Config,
+        file: Optional[str] = None,
         in_hook: Callable = None,
         out_hook: Callable = None,
-        collate_fn: Callable = None,
+        collate_fn: Callable = pad_collate,
     ):
         BaseAdapter.__init__(
             self,
@@ -23,11 +25,12 @@ class MSPAdapter(MSPParser, BaseAdapter):
             out_hook=out_hook,
             collate_fn=collate_fn,
         )
-        MSPParser.__init__(self)
+        self.parser = MSPParser(file)
 
     def _to_elem(self, spec_dict) -> AnnotatedPeptideSpectrum:
         """
         Converts a dictionary to an AnnotatedPeptideSpectrum object.
+        It is implicitly called by the _process_elem method.
 
         Args:
             spec_dict (dict): A dictionary containing the information for a spectrum.
@@ -45,5 +48,14 @@ class MSPAdapter(MSPParser, BaseAdapter):
         return spec
 
     def parse_text(self, text) -> Iterator[AnnotatedPeptideSpectrum]:
-        for spec in super().parse_text(text):
+        for spec in self.parser.parse_text(text):
+            yield self._process_elem(spec)
+
+    def parse(self) -> Iterator[AnnotatedPeptideSpectrum]:
+        for spec in self.parser.parse():
+            out = self._process_elem(spec)
+            yield out
+
+    def parse_file(self, file) -> Iterator[AnnotatedPeptideSpectrum]:
+        for spec in self.parser.parse_file(file):
             yield self._process_elem(spec)
