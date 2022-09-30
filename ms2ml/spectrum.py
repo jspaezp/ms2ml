@@ -11,7 +11,7 @@ There are broadly two types of spectra:
 import math
 import warnings
 from dataclasses import dataclass, field
-from typing import Optional
+from typing import List, Optional, Tuple
 
 import numpy as np
 
@@ -223,7 +223,7 @@ class AnnotatedPeptideSpectrum(Spectrum):
     def mass_error(self):
         raise NotImplementedError
 
-    def _annotate_peaks(self) -> tuple[np.ndarray, np.ndarray]:
+    def _annotate_peaks(self) -> Tuple[np.ndarray, np.ndarray]:
         if self.precursor_peptide is None:
             raise ValueError(
                 "No precursor peptide provided. Which is required to annotate the peaks"
@@ -323,7 +323,7 @@ class AnnotatedPeptideSpectrum(Spectrum):
         return self.fragment_intensities.get(index, 0.0)
 
     @property
-    def _indices(self) -> tuple[np.ndarray, np.ndarray]:
+    def _indices(self) -> Tuple[np.ndarray, np.ndarray]:
         if not hasattr(self, "_indices_"):
             self._indices_ = self._annotate_peaks()
 
@@ -354,7 +354,7 @@ class AnnotatedPeptideSpectrum(Spectrum):
         return np.array([self[k] for k in self.fragment_labels], dtype=np.float32)
 
     @property
-    def fragment_labels(self) -> list[str]:
+    def fragment_labels(self) -> List[str]:
         """Encodes the fragment ions as a numpy array
 
         The order of the ions will be defined in the config file.

@@ -37,12 +37,13 @@ class MSPAdapter(BaseAdapter):
                 usually the result of parsing an msp file using their MSP parser.
         """
         pep = Peptide.from_proforma_seq(spec_dict["header"]["Name"], config=self.config)
+        header = spec_dict["header"]
         spec = AnnotatedPeptideSpectrum(
             mz=spec_dict["peaks"]["mz"],
             intensity=spec_dict["peaks"]["intensity"],
             ms_level=2,  # Is this a valid assumption?
             precursor_peptide=pep,
-            extras=spec_dict["header"]["Comment"],
+            extras=None if "Comment" not in header else header["Comment"],
         )
 
         return spec

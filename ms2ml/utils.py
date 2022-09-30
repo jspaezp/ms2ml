@@ -1,4 +1,4 @@
-from typing import Callable, Optional, Sequence
+from typing import Callable, Optional, Sequence, Tuple
 
 import numpy as np
 
@@ -188,7 +188,7 @@ def annotate_peaks(
     mz,
     tolerance: float = 25.0,
     unit: MassError = "ppm",
-) -> tuple[np.ndarray, np.ndarray]:
+) -> Tuple[np.ndarray, np.ndarray]:
     """Annotate_peaks Assigns m/z peaks to annotations.
 
     Returns

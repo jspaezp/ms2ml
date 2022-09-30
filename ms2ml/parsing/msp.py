@@ -152,7 +152,9 @@ def _chunk_msp(file):
             if len(chunk) > 0:
                 chunk.append(line)
                 if line.strip() == "":
-                    yield chunk
+                    out = chunk
+                    chunk = []
+                    yield out
 
         if len(chunk) > 0:
             # This is just in case the file does not end with a newline

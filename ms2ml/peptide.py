@@ -231,7 +231,7 @@ class Peptide(ProForma):
         out = out[1:]
         return out
 
-    def annotated_ion_series(self, ion_type: str, charge: int) -> list[AnnotatedIon]:
+    def annotated_ion_series(self, ion_type: str, charge: int) -> List[AnnotatedIon]:
         """Returns a list of annotated ions.
 
         Examples:
@@ -443,7 +443,18 @@ class Peptide(ProForma):
             array([ 0,  1,  13,  3, 27])
         """
         aas = [x[0] for x in self]
-        vector = np.array([self.config.encoding_aa_order.index(x) for x in aas])
+
+        array_lst = []
+        for x in aas:
+            if x in self.config.encoding_aa_order:
+                array_lst.append(self.config.encoding_aa_order.index(x))
+            else:
+                # TODO: make so it warns once when an aminoacid
+                # is used that is not in the encoding_aa_order
+                # set(aas).difference(self.config.encoding_aa_order)
+                pass
+
+        vector = np.array(array_lst)
         return vector
 
     def mod_to_vector(self):
@@ -475,7 +486,7 @@ class Peptide(ProForma):
         return np.array(vector)
 
     @classmethod
-    def from_vector(cls, aa_vector: list[int], mod_vector, config: Config):
+    def from_vector(cls, aa_vector: List[int], mod_vector, config: Config):
         """Converts vectors back to peptides.
 
         Examples:
