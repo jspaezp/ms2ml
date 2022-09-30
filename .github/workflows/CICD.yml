@@ -2,15 +2,14 @@
 name: CI Testing
 
 on:
-  push:
-    branches: [ main, devel, release ]
   pull_request:
+  push:
     branches: [ main, devel, release ]
   schedule:
   - cron: "4 5 4 1/1 *" # Run monthly.
 
 jobs:
-  cheap_checks:
+  lint:
     runs-on: 'ubuntu-latest'
     steps:
       - uses: actions/checkout@v3
@@ -36,7 +35,7 @@ jobs:
       - name: View poetry --version
         run: poetry --version
       - name: Install Stuff
-        run: poetry install --no-root --only dev
+        run: poetry install --no-root --only lint
       - name: Black
         run: poetry run python -m black . --check --diff
       - name: ruff
@@ -45,7 +44,7 @@ jobs:
         run: poetry run isort . --check
 
   ci:
-    needs: cheap_checks
+    needs: lint
     strategy:
       matrix:
         python-version: ['3.8', '3.9', '3.10']
@@ -55,7 +54,7 @@ jobs:
         include:
           - python-version: '3.11.0-rc.2'
             experimental: true
-  
+
     continue-on-error: ${{ matrix.experimental }}
     runs-on: ${{ matrix.os }}
     steps:

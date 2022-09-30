@@ -16,6 +16,15 @@ pandas = "^1.4.4"
 pandas-stubs = "^1.4.4.220919"
 uniplot = "^0.7.0"
 
+[tool.poetry.group.lint.dependencies]
+black = "^22.8.0"
+isort = "^5.10.1"
+ruff = "^0.0.46"
+pydocstringformatter = "^0.7.2"
+autoflake = "^1.5.3"
+pylint = "^2.15.2"
+mypy = "^0.971"
+
 [tool.poetry.group.dev.dependencies]
 black = "^22.8.0"
 isort = "^5.10.1"
