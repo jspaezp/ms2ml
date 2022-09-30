@@ -168,7 +168,7 @@ class BibliosPecParser(BaseParser):
         """
 
         query = f"SELECT {', '.join(self.EXTRACT_FIELDS)} FROM RefSpectra"
-        query += " FULL JOIN RefSpectraPeaks"
+        query += " JOIN RefSpectraPeaks"
         query += " ON RefSpectra.id=RefSpectraPeaks.RefSpectraID"
         with sqlite3.connect(self.db_path) as conn:
             for row in conn.execute(query):
