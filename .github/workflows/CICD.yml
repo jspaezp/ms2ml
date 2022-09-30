@@ -50,14 +50,16 @@ jobs:
       matrix:
         python-version: ['3.8', '3.9', '3.10']
         poetry-version: ['1.2.0',]
-        experimental: [false]
+        experimental: ['false']
         include:
           - python-version: '3.11.0-rc.2'
-            poetry-version: ['1.2.0',]
+            poetry-version: '1.2.0'
             experimental: true
 
     continue-on-error: ${{ matrix.experimental }}
+
     steps:
+      
       # Initial Setup
       - uses: actions/checkout@v3
 
