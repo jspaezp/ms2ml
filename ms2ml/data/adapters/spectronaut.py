@@ -33,6 +33,8 @@ class SpectronautAdapter(SpectronautLibraryParser, BaseAdapter):
             intensity=spec_dict["RelativeIntensity"],
             ms_level=2,  # Is this a valid assumption?
             precursor_peptide=pep,
+            precursor_mz=spec_dict["PrecursorMz"],
+            precursor_charge=spec_dict["PrecursorCharge"],
             extras=spec_dict,
         )
 

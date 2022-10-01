@@ -43,6 +43,8 @@ class MSPAdapter(BaseAdapter):
             intensity=spec_dict["peaks"]["intensity"],
             ms_level=2,  # Is this a valid assumption?
             precursor_peptide=pep,
+            precursor_mz=0 if "PrecursorMz" not in header else header["PrecursorMz"],
+            precursor_charge=pep.charge,
             extras=None if "Comment" not in header else header["Comment"],
         )
 

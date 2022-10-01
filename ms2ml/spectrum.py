@@ -29,6 +29,8 @@ class Spectrum:
         >>> spectrum = Spectrum(
         ...     mz=np.array([1000.0, 1500.0, 2000.0]),
         ...     intensity=np.array([1.0, 2.0, 3.0]),
+        ...     precursor_mz=1000.0,
+        ...     precursor_charge=2,
         ...     ms_level=2,
         ...     extras={"EXTRAS": ["extra1", "extra2"]},
         ... )
@@ -40,8 +42,8 @@ class Spectrum:
     mz: np.ndarray
     intensity: np.ndarray
     ms_level: int
-    precursor_mz: float = 0.0
-    precursor_charge: int = 0
+    precursor_mz: float
+    precursor_charge: Optional[int] = None
     instrument: Optional[str] = None
     analyzer: Optional[str] = None
     extras: Optional[dict] = None
@@ -54,6 +56,7 @@ class Spectrum:
         if self.config is None:
             self.config = get_default_config()
 
+    # TODO add this to config
     def bin_spectrum(
         self,
         start: float,
@@ -62,6 +65,7 @@ class Spectrum:
         n_bins: int = None,
         relative: bool = False,
         offset: float = 0,
+        get_breaks: bool = False,
     ) -> np.ndarray:
         """Bins the spectrum.
 
@@ -79,11 +83,17 @@ class Spectrum:
             An array of binned intensities.
         """
         mz_arr = self.mz
+        assert start < end
 
         if relative:
-            mz_arr = mz_arr - self.precursor_mz + offset
-            start = start - self.precursor_mz
-            end = end - self.precursor_mz
+            if isinstance(relative, float) or isinstance(relative, int):
+                relative_value = relative
+            else:
+                relative_value = self.precursor_mz
+
+            start = start + relative_value
+            end = end + relative_value
+            mz_arr = mz_arr - relative_value + offset
         elif offset:
             msg = "Cannot use offset without relative binning."
             msg += " (relative=True) in bin_spectrum"
@@ -97,6 +107,7 @@ class Spectrum:
             binsize=binsize,
             n_bins=n_bins,
             weights=self.intensity,
+            get_breaks=get_breaks,
         )
 
         return binned
@@ -114,6 +125,7 @@ def _bin_spectrum(
     end: float,
     binsize=None,
     n_bins=None,
+    get_breaks=False,
 ) -> np.ndarray:
     """Bins the spectrum.
 
@@ -140,11 +152,17 @@ def _bin_spectrum(
         raise ValueError(msg)
 
     bins = np.linspace(start, end, num=n_bins)
-    return np.histogram(
+    hist = np.histogram(
         mz,
         bins=bins,
         weights=weights,
-    )[0]
+    )
+
+    if get_breaks:
+
+        return hist
+
+    return hist[0]
 
 
 @dataclass
@@ -158,11 +176,13 @@ class LCMSSpectrum(Spectrum):
         ...     retention_time=RetentionTime(rt=100.0, units="min"),
         ...     ms_level=2,
         ...     extras={"EXTRAS": ["extra1", "extra2"]},
+        ...     precursor_mz=1000.0,
         ... )
         >>> spectrum
         LCMSSpectrum(mz=array([1000., 1500., 2000.]), ...)
     """
 
+    # TODO consider if this is necesary ...
     retention_time: Optional[RetentionTime] = RetentionTime(rt=np.nan, units="minutes")
 
     # TODO consider deleting this class...
@@ -186,6 +206,7 @@ class AnnotatedPeptideSpectrum(Spectrum):
         ...     ms_level=2,
         ...     extras={"EXTRAS": ["extra1", "extra2"]},
         ...     precursor_peptide=peptide,
+        ...     precursor_mz=147.11333,
         ... )
         >>> spectrum
         AnnotatedPeptideSpectrum(mz=array([  50. ... precursor_isotope=0)
@@ -204,6 +225,7 @@ class AnnotatedPeptideSpectrum(Spectrum):
     # by positional arguments
     precursor_peptide: Optional[Peptide] = None
     precursor_isotope: Optional[int] = 0
+    precursor_charge: Optional[int] = None
 
     def __post_init__(self, *args, **kwargs):
         if self.config is None:
@@ -212,6 +234,9 @@ class AnnotatedPeptideSpectrum(Spectrum):
                 UserWarning,
             )
             self.config = self.precursor_peptide.config
+
+        if self.precursor_charge is None:
+            self.precursor_charge = self.precursor_peptide.charge
 
         super().__post_init__(*args, **kwargs)
 
@@ -329,7 +354,6 @@ class AnnotatedPeptideSpectrum(Spectrum):
 
         return self._indices_
 
-    @property
     def encode_fragments(self) -> np.float32:
         """Encodes the fragment ions as a numpy array
 
@@ -337,7 +361,7 @@ class AnnotatedPeptideSpectrum(Spectrum):
 
         Examples:
             >>> spec = AnnotatedPeptideSpectrum._sample()
-            >>> spec.encode_fragments
+            >>> spec.encode_fragments()
             array([200.,   0.,   0.,   0.,   0.,   0.,   0.,   0.,   0.,   0.,   0.,
                 0.,   0.,   0.,   0.,   0.,   0.,   0.,   0.,   0.,   0.,   0.,
                 0.,   0.,   0.,   0.,   0.,   0.,   0.,   0.,   0.,   0.,   0.,
@@ -378,6 +402,7 @@ class AnnotatedPeptideSpectrum(Spectrum):
             ...     intensity=np.array([50.0, 200.0, 1.0, 2.0, 3.0]),
             ...     ms_level=2,
             ...     extras={"EXTRAS": ["extra1", "extra2"]},
+            ...     precursor_mz=147.1130,
             ...     precursor_peptide=peptide,
             ... )
             >>> spectrum
@@ -397,5 +422,6 @@ class AnnotatedPeptideSpectrum(Spectrum):
             ms_level=2,
             extras={"EXTRAS": ["extra1", "extra2"]},
             precursor_peptide=peptide,
+            precursor_mz=147.11333,
         )
         return spectrum
