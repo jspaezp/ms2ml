@@ -1,6 +1,6 @@
 import numpy as np
 
-from ms2ml.parsing.bibliospec import BibliosPecParser
+from ms2ml.data.parsing.bibliospec import BibliosPecParser
 
 
 def test_bibliospec_parser(shared_datadir):

@@ -1,7 +1,7 @@
-from ms2ml.adapters.spectronaut import SpectronautAdapter
 from ms2ml.config import Config
+from ms2ml.data.adapters.spectronaut import SpectronautAdapter
+from ms2ml.data.parsing.spectronaut import SpectronautLibraryParser
 from ms2ml.data.utils import default_collate
-from ms2ml.parsing.spectronaut import SpectronautLibraryParser
 
 
 def test_spectronaut_parsing_works(shared_datadir):

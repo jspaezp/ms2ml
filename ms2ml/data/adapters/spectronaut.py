@@ -1,7 +1,7 @@
 from typing import Callable
 
 from ms2ml.config import Config
-from ms2ml.parsing.spectronaut import SpectronautLibraryParser
+from ms2ml.data.parsing.spectronaut import SpectronautLibraryParser
 from ms2ml.peptide import Peptide
 from ms2ml.spectrum import AnnotatedPeptideSpectrum
 

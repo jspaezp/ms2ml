@@ -11,7 +11,7 @@ They also provide a `hook` system to modify the outputs.
 
 ```{python}
 from tempfile import NamedTemporaryFile
-from ms2ml.adapters import MSPAdapter
+from ms2ml.data.adapters import MSPAdapter
 from ms2ml.config import Config
 from pprint import pprint
 
