@@ -1,4 +1,4 @@
-from typing import Callable
+from typing import Any, Callable, Iterator
 
 from ms2ml.config import Config
 from ms2ml.data.parsing.spectronaut import SpectronautLibraryParser
@@ -14,7 +14,7 @@ class SpectronautAdapter(SpectronautLibraryParser, BaseAdapter):
         config: Config,
         in_hook: Callable = None,
         out_hook: Callable = None,
-        collate_fn: Callable = None,
+        collate_fn: Callable[..., Any] = None,
     ):
         BaseAdapter.__init__(
             self,
@@ -45,6 +45,6 @@ class SpectronautAdapter(SpectronautLibraryParser, BaseAdapter):
         # 'FragmentCharge', 'FragmentLossType']
         return spec
 
-    def parse_file(self, file) -> AnnotatedPeptideSpectrum:
+    def parse_file(self, file) -> Iterator[AnnotatedPeptideSpectrum]:
         for spec in super().parse_file(file):
             yield self._process_elem(spec)

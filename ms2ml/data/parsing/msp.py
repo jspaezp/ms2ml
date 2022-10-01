@@ -1,4 +1,4 @@
-from typing import Iterator
+from typing import Any, Dict, Iterator, List, Optional, TypedDict
 
 import numpy as np
 from lark import Lark, Transformer
@@ -44,6 +44,12 @@ def _is_number_convertible(x):
     x = x.replace(".", "", 1)
 
     return x.isdigit()
+
+
+class PeakDict(TypedDict):
+    mz: float
+    intensity: float
+    annotation: str
 
 
 class _MSPTransformer(Transformer):
@@ -121,19 +127,41 @@ class _MSPTransformer(Transformer):
 
     def peak(self, items):
         items = [item for item in items if item is not None]
-        out = {"mz": items[0], "intensity": items[1], "annotation": items[2]}
+        out = PeakDict(mz=items[0], intensity=items[1], annotation=items[2])
         return out
 
-    def peaks(self, items):
-        out = {"mz": [], "intensity": [], "annotation": []}
-        items = [item for item in items if item is not None]
+    def peaks(self, items: List[Optional[PeakDict]]) -> Dict[str, np.ndarray]:
+        nnone_items: List[PeakDict] = [item for item in items if item is not None]
+        mzs: list[float] = [item["mz"] for item in nnone_items]
+        intensities: list[float] = [item["intensity"] for item in nnone_items]
+        annotations: list[str] = [item["annotation"] for item in nnone_items]
 
-        for item in items:
-            out["mz"].append(item["mz"])
-            out["intensity"].append(item["intensity"])
-            out["annotation"].append(item["annotation"])
+        out = {
+            "mz": np.array(mzs),
+            "intensity": np.array(intensities),
+            "annotation": np.array(annotations),
+        }
 
-        return {k: np.array(v) for k, v in out.items()}
+        return out
+
+
+class _MSPLark(Lark):
+    def __init__(self):
+        transformer = _MSPTransformer()
+        super().__init__(
+            _msp_grammar,
+            start="start",
+            parser="lalr",
+            lexer="contextual",
+            transformer=transformer,
+            debug=True,
+        )
+
+    def parse2(self, text: str, start: str = None, *args, **kwargs) -> Iterator[Dict]:
+        out: Iterator[Dict] = super().parse(
+            text, start, *args, **kwargs
+        )  # type: ignore[assignment]
+        return out
 
 
 def _chunk_msp(file):
@@ -167,26 +195,18 @@ class MSPParser(BaseParser):
     (and some other formats, such as .sptxt)
     """
 
-    transformer = _MSPTransformer()
-    parser = Lark(
-        _msp_grammar,
-        start="start",
-        parser="lalr",
-        lexer="contextual",
-        transformer=transformer,
-        debug=True,
-    )
+    parser = _MSPLark()
 
     def __init__(self, file=None):
         self.file = file
 
     @classmethod
-    def parse_text(cls, text: str) -> Iterator[dict]:
+    def parse_text(cls, text: str) -> Iterator[Dict[str, Any]]:
         """Parse an MSP file from a text input (string)."""
-        return cls.parser.parse(text)
+        return cls.parser.parse2(text)
 
     @staticmethod
-    def parse_file(file) -> Iterator[dict]:
+    def parse_file(file) -> Iterator[Dict[str, Any]]:
         """Parse an MSP file from a text file.
 
         This option reads the file line by line and parses

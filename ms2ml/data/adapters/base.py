@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import Any, Callable
+from typing import Any, Callable, Optional
 
 from ms2ml.config import Config
 from ms2ml.data.utils import pad_collate
@@ -9,9 +9,9 @@ class BaseAdapter(ABC):
     def __init__(
         self,
         config: Config,
-        in_hook: Callable = None,
-        out_hook: Callable = None,
-        collate_fn: Callable = pad_collate,
+        in_hook: Optional[Callable[..., Any]] = None,
+        out_hook: Optional[Callable[..., Any]] = None,
+        collate_fn: Optional[Callable[..., Any]] = pad_collate,
     ):
         """Provides a base class for adapters.
 

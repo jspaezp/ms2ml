@@ -15,6 +15,7 @@ lark = "^1.1.2"
 pandas = "^1.4.4"
 pandas-stubs = "^1.4.4.220919"
 uniplot = "^0.7.0"
+tqdm = "^4.64.1"
 
 [tool.poetry.group.lint.dependencies]
 black = "^22.8.0"

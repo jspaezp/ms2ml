@@ -1,6 +1,6 @@
 from io import StringIO
 from os import PathLike
-from typing import Iterator
+from typing import Any, Iterator, TextIO, Union
 
 import pandas as pd
 
@@ -11,7 +11,7 @@ class SpectronautLibraryParser(BaseParser):
     def __init__(self) -> None:
         BaseParser.__init__(self)
 
-    def parse_file(self, file: PathLike) -> Iterator:
+    def parse_file(self, file: Union[TextIO, PathLike[Any]]) -> Iterator:
         self.df = pd.read_csv(file)
         for i, x in self.df.groupby(
             ["ModifiedPeptide", "PrecursorCharge", "PrecursorMz"]

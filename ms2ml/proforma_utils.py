@@ -1,3 +1,5 @@
+from typing import Dict
+
 from pyteomics.proforma import UnimodResolver
 
 
@@ -16,7 +18,7 @@ class MemoizedUnimodResolver:
         'name': 'Phospho', 'id': 21, 'mass': 79.966331, 'provider': 'unimod'}
     """
 
-    _cache = {}
+    _cache: Dict[str, Dict] = {}
     _solver = None
 
     @classmethod
