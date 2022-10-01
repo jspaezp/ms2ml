@@ -11,7 +11,7 @@ There are broadly two types of spectra:
 import math
 import warnings
 from dataclasses import dataclass, field
-from typing import List, Optional, Tuple
+from typing import Dict, List, Optional, Tuple
 
 import numpy as np
 
@@ -251,7 +251,7 @@ class AnnotatedPeptideSpectrum(Spectrum):
         return self._indices[1]
 
     @property
-    def fragment_intensities(self) -> dict[str, float]:
+    def fragment_intensities(self) -> Dict[str, float]:
         """
         Returs a dictionary with the fragment ion names as keys and the
         corresponding intensities as values.
@@ -269,7 +269,7 @@ class AnnotatedPeptideSpectrum(Spectrum):
         return self._fragment_intensities
 
     @property
-    def fragments(self) -> dict[str, AnnotatedIon]:
+    def fragments(self) -> Dict[str, AnnotatedIon]:
         """
         Returs a dictionary with the fragment ion names as keys and the
         corresponding AnnotatedIon objects as values.
@@ -296,7 +296,7 @@ class AnnotatedPeptideSpectrum(Spectrum):
             intensities = self.intensity[self._mz_indices]
             mzs = self.mz[self._mz_indices]
 
-            frags: dict[str, AnnotatedIon] = {}
+            frags: Dict[str, AnnotatedIon] = {}
 
             for label, i, _ in zip(labels, intensities, mzs):
                 # TODO implement ambiguity resoluitions
