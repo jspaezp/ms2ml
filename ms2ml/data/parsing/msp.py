@@ -1,4 +1,4 @@
-from typing import Any, Dict, Iterator, List, Optional, TypedDict
+from typing import Any, ClassVar, Dict, Iterator, List, Optional, TypedDict
 
 import numpy as np
 from lark import Lark, Transformer
@@ -195,15 +195,15 @@ class MSPParser(BaseParser):
     (and some other formats, such as .sptxt)
     """
 
-    parser = _MSPLark()
+    parser: ClassVar = _MSPLark()
 
     def __init__(self, file=None):
         self.file = file
 
-    @classmethod
-    def parse_text(cls, text: str) -> Iterator[Dict[str, Any]]:
+    @staticmethod
+    def parse_text(text: str) -> Iterator[Dict[str, Any]]:
         """Parse an MSP file from a text input (string)."""
-        return cls.parser.parse2(text)
+        return MSPParser.parser.parse2(text)
 
     @staticmethod
     def parse_file(file) -> Iterator[Dict[str, Any]]:

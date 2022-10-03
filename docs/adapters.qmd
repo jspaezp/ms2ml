@@ -48,6 +48,25 @@ Since every intermediate entry is an annotated Spectrum object, we can
 get the corresponding peptide from `spec.precurse_peptide` and encode it
 on the fly and return an dictionary of tensors!
 
+We could in theory do this in a loop .... something like this ...
+
+    my_adapter = MSPAdapter(config=Config(), file = my_file)
+    out1 = []
+    out2 = []
+    for i, x in enumerate(my_adapter.parse()):
+        out1.append(x.precurse_peptide.aa_to_count())
+        out2.append(x.precurse_peptide.mod_to_vector())
+
+    out1 = np.array(out1)
+    out2 = np.array(out2)
+
+    print(out1.shape)
+    print(out2.shape)
+
+
+Or we can use the hook system to do it for us!
+
+
 ```{python}
 def post_hook(spec):
     return {
@@ -55,9 +74,12 @@ def post_hook(spec):
         "mods": spec.precursor_peptide.mod_to_vector(),
     }
 
-my_adapter = MSPAdapter(
-    file=my_file, config=Config(), out_hook=post_hook
-)
+my_adapter.out_hook = post_hook
+
+# We can also add the hook when deifing the adapter
+# my_adapter = MSPAdapter(
+#     file=my_file, config=Config(), out_hook=post_hook
+# )
 
 for i, x in enumerate(my_adapter.parse()):
     print(i)
