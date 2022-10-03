@@ -6,15 +6,15 @@ authors = ["J. Sebastian Paez <jspaezp@users.noreply.github.com>"]
 license = "Apache 2.0"
 
 [tool.poetry.dependencies]
-python = ">=3.8,<3.11"
+python = ">=3.8,<3.12"
 pyteomics = "^4.5.5"
-lxml = {version = "4.9.1", python = "^3.8"} # Needed due to a non-exclicit dependency in pyteomics
+lxml = "^4.9.1" # Needed due to a non-exclicit dependency in pyteomics
 torch = "^1.12.1"
 numpy = "^1.23.2"
 psims = { version = "^1.2.0", python = ">3.8,<3.11" }
 lark = "^1.1.2"
 pandas = "^1.4.4"
-pandas-stubs = "^1.4.4.220919"
+pandas-stubs = { version = "^1.4.4.220919", python = ">=3.8,<3.11" }
 uniplot = "^0.7.0"
 tqdm = "^4.64.1"
 
