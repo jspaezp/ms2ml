@@ -130,3 +130,77 @@ defined aminoacids in the configuration!!
 # programmers
 f.close()
 ```
+
+
+## Batching
+
+Sometimes we dont want either 1 element at a time or all of them at a time.
+For those cases, we batch.
+
+In this case we can get form a file of 1000 spectra, 10 at a time.
+
+```{python}
+# Same setup as before but for a much larger file (1000 spectra)
+f = NamedTemporaryFile(delete=False)
+with open(f.name, "w") as f:
+    # We make a file with 1000 spectra
+    f.write(text*500)
+
+my_file = f.name
+
+def post_hook(spec):
+    return {
+        "aa": spec.precursor_peptide.aa_to_count(),
+        "mods": spec.precursor_peptide.mod_to_vector(),
+     }
+
+```
+
+
+When defining the adapter, we can specify the collate_fn.
+This function is called to combine all the elements in a batch.
+it can be something as simple as as 'list' or something as complicated
+as you want to make it. (np.stack, torch.stack, torch.cat, combinations of
+the former ... the sky is the limit)
+
+```{python}
+my_adapter = MSPAdapter(
+    config=Config(),
+     file = my_file,
+     out_hook=post_hook,
+     collate_fn = lambda x: x)
+
+```
+
+Here we define the `batch_size` to be 10.
+
+```{python}
+for i, x in enumerate(my_adapter.batch(batch_size = 10)):
+    print(i)
+    break
+
+print(x[1])
+print(len(x))
+print(type(x))
+# The shapes of every element in the batch
+```
+
+And every iteration, x is a new group of 10 peptides,
+encoded the way we specified before.
+
+```{python}
+my_adapter = MSPAdapter(
+    config=Config(),
+     file = my_file,
+     out_hook=post_hook)
+
+for i, x in enumerate(my_adapter.batch(batch_size = 4)):
+    print(i)
+    break
+
+
+pprint(x)
+print(len(x))
+print(type(x))
+f.close()
+```

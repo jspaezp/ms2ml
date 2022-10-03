@@ -46,6 +46,7 @@ class MSPAdapter(BaseAdapter):
             precursor_mz=0 if "PrecursorMz" not in header else header["PrecursorMz"],
             precursor_charge=pep.charge,
             extras=None if "Comment" not in header else header["Comment"],
+            config=self.config,
         )
 
         return spec
@@ -62,3 +63,7 @@ class MSPAdapter(BaseAdapter):
     def parse_file(self, file) -> Iterator[AnnotatedPeptideSpectrum]:
         for spec in self.parser.parse_file(file):
             yield self._process_elem(spec)
+
+    def batch(self, batch_size: int) -> Iterator[AnnotatedPeptideSpectrum]:
+        for batch in super().batch(self.parse(), batch_size=batch_size):
+            yield batch

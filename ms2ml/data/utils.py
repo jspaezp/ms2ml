@@ -55,6 +55,8 @@ def _is_uniform_nested_list(x):
         if isinstance(elem, np.ndarray):
             elem_shape = elem.shape
             for y in x:
+                if isinstance(y, list):
+                    breakpoint()
                 if y.shape != elem_shape:
                     return False
 
@@ -121,7 +123,6 @@ def _get_elem_info(x):
         type(x)
         elem = x[0]
     except KeyError as e:
-        breakpoint()
         error_msg = "Cannot get the elements of the batch at position"
         error_msg += f" 0: {e}, Try to wrap the elements in a list"
         error_msg += " (`default_collate([...])`)"
