@@ -225,7 +225,7 @@ sqlalchemy==1.4.41 ; python_full_version > "3.8.0" and python_version < "3.11" \
     --hash=sha256:e16c2be5cb19e2c08da7bd3a87fed2a0d4e90065ee553a940c4fc1a0fb1ab72b \
     --hash=sha256:f37fa70d95658763254941ddd30ecb23fc4ec0c5a788a7c21034fc2305dab7cc \
     --hash=sha256:f5ebeeec5c14533221eb30bad716bc1fd32f509196318fb9caa7002c4a364e4c
-torch==1.12.1 ; python_version >= "3.8" and python_version < "3.12" \
+torch==1.12.1 ; python_version >= "3.8" and python_version < "3.11" \
     --hash=sha256:03e31c37711db2cd201e02de5826de875529e45a55631d317aadce2f1ed45aa8 \
     --hash=sha256:0b44601ec56f7dd44ad8afc00846051162ef9c26a8579dda0a02194327f2d55e \
     --hash=sha256:42e115dab26f60c29e298559dbec88444175528b729ae994ec4c65d56fe267dd \
@@ -252,7 +252,7 @@ tqdm==4.64.1 ; python_version >= "3.8" and python_version < "3.12" \
 types-pytz==2022.2.1.0 ; python_version >= "3.8" and python_version < "3.11" \
     --hash=sha256:47cfb19c52b9f75896440541db392fd312a35b279c6307a531db71152ea63e2b \
     --hash=sha256:50ead2254b524a3d4153bc65d00289b66898060d2938e586170dce918dbaf3b3
-typing-extensions==4.3.0 ; python_version >= "3.8" and python_version < "3.12" \
+typing-extensions==4.3.0 ; python_version >= "3.8" and python_version < "3.11" \
     --hash=sha256:25642c956049920a5aa49edcdd6ab1e06d7e5d467fc00e0506c44ac86fbfca02 \
     --hash=sha256:e6d2677a32f47fc7eb2795db1dd15c1f34eff616bcaf2cfb5e997f854fa1c4a6
 uniplot==0.7.0 ; python_version >= "3.8" and python_version < "3.12" \
