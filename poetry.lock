@@ -979,7 +979,7 @@ mkdocstrings = ">=0.19"
 
 [[package]]
 name = "mkquartodocs"
-version = "0.5.3"
+version = "0.5.4"
 description = ""
 category = "dev"
 optional = false
@@ -2009,7 +2009,7 @@ testing = ["func-timeout", "jaraco.itertools", "pytest (>=6)", "pytest-black (>=
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.8,<3.12"
-content-hash = "e1d1698286daaacd331daea22eb01c3b3c525794126289ef82edc32a02ad0d18"
+content-hash = "b8c22f2f5e23de3282931b02817c11f474d63128d154db8147a745e27b5385ae"
 
 [metadata.files]
 appnope = [
@@ -2841,8 +2841,8 @@ mkdocstrings-python = [
     {file = "mkdocstrings_python-0.7.1-py3-none-any.whl", hash = "sha256:a22060bfa374697678e9af4e62b020d990dad2711c98f7a9fac5c0345bef93c7"},
 ]
 mkquartodocs = [
-    {file = "mkquartodocs-0.5.3-py3-none-any.whl", hash = "sha256:76cf6407d97c8b78e779110eb5d0569fd1844505a9554e884e11ecc8b2b31565"},
-    {file = "mkquartodocs-0.5.3.tar.gz", hash = "sha256:5c0d93f99c55bcf111a125de1a5412fffbf782dd74b8ce5be7a45c7866c12e59"},
+    {file = "mkquartodocs-0.5.4-py3-none-any.whl", hash = "sha256:f12cdab8d84aa7b9372c7fd8465ac82eb2c0fe57f2d268d840f75305f93565df"},
+    {file = "mkquartodocs-0.5.4.tar.gz", hash = "sha256:d387edf8584b477e119c2d7993c5c008a6b75b72fba23aaccb0e47ba6b1ca640"},
 ]
 mypy = [
     {file = "mypy-0.971-cp310-cp310-macosx_10_9_universal2.whl", hash = "sha256:f2899a3cbd394da157194f913a931edfd4be5f274a88041c9dc2d9cdcb1c315c"},
