@@ -1,15 +1,17 @@
+from __future__ import annotations
+
 from abc import ABC, abstractmethod
 from os import PathLike
-from typing import Any, Iterator, Optional, TextIO, Union
+from typing import Any, Iterator, TextIO
 
 
 class BaseParser(ABC):
     """Base class for parsers."""
 
-    file: Optional[Union[PathLike[Any], TextIO]]
+    file: PathLike[Any] | TextIO | None
 
     @abstractmethod
-    def parse_file(self, file: Union[PathLike[Any], TextIO]) -> Iterator:
+    def parse_file(self, file: PathLike[Any] | TextIO) -> Iterator:
         """Parse a file.
 
         Parameters
@@ -34,5 +36,4 @@ class BaseParser(ABC):
         if self.file is None:
             raise ValueError("No file specified")
 
-        for item in self.parse_file(self.file):
-            yield item
+        yield from self.parse_file(self.file)

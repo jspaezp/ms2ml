@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "ms2ml"
-version = "0.1.0"
+version = "0.1.1"
 description = "Provides an intermediate layer between mass spec data and ML applications, such as encoding."
 authors = ["J. Sebastian Paez <jspaezp@users.noreply.github.com>"]
 license = "Apache 2.0"
@@ -70,13 +70,11 @@ legacy_tox_ini = """
 [testenv]
 deps =
     pytest
-whitelist_externals =
-  poetry
-  bash
-skip_install = true
+whitelist_externals = poetry
 commands =
     poetry install --all-extras
-    poetry run pytest
+    poetry run python --version
+    poetry run pytest --import-mode importlib
 
 [tox]
 envlist = py{38,39,310}
