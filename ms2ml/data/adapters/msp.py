@@ -65,5 +65,4 @@ class MSPAdapter(BaseAdapter):
             yield self._process_elem(spec)
 
     def batch(self, batch_size: int) -> Iterator[AnnotatedPeptideSpectrum]:
-        for batch in super().batch(self.parse(), batch_size=batch_size):
-            yield batch
+        yield from super().batch(self.parse(), batch_size=batch_size)

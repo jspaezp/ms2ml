@@ -169,7 +169,7 @@ def _chunk_msp(file):
 
     It uses newlines as separators, so it is not very robust.
     """
-    with open(file, "r") as f:
+    with open(file) as f:
         chunk = []
         for line in f:
             if line.startswith("Name:"):
@@ -215,8 +215,7 @@ class MSPParser(BaseParser):
         """
         for chunk in _chunk_msp(file):
             tmp = MSPParser.parse_text("".join(chunk))
-            for spec in tmp:
-                yield spec
+            yield from tmp
 
     def parse(self) -> Iterator[dict]:
         """Parse an MSP file."""
