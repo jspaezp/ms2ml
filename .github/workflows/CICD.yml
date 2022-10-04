@@ -85,7 +85,23 @@ jobs:
 
       # CI checks
       - name: Pytest
-        run: poetry run python -m pytest
+        run: poetry run python -m pytest --cov . --cov-report=xml
+      
+      # Documentation setup
+      - name: Setup Quarto
+        uses: quarto-dev/quarto-actions/setup@v2
+      - name: View Quarto version
+        run:
+          quarto --version
+
+      - name: mkdocs
+        run: poetry run python -m mkdocs build --strict
+
+      # Upload coverage
+      - uses: codecov/codecov-action@v3
+        with:
+          verbose: true # optional (default = false)
+
 
 
   release:
@@ -98,6 +114,13 @@ jobs:
       - name: Release
         uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/')
+
+      # Documentation setup
+      - name: Setup Quarto
+        uses: quarto-dev/quarto-actions/setup@v2
+      - name: View Quarto version
+        run:
+          quarto --version
 
       # Python setup
       - uses: actions/setup-python@v4
