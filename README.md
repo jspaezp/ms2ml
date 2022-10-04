@@ -1,4 +1,14 @@
+![Pypi version](https://img.shields.io/pypi/v/ms2ml?style=flat-square)
+![Pypi Downloads](https://img.shields.io/pypi/dm/ms2ml?style=flat-square)
+![Github Activity](https://img.shields.io/github/last-commit/jspaezp/ms2ml?style=flat-square)
+![Python versions](https://img.shields.io/pypi/pyversions/ms2ml?style=flat-square)
+![GitHub Actions](https://img.shields.io/github/workflow/status/jspaezp/ms2ml/CI%20Testing/release?style=flat-square)
+![License](https://img.shields.io/pypi/l/ms2ml?style=flat-square)
+
 # ms2ml
+
+Documentation site: https://jspaezp.github.io/ms2ml/encoding_options/
+GitHub: https://github.com/jspaezp/ms2ml
 
 **This package is in early development, I am actively taking ideas and requests**
 
@@ -7,6 +17,34 @@ The idea of this package is to have an intermeiate layer between the pyteomics p
 Since ML applications do not take MS data as input directly, it is necessary to convert/encode it. This package is meant to handle that aspect.
 
 This project is meant to be opinionated but not arbitrary. By that I mean that it should attempt to enforce the "better way" of doing things (not give flexibility to do everything every way) but all design decisions are open to discussion (ideally though github).
+
+## Installation
+
+```shell
+pip install ms2ml
+```
+
+## Usage
+
+```python
+from ms2ml.config import Config
+from ms2ml.data.adapters import MSPAdapter
+
+# From proteometools
+my_file = "FTMS_HCD_20_annotated_2019-11-12.msp"
+
+def post_hook(spec):
+    return {
+        "aa": spec.precursor_peptide.aa_to_onehot(),
+        "mods": spec.precursor_peptide.mod_to_vector(),
+    }
+
+my_adapter = MSPAdapter(file=my_file, config=Config(), out_hook=post_hook)
+bundled = my_adapter.bundle(my_adapter.parse())
+print({k: f"{type(v): of shape: {v.shape}}" for k, v in bundled.items()})
+# {'aa': "<class 'numpy.ndarray'>: of shape: (N, 42, 29)",
+#  'mods': "<class 'numpy.ndarray'>: of shape: (N, 42)"}
+```
 
 ## Core parts
 
@@ -50,6 +88,65 @@ This project is meant to be opinionated but not arbitrary. By that I mean that i
 ## Target audience
 
 People who want to train ML models from peptide/proteomics data instead of figuring out ways to encode their tensors and write parsers.
+
+```mermaid
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryBorderColor': '#666666', 'primaryColor': '#ffffff', 'edgeLabelBackground':'#ffffff', 'tertiaryColor': '#666666'}}}%%
+flowchart TB
+    raw["Raw Data: .raw"]
+    mzml["Converted Data: .mzML"]
+    pepxml["Searched Data: .pep.xml"]
+    pout["FDR controlled Data: .pep.xml .pout"]
+    speclib["Spectral library: .ms2 .blib .sptxt .msp"]
+    tensor["Encoded Spectra: np.array torch.tensor"]
+    tensorcache["Tensor Cache: .hdf5 .csv .feather"]
+    mlmodel["ML model: torch.nn.Module tf.keras.nn"]
+    randomscript["Self-implemented script .py .R"]
+
+    msconvert[MSConvert]
+    searchengine[Search Engine: comet,msfragger...]
+    fdrvalidator[FDR validator: peptideprophet, Percolator, Mokapot]
+    speclibbuilder[Spectral Library Builder]
+
+    ms2ml[MS2ML]
+
+    raw --> msconvert
+    msconvert --> mzml
+    raw --> searchengine
+    searchengine --> pepxml
+    mzml --> searchengine
+    pepxml --> fdrvalidator
+    fdrvalidator --> pout
+    pout --> speclibbuilder
+    speclibbuilder --> speclib
+    pout --> randomscript
+    randomscript --> tensor
+    speclib --> randomscript
+    tensor --> mlmodel
+    tensor --> tensorcache
+    tensorcache --> mlmodel
+    tensorcache --> randomscript
+    randomscript --> mlmodel
+
+    speclib --> ms2ml
+    ms2ml --> mlmodel
+
+    linkStyle 10,11,12,13,14,15,16 stroke:#db7093,stroke-width:5px;
+    linkStyle 17,18 stroke:#008000,stroke-width:5px;
+
+    style msconvert stroke:#00ffff,stroke-width:4px
+    style searchengine stroke:#00ffff,stroke-width:4px
+    style fdrvalidator stroke:#00ffff,stroke-width:4px
+    style speclibbuilder stroke:#00ffff,stroke-width:4px
+
+    style raw fill:#cccccc,stroke-width:2px
+    style mzml fill:#cccccc,stroke-width:2px
+    style pepxml fill:#cccccc,stroke-width:2px
+    style pout fill:#cccccc,stroke-width:2px
+    style speclib fill:#cccccc,stroke-width:2px
+
+    style ms2ml fill:#ee82ee,stroke:#b882ee,stroke-width:4px
+
+```
 
 ## Controlled Vocabulary
 
@@ -108,6 +205,13 @@ Check:
       spectra to pre- and post-processed spectral data.
     - Tailored for small molecule data
 
+- https://gitlab.com/roettgerlab/ms2ai:
+    - MS2AI from Tobias Rehfeldt (who is also part of the ProteomicsML project)
+    - Uses maxquant to for a full PRIDE to ml workflow.
+
+- https://github.com/wilhelm-lab/dlomix
+    - DLOmix from Mathias Wilhelm’s group
+    - Tensorflow centric implementatino of ml models for proteomcs
 
 
 # Contribution
