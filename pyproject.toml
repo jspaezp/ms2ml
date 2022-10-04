@@ -55,7 +55,7 @@ pymdown-extensions = "^9.5"
 mkdocs-material = "^8.4.2"
 mkdocs-autorefs = "^0.4.1"
 mkdocstrings = {extras = ["python"], version = "^0.19.0"}
-mkquartodocs = {python=">3.8,<3.11", version = "^0.5.4"}
+mkquartodocs = "^0.5.4"
 
 
 [tool.poetry.group.formatting.dependencies]
