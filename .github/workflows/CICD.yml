@@ -36,6 +36,8 @@ jobs:
         run: poetry --version
       - name: Install Stuff
         run: poetry install --no-root --only lint
+
+      # Linting
       - name: Black
         run: poetry run python -m black . --check --diff
       - name: ruff
@@ -60,7 +62,7 @@ jobs:
     continue-on-error: ${{ matrix.experimental }}
 
     steps:
-      
+
       # Initial Setup
       - uses: actions/checkout@v3
 
@@ -81,12 +83,12 @@ jobs:
 
       # Package Setup
       - name: Install deps
-        run: poetry install -n -v --all-extras
+        run: poetry install --no-interaction --verbose --extras test --extras docs
 
       # CI checks
       - name: Pytest
         run: poetry run python -m pytest --cov . --cov-report=xml
-      
+
       # Documentation setup
       - name: Setup Quarto
         uses: quarto-dev/quarto-actions/setup@v2
