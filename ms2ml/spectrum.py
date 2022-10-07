@@ -35,8 +35,7 @@ class Spectrum:
         ...     extras={"EXTRAS": ["extra1", "extra2"]},
         ... )
         >>> spectrum
-        Spectrum(mz=array([1000., 1500., 2000.]),
-        ... extras={'EXTRAS': ['extra1', 'extra2']})
+        Spectrum(mz=array([1000., 1500., 2000.]), ...)
     """
 
     mz: np.ndarray
@@ -47,6 +46,7 @@ class Spectrum:
     instrument: Optional[str] = None
     analyzer: Optional[str] = None
     extras: Optional[dict] = None
+    retention_time: Optional[RetentionTime] = None
     config: Optional[Config] = field(repr=False, default=None)
 
     def __post_init__(self):
@@ -55,6 +55,9 @@ class Spectrum:
 
         if self.config is None:
             self.config = get_default_config()
+
+        if self.retention_time is None:
+            self.retention_time = RetentionTime(rt=np.nan, units="minutes")
 
     # TODO add this to config
     def bin_spectrum(
@@ -163,31 +166,6 @@ def _bin_spectrum(
         return hist
 
     return hist[0]
-
-
-@dataclass
-class LCMSSpectrum(Spectrum):
-    """Class to store the spectrum information with retention time.
-
-    Examples:
-        >>> spectrum = LCMSSpectrum(
-        ...     mz=np.array([1000.0, 1500.0, 2000.0]),
-        ...     intensity=np.array([1.0, 2.0, 3.0]),
-        ...     retention_time=RetentionTime(rt=100.0, units="min"),
-        ...     ms_level=2,
-        ...     extras={"EXTRAS": ["extra1", "extra2"]},
-        ...     precursor_mz=1000.0,
-        ... )
-        >>> spectrum
-        LCMSSpectrum(mz=array([1000., 1500., 2000.]), ...)
-    """
-
-    # TODO consider if this is necesary ...
-    retention_time: Optional[RetentionTime] = RetentionTime(rt=np.nan, units="minutes")
-
-    # TODO consider deleting this class...
-    def __post_init__(self, *args, **kwargs):
-        super().__post_init__(*args, **kwargs)
 
 
 @dataclass

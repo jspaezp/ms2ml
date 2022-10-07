@@ -249,11 +249,11 @@ torch==1.12.1 ; python_version >= "3.8" and python_version < "3.11" \
 tqdm==4.64.1 ; python_version >= "3.8" and python_version < "3.12" \
     --hash=sha256:5f4f682a004951c1b450bc753c710e9280c5746ce6ffedee253ddbcbf54cf1e4 \
     --hash=sha256:6fee160d6ffcd1b1c68c65f14c829c22832bc401726335ce92c52d395944a6a1
-types-pytz==2022.2.1.0 ; python_version >= "3.8" and python_version < "3.11" \
-    --hash=sha256:47cfb19c52b9f75896440541db392fd312a35b279c6307a531db71152ea63e2b \
-    --hash=sha256:50ead2254b524a3d4153bc65d00289b66898060d2938e586170dce918dbaf3b3
-typing-extensions==4.3.0 ; python_version >= "3.8" and python_version < "3.11" \
-    --hash=sha256:25642c956049920a5aa49edcdd6ab1e06d7e5d467fc00e0506c44ac86fbfca02 \
-    --hash=sha256:e6d2677a32f47fc7eb2795db1dd15c1f34eff616bcaf2cfb5e997f854fa1c4a6
+types-pytz==2022.4.0.0 ; python_version >= "3.8" and python_version < "3.11" \
+    --hash=sha256:17d66e4b16e80ceae0787726f3a22288df7d3f9fdebeb091dc64b92c0e4ea09d \
+    --hash=sha256:950b0f3d64ed5b03a3e29c1e38fe2be8371c933c8e97922d0352345336eb8af4
+typing-extensions==4.4.0 ; python_version >= "3.8" and python_version < "3.11" \
+    --hash=sha256:1511434bb92bf8dd198c12b1cc812e800d4181cfcb867674e0f8279cc93087aa \
+    --hash=sha256:16fa4864408f655d35ec496218b85f79b3437c829e93320c7c9215ccfd92489e
 uniplot==0.7.0 ; python_version >= "3.8" and python_version < "3.12" \
     --hash=sha256:b0700717f7d088e51c5ca31c00642a21718c2381bad30828fc77c2de4f8c78a9

@@ -50,4 +50,4 @@ class RetentionTime:
 
     rt: float
     units: str
-    run: Optional["str"] = None
+    run: Optional[str] = None
