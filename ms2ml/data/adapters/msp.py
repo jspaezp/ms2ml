@@ -14,8 +14,8 @@ class MSPAdapter(BaseAdapter):
         self,
         config: Config,
         file: Optional[str] = None,
-        in_hook: Callable = None,
-        out_hook: Callable = None,
+        in_hook: Optional[Callable] = None,
+        out_hook: Optional[Callable] = None,
         collate_fn: Callable = pad_collate,
     ):
         BaseAdapter.__init__(

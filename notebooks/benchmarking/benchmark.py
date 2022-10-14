@@ -5,12 +5,12 @@ from tqdm.auto import tqdm
 from ms2ml.config import Config
 from ms2ml.data.adapters import MSPAdapter
 
-my_file = "../FTMS_HCD_20_annotated_2019-11-12.msp"
+my_file = "notebooks/FTMS_HCD_20_annotated_2019-11-12.msp"
 
 
 def post_hook(spec):
     return {
-        "aa": spec.precursor_peptide.aa_to_count(),
+        "aa": spec.precursor_peptide.aa_to_onehot(),
         "mods": spec.precursor_peptide.mod_to_vector(),
     }
 
@@ -26,3 +26,4 @@ for i, x in enumerate(tqdm(my_adapter.parse())):
 
 bundled = my_adapter.bundle(out)
 pprint({k: v.shape for k, v in bundled.items()})
+print({k: f"{type(v)}: of shape: {v.shape}" for k, v in bundled.items()})

@@ -15,8 +15,7 @@ class BaseAdapter(ABC):
     ):
         """Provides a base class for adapters.
 
-        Args
-        ----
+        Args:
             config (Config): Configuration object.
             in_hook (Callable): Function to be applied to each element before
                 processing.

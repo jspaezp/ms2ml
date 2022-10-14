@@ -11,7 +11,7 @@ There are broadly two types of spectra:
 import math
 import warnings
 from dataclasses import dataclass, field
-from typing import Dict, List, Optional, Tuple
+from typing import Dict, List, Optional, Tuple, Union
 
 import numpy as np
 
@@ -46,7 +46,7 @@ class Spectrum:
     instrument: Optional[str] = None
     analyzer: Optional[str] = None
     extras: Optional[dict] = None
-    retention_time: Optional[RetentionTime] = None
+    retention_time: Optional[Union[RetentionTime, float]] = None
     config: Optional[Config] = field(repr=False, default=None)
 
     def __post_init__(self):
@@ -118,7 +118,24 @@ class Spectrum:
     @property
     def base_peak(self) -> float:
         """Returns the base peak intensity of the spectrum."""
-        return np.max(self.intensity)
+        if not hasattr(self, "_base_peak"):
+            self._base_peak = np.max(self.intensity)
+        return self._base_peak
+
+    @base_peak.setter
+    def base_peak(self, value) -> None:
+        self._base_peak = value
+
+    @property
+    def tic(self) -> float:
+        """Returns the total ion current of the spectrum."""
+        if not hasattr(self, "_tic"):
+            self._tic = np.sum(self.intensity)
+        return self._tic
+
+    @tic.setter
+    def tic(self, value) -> None:
+        self._tic = value
 
 
 def _bin_spectrum(
