@@ -153,7 +153,7 @@ class Spectrum:
         )
         return spectrum
 
-    def annotate(self, peptide) -> AnnotatedPeptideSpectrum:
+    def annotate(self, peptide: str | Peptide) -> AnnotatedPeptideSpectrum:
         """Annotates the spectrum with the given peptide.
 
         Args:
