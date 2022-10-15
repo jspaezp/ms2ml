@@ -92,5 +92,5 @@ plugins:
             annotations_path: source
             docstring_section_style: spacy
             docstring_options:
-              ignore_init_summary: yes
+              ignore_init_summary: no
             merge_init_into_class: yes

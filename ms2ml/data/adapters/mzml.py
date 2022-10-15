@@ -37,7 +37,7 @@ class MZMLAdapter(BaseAdapter):
             in_hook=in_hook,
             collate_fn=collate_fn,
         )
-        self.file = file
+        self.file = str(file)
         self.config = config
         self.out_hook = out_hook
 
@@ -114,7 +114,7 @@ class MZMLAdapter(BaseAdapter):
     def __repr__(self):
         return f"MS2ML MZML Adapter for {self.file}"
 
-    def __get__(self, idx):
+    def __getitem__(self, idx):
         with read_mzml(self.file) as reader:
             try:
                 spec = reader[idx]

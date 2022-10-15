@@ -2,7 +2,7 @@ from ms2ml.config import Config
 from ms2ml.data.adapters.mzml import MZMLAdapter
 
 
-def test_spectronaut_adapter_works(shared_datadir):
+def test_mzml_adapter_works(shared_datadir):
     file = shared_datadir / "mzml" / "sample_tiny_hela.mzML"
 
     spec_adapter = MZMLAdapter(

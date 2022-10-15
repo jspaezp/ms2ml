@@ -11,6 +11,14 @@ from .base import BaseParser
 def _decompress_peaks(
     compressed_mzs: bytes, compressed_int: bytes, num_peaks: int
 ) -> Tuple[np.ndarray, np.ndarray]:
+    """Decompress the m/z and intensity arrays from the Bibliospec format.
+
+    The implementation of the compression is based on the C++ code in the
+    Bibliospec source code.
+
+    The compression is using concatenation of the intensity or mz arrray
+    from a struct and then using zlib to compress the resulting byte array.
+    """
     # [0, 15, 32, 47] could work ....maybe ...
     if len(compressed_mzs) != (4 * num_peaks):
         compressed_mzs = zlib.decompress(compressed_mzs, 32)
@@ -145,6 +153,8 @@ class BibliosPecParser(BaseParser):
 
     def parse_text(self, text):
         """Parse a chunk of text.
+
+        Currently not implemented.
 
         Parameters
         ----------

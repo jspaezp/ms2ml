@@ -8,10 +8,12 @@ There are broadly two types of spectra:
 2. Annotated Spectra
 """
 
+from __future__ import annotations
+
+import dataclasses
 import math
 import warnings
 from dataclasses import dataclass, field
-from typing import Dict, List, Optional, Tuple, Union
 
 import numpy as np
 
@@ -42,12 +44,12 @@ class Spectrum:
     intensity: np.ndarray
     ms_level: int
     precursor_mz: float
-    precursor_charge: Optional[int] = None
-    instrument: Optional[str] = None
-    analyzer: Optional[str] = None
-    extras: Optional[dict] = None
-    retention_time: Optional[Union[RetentionTime, float]] = None
-    config: Optional[Config] = field(repr=False, default=None)
+    precursor_charge: int | None = None
+    instrument: str | None = None
+    analyzer: str | None = None
+    extras: dict | None = None
+    retention_time: RetentionTime | float | None = None
+    config: Config | None = field(repr=False, default=None)
 
     def __post_init__(self):
         if self.extras is None:
@@ -137,6 +139,44 @@ class Spectrum:
     def tic(self, value) -> None:
         self._tic = value
 
+    @staticmethod
+    def _sample():
+        """Returns a sample Spectrum object."""
+        config = Config()
+        spectrum = Spectrum(
+            mz=np.array([50.0, 147.11333, 1000.0, 1500.0, 2000.0]),
+            intensity=np.array([50.0, 200.0, 1.0, 2.0, 3.0]),
+            ms_level=2,
+            extras={"EXTRAS": ["extra1", "extra2"]},
+            config=config,
+            precursor_mz=147.11333,
+        )
+        return spectrum
+
+    def annotate(self, peptide) -> AnnotatedPeptideSpectrum:
+        """Annotates the spectrum with the given peptide.
+
+        Args:
+            peptide: The peptide to annotate the spectrum with.
+
+        Returns:
+            An AnnotatedPeptideSpectrum object.
+
+        Examples:
+            >>> spectrum = Spectrum._sample()
+            >>> peptide = Peptide.from_sequence("PEPPINK/2", spectrum.config)
+            >>> annotated_spectrum = spectrum.annotate(peptide)
+            >>> annotated_spectrum
+            AnnotatedPeptideSpectrum(mz=array([  50. ... precursor_isotope=0)
+        """
+        if isinstance(peptide, str):
+            peptide = Peptide.from_sequence(peptide, config=self.config)
+
+        spec_dict = dataclasses.asdict(self)
+        spec_dict["config"] = self.config
+        spec = AnnotatedPeptideSpectrum(precursor_peptide=peptide, **spec_dict)
+        return spec
+
 
 def _bin_spectrum(
     mz: np.ndarray,
@@ -218,9 +258,9 @@ class AnnotatedPeptideSpectrum(Spectrum):
     # right now it has to be due to the fact that when it inherits from
     # Spectrum, it already has optional arguments, that cannot be followed
     # by positional arguments
-    precursor_peptide: Optional[Peptide] = None
-    precursor_isotope: Optional[int] = 0
-    precursor_charge: Optional[int] = None
+    precursor_peptide: Peptide | None = None
+    precursor_isotope: int | None = 0
+    precursor_charge: int | None = None
 
     def __post_init__(self, *args, **kwargs):
         if self.config is None:
@@ -243,7 +283,7 @@ class AnnotatedPeptideSpectrum(Spectrum):
     def mass_error(self):
         raise NotImplementedError
 
-    def _annotate_peaks(self) -> Tuple[np.ndarray, np.ndarray]:
+    def _annotate_peaks(self) -> tuple[np.ndarray, np.ndarray]:
         if self.precursor_peptide is None:
             raise ValueError(
                 "No precursor peptide provided. Which is required to annotate the peaks"
@@ -271,7 +311,7 @@ class AnnotatedPeptideSpectrum(Spectrum):
         return self._indices[1]
 
     @property
-    def fragment_intensities(self) -> Dict[str, float]:
+    def fragment_intensities(self) -> dict[str, float]:
         """
         Returs a dictionary with the fragment ion names as keys and the
         corresponding intensities as values.
@@ -289,7 +329,7 @@ class AnnotatedPeptideSpectrum(Spectrum):
         return self._fragment_intensities
 
     @property
-    def fragments(self) -> Dict[str, AnnotatedIon]:
+    def fragments(self) -> dict[str, AnnotatedIon]:
         """
         Returs a dictionary with the fragment ion names as keys and the
         corresponding AnnotatedIon objects as values.
@@ -316,7 +356,7 @@ class AnnotatedPeptideSpectrum(Spectrum):
             intensities = self.intensity[self._mz_indices]
             mzs = self.mz[self._mz_indices]
 
-            frags: Dict[str, AnnotatedIon] = {}
+            frags: dict[str, AnnotatedIon] = {}
 
             for label, i, _ in zip(labels, intensities, mzs):
                 # TODO implement ambiguity resoluitions
@@ -343,7 +383,7 @@ class AnnotatedPeptideSpectrum(Spectrum):
         return self.fragment_intensities.get(index, 0.0)
 
     @property
-    def _indices(self) -> Tuple[np.ndarray, np.ndarray]:
+    def _indices(self) -> tuple[np.ndarray, np.ndarray]:
         if not hasattr(self, "_indices_"):
             self._indices_ = self._annotate_peaks()
 
@@ -373,7 +413,7 @@ class AnnotatedPeptideSpectrum(Spectrum):
         return np.array([self[k] for k in self.fragment_labels], dtype=np.float32)
 
     @property
-    def fragment_labels(self) -> List[str]:
+    def fragment_labels(self) -> list[str]:
         """Encodes the fragment ions as a numpy array
 
         The order of the ions will be defined in the config file.

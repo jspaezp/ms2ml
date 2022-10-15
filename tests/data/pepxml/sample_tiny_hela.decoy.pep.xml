@@ -1,0 +1,1186 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ <msms_pipeline_analysis date="2022-10-14T20:48:15" xmlns="http://regis-web.systemsbiology.net/pepXML" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://sashimi.sourceforge.net/schema_revision/pepXML/pepXML_v120.xsd" summary_xml="/Users/sebastianpaez/git/ms2ml/tests/data/mzml/sample_tiny_hela.pep.xml">
+ <msms_run_summary base_name="/Users/sebastianpaez/git/ms2ml/tests/data/mzml/sample_tiny_hela" msManufacturer="UNKNOWN" msModel="UNKNOWN" raw_data_type="raw" raw_data=".mzML">
+ <sample_enzyme name="Trypsin">
+  <specificity cut="KR" no_cut="P" sense="C"/>
+ </sample_enzyme>
+ <search_summary base_name="/Users/sebastianpaez/git/ms2ml/tests/data/mzml/sample_tiny_hela" search_engine="Comet" search_engine_version="2022.01 rev. 2 (f447eed)" precursor_mass_type="monoisotopic" fragment_mass_type="monoisotopic" search_id="1">
+  <search_database local_path="UP000005640.fasta" type="AA"/>
+  <enzymatic_search_constraint enzyme="Trypsin" max_num_internal_cleavages="2" min_number_termini="2"/>
+  <aminoacid_modification aminoacid="M" massdiff="15.994900" mass="147.035385" variable="Y" symbol="*"/>
+  <aminoacid_modification aminoacid="C" massdiff="57.021464" mass="160.030649" variable="N"/>
+  <parameter name="# comet_version" value="2022.01 rev. 2"/>
+  <parameter name="activation_method" value="ALL"/>
+  <parameter name="add_A_alanine" value="0.000000"/>
+  <parameter name="add_B_user_amino_acid" value="0.000000"/>
+  <parameter name="add_C_cysteine" value="57.021464"/>
+  <parameter name="add_Cterm_peptide" value="0.000000"/>
+  <parameter name="add_Cterm_protein" value="0.000000"/>
+  <parameter name="add_D_aspartic_acid" value="0.000000"/>
+  <parameter name="add_E_glutamic_acid" value="0.000000"/>
+  <parameter name="add_F_phenylalanine" value="0.000000"/>
+  <parameter name="add_G_glycine" value="0.000000"/>
+  <parameter name="add_H_histidine" value="0.000000"/>
+  <parameter name="add_I_isoleucine" value="0.000000"/>
+  <parameter name="add_J_user_amino_acid" value="0.000000"/>
+  <parameter name="add_K_lysine" value="0.000000"/>
+  <parameter name="add_L_leucine" value="0.000000"/>
+  <parameter name="add_M_methionine" value="0.000000"/>
+  <parameter name="add_N_asparagine" value="0.000000"/>
+  <parameter name="add_Nterm_peptide" value="0.000000"/>
+  <parameter name="add_Nterm_protein" value="0.000000"/>
+  <parameter name="add_O_pyrrolysine" value="0.000000"/>
+  <parameter name="add_P_proline" value="0.000000"/>
+  <parameter name="add_Q_glutamine" value="0.000000"/>
+  <parameter name="add_R_arginine" value="0.000000"/>
+  <parameter name="add_S_serine" value="0.000000"/>
+  <parameter name="add_T_threonine" value="0.000000"/>
+  <parameter name="add_U_selenocysteine" value="0.000000"/>
+  <parameter name="add_V_valine" value="0.000000"/>
+  <parameter name="add_W_tryptophan" value="0.000000"/>
+  <parameter name="add_X_user_amino_acid" value="0.000000"/>
+  <parameter name="add_Y_tyrosine" value="0.000000"/>
+  <parameter name="add_Z_user_amino_acid" value="0.000000"/>
+  <parameter name="allowed_missed_cleavage" value="2"/>
+  <parameter name="clear_mz_range" value="0.000000 0.000000"/>
+  <parameter name="clip_nterm_methionine" value="0"/>
+  <parameter name="database_name" value="UP000005640.fasta"/>
+  <parameter name="decoy_prefix" value="DECOY_"/>
+  <parameter name="decoy_search" value="2"/>
+  <parameter name="digest_mass_range" value="600.000000 5000.000000"/>
+  <parameter name="equal_I_and_L" value="1"/>
+  <parameter name="fragment_bin_offset" value="0.000000"/>
+  <parameter name="fragment_bin_tol" value="0.020000"/>
+  <parameter name="isotope_error" value="1"/>
+  <parameter name="mass_offsets" value=""/>
+  <parameter name="mass_type_fragment" value="1"/>
+  <parameter name="mass_type_parent" value="1"/>
+  <parameter name="max_duplicate_proteins" value="20"/>
+  <parameter name="max_fragment_charge" value="3"/>
+  <parameter name="max_precursor_charge" value="6"/>
+  <parameter name="max_variable_mods_in_peptide" value="5"/>
+  <parameter name="minimum_intensity" value="0.000000"/>
+  <parameter name="minimum_peaks" value="10"/>
+  <parameter name="ms_level" value="2"/>
+  <parameter name="nucleotide_reading_frame" value="0"/>
+  <parameter name="num_enzyme_termini" value="2"/>
+  <parameter name="num_output_lines" value="5"/>
+  <parameter name="num_results" value="100"/>
+  <parameter name="num_threads" value="5"/>
+  <parameter name="output_mzidentmlfile" value="1"/>
+  <parameter name="output_pepxmlfile" value="1"/>
+  <parameter name="output_percolatorfile" value="1"/>
+  <parameter name="output_sqtfile" value="1"/>
+  <parameter name="output_suffix" value=""/>
+  <parameter name="output_txtfile" value="1"/>
+  <parameter name="override_charge" value="0"/>
+  <parameter name="peff_format" value="0"/>
+  <parameter name="peff_obo" value=""/>
+  <parameter name="peptide_length_range" value="6 35"/>
+  <parameter name="peptide_mass_tolerance" value="20.000000"/>
+  <parameter name="peptide_mass_units" value="2"/>
+  <parameter name="precursor_NL_ions" value=""/>
+  <parameter name="precursor_charge" value="0 0"/>
+  <parameter name="precursor_tolerance_type" value="1"/>
+  <parameter name="print_expect_score" value="1"/>
+  <parameter name="remove_precursor_peak" value="0"/>
+  <parameter name="remove_precursor_tolerance" value="1.500000"/>
+  <parameter name="require_variable_mod" value="0"/>
+  <parameter name="sample_enzyme_number" value="1"/>
+  <parameter name="scan_range" value="0 0"/>
+  <parameter name="search_enzyme2_number" value="0"/>
+  <parameter name="search_enzyme_number" value="1"/>
+  <parameter name="spectrum_batch_size" value="15000"/>
+  <parameter name="theoretical_fragment_ions" value="1"/>
+  <parameter name="use_A_ions" value="0"/>
+  <parameter name="use_B_ions" value="1"/>
+  <parameter name="use_C_ions" value="0"/>
+  <parameter name="use_NL_ions" value="0"/>
+  <parameter name="use_X_ions" value="0"/>
+  <parameter name="use_Y_ions" value="1"/>
+  <parameter name="use_Z1_ions" value="0"/>
+  <parameter name="use_Z_ions" value="0"/>
+  <parameter name="variable_mod01" value=" 15.9949 M 0 3 -1 0 0 0.0"/>
+  <parameter name="variable_mod02" value=" 0.0 X 0 3 -1 0 0 0.0"/>
+  <parameter name="variable_mod03" value=" 0.0 X 0 3 -1 0 0 0.0"/>
+  <parameter name="variable_mod04" value=" 0.0 X 0 3 -1 0 0 0.0"/>
+  <parameter name="variable_mod05" value=" 0.0 X 0 3 -1 0 0 0.0"/>
+  <parameter name="variable_mod06" value=" 0.0 X 0 3 -1 0 0 0.0"/>
+  <parameter name="variable_mod07" value=" 0.0 X 0 3 -1 0 0 0.0"/>
+  <parameter name="variable_mod08" value=" 0.0 X 0 3 -1 0 0 0.0"/>
+  <parameter name="variable_mod09" value=" 0.0 X 0 3 -1 0 0 0.0"/>
+ </search_summary>
+ <spectrum_query spectrum="sample_tiny_hela.10039.10039.2" spectrumNativeID="controllerType=0 controllerNumber=1 scan=10039" start_scan="10039" end_scan="10039" precursor_neutral_mass="763.387719" assumed_charge="2" index="1" retention_time_sec="600.0">
+  <search_result>
+   <search_hit hit_rank="1" peptide="SPLEYR" peptide_prev_aa="R" peptide_next_aa="K" protein="DECOY_sp|O96006|ZBED1_HUMAN" num_tot_proteins="1" num_matched_ions="3" tot_num_ions="10" calc_neutral_pep_mass="763.386454" massdiff="0.001265" num_tol_term="2" num_missed_cleavages="0" num_matched_peptides="843">
+    <search_score name="xcorr" value="0.685"/>
+    <search_score name="deltacn" value="0.017"/>
+    <search_score name="spscore" value="59.5"/>
+    <search_score name="sprank" value="1"/>
+    <search_score name="expect" value="2.05E+01"/>
+   </search_hit>
+   <search_hit hit_rank="2" peptide="KQMTTR" peptide_prev_aa="R" peptide_next_aa="L" protein="DECOY_sp|Q96NX9|DACH2_HUMAN" num_tot_proteins="1" num_matched_ions="3" tot_num_ions="10" calc_neutral_pep_mass="763.401058" massdiff="-0.013339" num_tol_term="2" num_missed_cleavages="1" num_matched_peptides="843">
+    <search_score name="xcorr" value="0.674"/>
+    <search_score name="deltacn" value="0.004"/>
+    <search_score name="spscore" value="48.3"/>
+    <search_score name="sprank" value="3"/>
+    <search_score name="expect" value="2.25E+01"/>
+   </search_hit>
+   <search_hit hit_rank="3" peptide="KFANER" peptide_prev_aa="K" peptide_next_aa="R" protein="DECOY_sp|P26358|DNMT1_HUMAN" num_tot_proteins="1" num_matched_ions="3" tot_num_ions="10" calc_neutral_pep_mass="763.397687" massdiff="-0.009969" num_tol_term="2" num_missed_cleavages="1" num_matched_peptides="843">
+    <search_score name="xcorr" value="0.671"/>
+    <search_score name="deltacn" value="0.036"/>
+    <search_score name="spscore" value="48.3"/>
+    <search_score name="sprank" value="3"/>
+    <search_score name="expect" value="2.29E+01"/>
+   </search_hit>
+   <search_hit hit_rank="4" peptide="LGQQYR" peptide_prev_aa="R" peptide_next_aa="G" protein="DECOY_sp|A0A087WWA1|P3URF_HUMAN" num_tot_proteins="1" num_matched_ions="3" tot_num_ions="10" calc_neutral_pep_mass="763.397687" massdiff="-0.009969" num_tol_term="2" num_missed_cleavages="0" num_matched_peptides="843">
+    <search_score name="xcorr" value="0.647"/>
+    <search_score name="deltacn" value="0.047"/>
+    <search_score name="spscore" value="56.0"/>
+    <search_score name="sprank" value="2"/>
+    <search_score name="expect" value="2.74E+01"/>
+   </search_hit>
+   <search_hit hit_rank="5" peptide="KMVNEK" peptide_prev_aa="R" peptide_next_aa="G" protein="DECOY_sp|Q13410|BT1A1_HUMAN" num_tot_proteins="1" num_matched_ions="3" tot_num_ions="10" calc_neutral_pep_mass="763.389810" massdiff="-0.002091" num_tol_term="2" num_missed_cleavages="1" num_matched_peptides="843">
+    <modification_info modified_peptide="KM[147]VNEK">
+     <mod_aminoacid_mass position="2" mass="147.035385" variable="15.994900" source="param"/>
+    </modification_info>
+    <search_score name="xcorr" value="0.617"/>
+    <search_score name="deltacn" value="1.000"/>
+    <search_score name="spscore" value="43.4"/>
+    <search_score name="sprank" value="6"/>
+    <search_score name="expect" value="3.45E+01"/>
+   </search_hit>
+  </search_result>
+ </spectrum_query>
+ <spectrum_query spectrum="sample_tiny_hela.10040.10040.2" spectrumNativeID="controllerType=0 controllerNumber=1 scan=10040" start_scan="10040" end_scan="10040" precursor_neutral_mass="851.403724" assumed_charge="2" index="2" retention_time_sec="600.1">
+  <search_result>
+   <search_hit hit_rank="1" peptide="MAMALDGK" peptide_prev_aa="K" peptide_next_aa="L" protein="DECOY_sp|Q9UBI4|STML1_HUMAN" num_tot_proteins="1" num_matched_ions="4" tot_num_ions="14" calc_neutral_pep_mass="851.388095" massdiff="0.015629" num_tol_term="2" num_missed_cleavages="0" num_matched_peptides="495">
+    <modification_info modified_peptide="MAM[147]ALDGK">
+     <mod_aminoacid_mass position="3" mass="147.035385" variable="15.994900" source="param"/>
+    </modification_info>
+    <search_score name="xcorr" value="0.713"/>
+    <search_score name="deltacn" value="0.037"/>
+    <search_score name="spscore" value="78.6"/>
+    <search_score name="sprank" value="1"/>
+    <search_score name="expect" value="4.49E+00"/>
+   </search_hit>
+   <search_hit hit_rank="2" peptide="MAMALDGK" peptide_prev_aa="K" peptide_next_aa="L" protein="DECOY_sp|Q9UBI4|STML1_HUMAN" num_tot_proteins="1" num_matched_ions="4" tot_num_ions="14" calc_neutral_pep_mass="851.388095" massdiff="0.015629" num_tol_term="2" num_missed_cleavages="0" num_matched_peptides="495">
+    <modification_info modified_peptide="M[147]AMALDGK">
+     <mod_aminoacid_mass position="1" mass="147.035385" variable="15.994900" source="param"/>
+    </modification_info>
+    <search_score name="xcorr" value="0.712"/>
+    <search_score name="deltacn" value="0.036"/>
+    <search_score name="spscore" value="78.6"/>
+    <search_score name="sprank" value="1"/>
+    <search_score name="expect" value="4.56E+00"/>
+   </search_hit>
+   <search_hit hit_rank="3" peptide="TERMGSR" peptide_prev_aa="R" peptide_next_aa="A" protein="DECOY_sp|C9JR72|KBTBD_HUMAN" num_tot_proteins="1" num_matched_ions="4" tot_num_ions="12" calc_neutral_pep_mass="851.391935" massdiff="0.011789" num_tol_term="2" num_missed_cleavages="1" num_matched_peptides="495">
+    <modification_info modified_peptide="TERM[147]GSR">
+     <mod_aminoacid_mass position="4" mass="147.035385" variable="15.994900" source="param"/>
+    </modification_info>
+    <search_score name="xcorr" value="0.687"/>
+    <search_score name="deltacn" value="0.158"/>
+    <search_score name="spscore" value="63.9"/>
+    <search_score name="sprank" value="2"/>
+    <search_score name="expect" value="6.12E+00"/>
+   </search_hit>
+   <search_hit hit_rank="4" peptide="EYYHLK" peptide_prev_aa="K" peptide_next_aa="Q" protein="DECOY_sp|Q5T2T1|MPP7_HUMAN" num_tot_proteins="1" num_matched_ions="3" tot_num_ions="10" calc_neutral_pep_mass="851.417754" massdiff="-0.014030" num_tol_term="2" num_missed_cleavages="0" num_matched_peptides="495">
+    <search_score name="xcorr" value="0.578"/>
+    <search_score name="deltacn" value="0.154"/>
+    <search_score name="spscore" value="56.0"/>
+    <search_score name="sprank" value="3"/>
+    <search_score name="expect" value="2.16E+01"/>
+   </search_hit>
+   <search_hit hit_rank="5" peptide="TECSNLK" peptide_prev_aa="R" peptide_next_aa="S" protein="DECOY_sp|Q5T5Y3|CAMP1_HUMAN" num_tot_proteins="1" num_matched_ions="3" tot_num_ions="12" calc_neutral_pep_mass="850.385468" massdiff="1.018256" num_tol_term="2" num_missed_cleavages="0" num_matched_peptides="495">
+    <modification_info modified_peptide="TECSNLK">
+     <mod_aminoacid_mass position="3" mass="160.030649" static="57.021464"/>
+    </modification_info>
+    <search_score name="xcorr" value="0.489"/>
+    <search_score name="deltacn" value="1.000"/>
+    <search_score name="spscore" value="43.1"/>
+    <search_score name="sprank" value="4"/>
+    <search_score name="expect" value="6.11E+01"/>
+   </search_hit>
+  </search_result>
+ </spectrum_query>
+ <spectrum_query spectrum="sample_tiny_hela.10041.10041.2" spectrumNativeID="controllerType=0 controllerNumber=1 scan=10041" start_scan="10041" end_scan="10041" precursor_neutral_mass="888.469086" assumed_charge="2" index="3" retention_time_sec="600.1">
+  <search_result>
+   <search_hit hit_rank="1" peptide="TGLEGSLGR" peptide_prev_aa="K" peptide_next_aa="S" protein="DECOY_sp|Q96NG3|ODAD4_HUMAN" num_tot_proteins="1" num_matched_ions="6" tot_num_ions="16" calc_neutral_pep_mass="888.466495" massdiff="0.002591" num_tol_term="2" num_missed_cleavages="0" num_matched_peptides="1156">
+    <search_score name="xcorr" value="1.291"/>
+    <search_score name="deltacn" value="0.069"/>
+    <search_score name="spscore" value="180.2"/>
+    <search_score name="sprank" value="1"/>
+    <search_score name="expect" value="1.97E+00"/>
+   </search_hit>
+   <search_hit hit_rank="2" peptide="ASLVATDGR" peptide_prev_aa="K" peptide_next_aa="V" protein="DECOY_sp|P35590|TIE1_HUMAN" num_tot_proteins="1" num_matched_ions="5" tot_num_ions="16" calc_neutral_pep_mass="888.466495" massdiff="0.002591" num_tol_term="2" num_missed_cleavages="0" num_matched_peptides="1156">
+    <search_score name="xcorr" value="1.202"/>
+    <search_score name="deltacn" value="0.131"/>
+    <search_score name="spscore" value="115.8"/>
+    <search_score name="sprank" value="3"/>
+    <search_score name="expect" value="3.36E+00"/>
+   </search_hit>
+   <search_hit hit_rank="3" peptide="SIAQDLSR" peptide_prev_aa="K" peptide_next_aa="F" protein="DECOY_sp|Q96F07|CYFP2_HUMAN" num_tot_proteins="1" num_matched_ions="6" tot_num_ions="14" calc_neutral_pep_mass="888.466495" massdiff="0.002591" num_tol_term="2" num_missed_cleavages="0" num_matched_peptides="1156">
+    <search_score name="xcorr" value="1.045"/>
+    <search_score name="deltacn" value="0.011"/>
+    <search_score name="spscore" value="145.3"/>
+    <search_score name="sprank" value="2"/>
+    <search_score name="expect" value="8.69E+00"/>
+   </search_hit>
+   <search_hit hit_rank="4" peptide="ASETLVNR" peptide_prev_aa="R" peptide_next_aa="I" protein="DECOY_sp|A0A0B4J2D5|GAL3B_HUMAN" num_tot_proteins="2" num_matched_ions="5" tot_num_ions="14" calc_neutral_pep_mass="888.466495" massdiff="0.002591" num_tol_term="2" num_missed_cleavages="0" num_matched_peptides="1156">
+    <alternative_protein protein="DECOY_sp|P0DPI2|GAL3A_HUMAN"/>
+    <search_score name="xcorr" value="1.033"/>
+    <search_score name="deltacn" value="0.077"/>
+    <search_score name="spscore" value="98.0"/>
+    <search_score name="sprank" value="5"/>
+    <search_score name="expect" value="9.32E+00"/>
+   </search_hit>
+   <search_hit hit_rank="5" peptide="ASSLAGEVR" peptide_prev_aa="R" peptide_next_aa="A" protein="DECOY_sp|H7BZ55|CRCC2_HUMAN" num_tot_proteins="1" num_matched_ions="4" tot_num_ions="16" calc_neutral_pep_mass="888.466495" massdiff="0.002591" num_tol_term="2" num_missed_cleavages="0" num_matched_peptides="1156">
+    <search_score name="xcorr" value="0.953"/>
+    <search_score name="deltacn" value="1.000"/>
+    <search_score name="spscore" value="59.8"/>
+    <search_score name="sprank" value="13"/>
+    <search_score name="expect" value="1.51E+01"/>
+   </search_hit>
+  </search_result>
+ </spectrum_query>
+ <spectrum_query spectrum="sample_tiny_hela.10042.10042.2" spectrumNativeID="controllerType=0 controllerNumber=1 scan=10042" start_scan="10042" end_scan="10042" precursor_neutral_mass="959.459245" assumed_charge="2" index="4" retention_time_sec="600.1">
+  <search_result>
+   <search_hit hit_rank="1" peptide="KEESPDQK" peptide_prev_aa="R" peptide_next_aa="Y" protein="DECOY_sp|O94985|CSTN1_HUMAN" num_tot_proteins="1" num_matched_ions="4" tot_num_ions="14" calc_neutral_pep_mass="959.455990" massdiff="0.003255" num_tol_term="2" num_missed_cleavages="1" num_matched_peptides="492">
+    <search_score name="xcorr" value="0.905"/>
+    <search_score name="deltacn" value="0.222"/>
+    <search_score name="spscore" value="35.6"/>
+    <search_score name="sprank" value="1"/>
+    <search_score name="expect" value="3.36E+00"/>
+   </search_hit>
+   <search_hit hit_rank="2" peptide="PPCSELEK" peptide_prev_aa="R" peptide_next_aa="M" protein="DECOY_sp|Q8WTX9|ZDHC1_HUMAN" num_tot_proteins="1" num_matched_ions="3" tot_num_ions="14" calc_neutral_pep_mass="958.442983" massdiff="1.016263" num_tol_term="1" num_missed_cleavages="0" num_matched_peptides="492">
+    <modification_info modified_peptide="PPCSELEK">
+     <mod_aminoacid_mass position="3" mass="160.030649" static="57.021464"/>
+    </modification_info>
+    <search_score name="xcorr" value="0.704"/>
+    <search_score name="deltacn" value="0.002"/>
+    <search_score name="spscore" value="19.8"/>
+    <search_score name="sprank" value="9"/>
+    <search_score name="expect" value="1.99E+01"/>
+   </search_hit>
+   <search_hit hit_rank="3" peptide="FMFELEK" peptide_prev_aa="K" peptide_next_aa="F" protein="DECOY_sp|P0C7M8|CLC2L_HUMAN" num_tot_proteins="1" num_matched_ions="3" tot_num_ions="12" calc_neutral_pep_mass="958.446991" massdiff="1.012255" num_tol_term="2" num_missed_cleavages="0" num_matched_peptides="492">
+    <modification_info modified_peptide="FM[147]FELEK">
+     <mod_aminoacid_mass position="2" mass="147.035385" variable="15.994900" source="param"/>
+    </modification_info>
+    <search_score name="xcorr" value="0.702"/>
+    <search_score name="deltacn" value="0.002"/>
+    <search_score name="spscore" value="23.1"/>
+    <search_score name="sprank" value="6"/>
+    <search_score name="expect" value="2.02E+01"/>
+   </search_hit>
+   <search_hit hit_rank="4" peptide="KVPEDDEK" peptide_prev_aa="R" peptide_next_aa="R" protein="DECOY_sp|Q7Z4V5|HDGR2_HUMAN" num_tot_proteins="1" num_matched_ions="3" tot_num_ions="14" calc_neutral_pep_mass="958.460741" massdiff="0.998504" num_tol_term="2" num_missed_cleavages="1" num_matched_peptides="492">
+    <search_score name="xcorr" value="0.701"/>
+    <search_score name="deltacn" value="0.001"/>
+    <search_score name="spscore" value="20.8"/>
+    <search_score name="sprank" value="8"/>
+    <search_score name="expect" value="2.04E+01"/>
+   </search_hit>
+   <search_hit hit_rank="5" peptide="KTEYYEK" peptide_prev_aa="K" peptide_next_aa="S" protein="DECOY_sp|Q8WWZ4|ABCAA_HUMAN" num_tot_proteins="1" num_matched_ions="3" tot_num_ions="12" calc_neutral_pep_mass="959.460013" massdiff="-0.000767" num_tol_term="2" num_missed_cleavages="1" num_matched_peptides="492">
+    <search_score name="xcorr" value="0.700"/>
+    <search_score name="deltacn" value="1.000"/>
+    <search_score name="spscore" value="24.2"/>
+    <search_score name="sprank" value="4"/>
+    <search_score name="expect" value="2.05E+01"/>
+   </search_hit>
+  </search_result>
+ </spectrum_query>
+ <spectrum_query spectrum="sample_tiny_hela.10043.10043.2" spectrumNativeID="controllerType=0 controllerNumber=1 scan=10043" start_scan="10043" end_scan="10043" precursor_neutral_mass="821.418365" assumed_charge="2" index="5" retention_time_sec="600.2">
+  <search_result>
+   <search_hit hit_rank="1" peptide="SGTGPYLK" peptide_prev_aa="K" peptide_next_aa="S" protein="DECOY_sp|Q32MH5|F214A_HUMAN" num_tot_proteins="1" num_matched_ions="3" tot_num_ions="14" calc_neutral_pep_mass="821.428319" massdiff="-0.009954" num_tol_term="2" num_missed_cleavages="0" num_matched_peptides="731">
+    <search_score name="xcorr" value="0.747"/>
+    <search_score name="deltacn" value="0.001"/>
+    <search_score name="spscore" value="42.3"/>
+    <search_score name="sprank" value="9"/>
+    <search_score name="expect" value="2.26E+01"/>
+   </search_hit>
+   <search_hit hit_rank="2" peptide="PTSEMLK" peptide_prev_aa="K" peptide_next_aa="V" protein="DECOY_sp|Q96JB1|DYH8_HUMAN" num_tot_proteins="1" num_matched_ions="3" tot_num_ions="12" calc_neutral_pep_mass="820.400040" massdiff="1.018325" num_tol_term="1" num_missed_cleavages="0" num_matched_peptides="731">
+    <modification_info modified_peptide="PTSEM[147]LK">
+     <mod_aminoacid_mass position="5" mass="147.035385" variable="15.994900" source="param"/>
+    </modification_info>
+    <search_score name="xcorr" value="0.746"/>
+    <search_score name="deltacn" value="0.043"/>
+    <search_score name="spscore" value="42.6"/>
+    <search_score name="sprank" value="7"/>
+    <search_score name="expect" value="2.27E+01"/>
+   </search_hit>
+   <search_hit hit_rank="3" peptide="MAMIVEK" peptide_prev_aa="K" peptide_next_aa="K" protein="DECOY_sp|Q8NGN0|OR4D5_HUMAN" num_tot_proteins="1" num_matched_ions="3" tot_num_ions="12" calc_neutral_pep_mass="820.418682" massdiff="0.999683" num_tol_term="2" num_missed_cleavages="0" num_matched_peptides="731">
+    <search_score name="xcorr" value="0.714"/>
+    <search_score name="deltacn" value="0.037"/>
+    <search_score name="spscore" value="38.6"/>
+    <search_score name="sprank" value="15"/>
+    <search_score name="expect" value="3.13E+01"/>
+   </search_hit>
+   <search_hit hit_rank="4" peptide="AYQEALK" peptide_prev_aa="K" peptide_next_aa="E" protein="DECOY_sp|P00480|OTC_HUMAN" num_tot_proteins="1" num_matched_ions="3" tot_num_ions="12" calc_neutral_pep_mass="821.428319" massdiff="-0.009954" num_tol_term="2" num_missed_cleavages="0" num_matched_peptides="731">
+    <search_score name="xcorr" value="0.688"/>
+    <search_score name="deltacn" value="0.063"/>
+    <search_score name="spscore" value="42.5"/>
+    <search_score name="sprank" value="8"/>
+    <search_score name="expect" value="4.06E+01"/>
+   </search_hit>
+   <search_hit hit_rank="5" peptide="TSNQMLK" peptide_prev_aa="K" peptide_next_aa="A" protein="DECOY_sp|Q9NTI2|AT8A2_HUMAN" num_tot_proteins="1" num_matched_ions="4" tot_num_ions="12" calc_neutral_pep_mass="820.411288" massdiff="1.007077" num_tol_term="2" num_missed_cleavages="0" num_matched_peptides="731">
+    <search_score name="xcorr" value="0.645"/>
+    <search_score name="deltacn" value="1.000"/>
+    <search_score name="spscore" value="67.1"/>
+    <search_score name="sprank" value="1"/>
+    <search_score name="expect" value="6.23E+01"/>
+   </search_hit>
+  </search_result>
+ </spectrum_query>
+ <spectrum_query spectrum="sample_tiny_hela.10044.10044.3" spectrumNativeID="controllerType=0 controllerNumber=1 scan=10044" start_scan="10044" end_scan="10044" precursor_neutral_mass="1485.721852" assumed_charge="3" index="6" retention_time_sec="600.2">
+  <search_result>
+   <search_hit hit_rank="1" peptide="KSDSQVFGSCSKR" peptide_prev_aa="R" peptide_next_aa="E" protein="DECOY_sp|O95243|MBD4_HUMAN" num_tot_proteins="1" num_matched_ions="4" tot_num_ions="48" calc_neutral_pep_mass="1484.704176" massdiff="1.017676" num_tol_term="2" num_missed_cleavages="2" num_matched_peptides="779">
+    <modification_info modified_peptide="KSDSQVFGSCSKR">
+     <mod_aminoacid_mass position="10" mass="160.030649" static="57.021464"/>
+    </modification_info>
+    <search_score name="xcorr" value="0.825"/>
+    <search_score name="deltacn" value="0.083"/>
+    <search_score name="spscore" value="17.5"/>
+    <search_score name="sprank" value="10"/>
+    <search_score name="expect" value="7.45E+00"/>
+   </search_hit>
+   <search_hit hit_rank="2" peptide="KGAQMMKQVSSMK" peptide_prev_aa="K" peptide_next_aa="F" protein="DECOY_sp|Q6PIW4|FIGL1_HUMAN" num_tot_proteins="1" num_matched_ions="5" tot_num_ions="48" calc_neutral_pep_mass="1484.714911" massdiff="1.006941" num_tol_term="2" num_missed_cleavages="2" num_matched_peptides="779">
+    <modification_info modified_peptide="KGAQM[147]M[147]KQVSSMK">
+     <mod_aminoacid_mass position="5" mass="147.035385" variable="15.994900" source="param"/>
+     <mod_aminoacid_mass position="6" mass="147.035385" variable="15.994900" source="param"/>
+    </modification_info>
+    <search_score name="xcorr" value="0.757"/>
+    <search_score name="deltacn" value="0.034"/>
+    <search_score name="spscore" value="23.3"/>
+    <search_score name="sprank" value="3"/>
+    <search_score name="expect" value="1.43E+01"/>
+   </search_hit>
+   <search_hit hit_rank="3" peptide="NVGSYSQVEDLFK" peptide_prev_aa="R" peptide_next_aa="M" protein="DECOY_sp|Q8N264|RHG24_HUMAN" num_tot_proteins="1" num_matched_ions="4" tot_num_ions="48" calc_neutral_pep_mass="1484.714724" massdiff="1.007128" num_tol_term="2" num_missed_cleavages="0" num_matched_peptides="779">
+    <search_score name="xcorr" value="0.731"/>
+    <search_score name="deltacn" value="0.057"/>
+    <search_score name="spscore" value="22.0"/>
+    <search_score name="sprank" value="5"/>
+    <search_score name="expect" value="1.83E+01"/>
+   </search_hit>
+   <search_hit hit_rank="4" peptide="LKKEMECMAVSK" peptide_prev_aa="K" peptide_next_aa="E" protein="DECOY_sp|Q13464|ROCK1_HUMAN" num_tot_proteins="1" num_matched_ions="4" tot_num_ions="44" calc_neutral_pep_mass="1484.703678" massdiff="1.018174" num_tol_term="2" num_missed_cleavages="2" num_matched_peptides="779">
+    <modification_info modified_peptide="LKKEM[147]ECM[147]AVSK">
+     <mod_aminoacid_mass position="5" mass="147.035385" variable="15.994900" source="param"/>
+     <mod_aminoacid_mass position="7" mass="160.030649" static="57.021464"/>
+     <mod_aminoacid_mass position="8" mass="147.035385" variable="15.994900" source="param"/>
+    </modification_info>
+    <search_score name="xcorr" value="0.689"/>
+    <search_score name="deltacn" value="0.002"/>
+    <search_score name="spscore" value="19.1"/>
+    <search_score name="sprank" value="9"/>
+    <search_score name="expect" value="2.73E+01"/>
+   </search_hit>
+   <search_hit hit_rank="5" peptide="DLLYPLCHSPSGK" peptide_prev_aa="K" peptide_next_aa="L" protein="DECOY_sp|A0A1B0GTY4|TEX50_HUMAN" num_tot_proteins="1" num_matched_ions="5" tot_num_ions="48" calc_neutral_pep_mass="1485.728600" massdiff="-0.006748" num_tol_term="2" num_missed_cleavages="0" num_matched_peptides="779">
+    <modification_info modified_peptide="DLLYPLCHSPSGK">
+     <mod_aminoacid_mass position="7" mass="160.030649" static="57.021464"/>
+    </modification_info>
+    <search_score name="xcorr" value="0.687"/>
+    <search_score name="deltacn" value="1.000"/>
+    <search_score name="spscore" value="27.5"/>
+    <search_score name="sprank" value="2"/>
+    <search_score name="expect" value="2.76E+01"/>
+   </search_hit>
+  </search_result>
+ </spectrum_query>
+ <spectrum_query spectrum="sample_tiny_hela.10045.10045.2" spectrumNativeID="controllerType=0 controllerNumber=1 scan=10045" start_scan="10045" end_scan="10045" precursor_neutral_mass="956.455954" assumed_charge="2" index="7" retention_time_sec="600.3">
+  <search_result>
+   <search_hit hit_rank="1" peptide="TKGSDGYTK" peptide_prev_aa="R" peptide_next_aa="T" protein="DECOY_sp|O94818|NOL4_HUMAN" num_tot_proteins="1" num_matched_ions="4" tot_num_ions="16" calc_neutral_pep_mass="955.461075" massdiff="0.994878" num_tol_term="2" num_missed_cleavages="1" num_matched_peptides="396">
+    <search_score name="xcorr" value="0.828"/>
+    <search_score name="deltacn" value="0.122"/>
+    <search_score name="spscore" value="75.8"/>
+    <search_score name="sprank" value="1"/>
+    <search_score name="expect" value="4.38E+00"/>
+   </search_hit>
+   <search_hit hit_rank="2" peptide="DTMVFVTK" peptide_prev_aa="K" peptide_next_aa="Y" protein="DECOY_sp|Q9NYK1|TLR7_HUMAN" num_tot_proteins="1" num_matched_ions="3" tot_num_ions="14" calc_neutral_pep_mass="955.468454" massdiff="0.987499" num_tol_term="2" num_missed_cleavages="0" num_matched_peptides="396">
+    <modification_info modified_peptide="DTM[147]VFVTK">
+     <mod_aminoacid_mass position="3" mass="147.035385" variable="15.994900" source="param"/>
+    </modification_info>
+    <search_score name="xcorr" value="0.727"/>
+    <search_score name="deltacn" value="0.127"/>
+    <search_score name="spscore" value="49.1"/>
+    <search_score name="sprank" value="6"/>
+    <search_score name="expect" value="1.30E+01"/>
+   </search_hit>
+   <search_hit hit_rank="3" peptide="KMMIMQK" peptide_prev_aa="R" peptide_next_aa="K" protein="DECOY_sp|Q9BZA7|PC11X_HUMAN" num_tot_proteins="2" num_matched_ions="3" tot_num_ions="12" calc_neutral_pep_mass="956.449286" massdiff="0.006667" num_tol_term="2" num_missed_cleavages="1" num_matched_peptides="396">
+    <alternative_protein protein="DECOY_sp|Q9BZA8|PC11Y_HUMAN"/>
+    <modification_info modified_peptide="KM[147]M[147]IM[147]QK">
+     <mod_aminoacid_mass position="2" mass="147.035385" variable="15.994900" source="param"/>
+     <mod_aminoacid_mass position="3" mass="147.035385" variable="15.994900" source="param"/>
+     <mod_aminoacid_mass position="5" mass="147.035385" variable="15.994900" source="param"/>
+    </modification_info>
+    <search_score name="xcorr" value="0.634"/>
+    <search_score name="deltacn" value="0.001"/>
+    <search_score name="spscore" value="60.7"/>
+    <search_score name="sprank" value="2"/>
+    <search_score name="expect" value="3.51E+01"/>
+   </search_hit>
+   <search_hit hit_rank="4" peptide="SENHPFVK" peptide_prev_aa="K" peptide_next_aa="Y" protein="DECOY_sp|P56715|RP1_HUMAN" num_tot_proteins="1" num_matched_ions="3" tot_num_ions="14" calc_neutral_pep_mass="956.471580" massdiff="-0.015627" num_tol_term="2" num_missed_cleavages="0" num_matched_peptides="396">
+    <search_score name="xcorr" value="0.634"/>
+    <search_score name="deltacn" value="0.013"/>
+    <search_score name="spscore" value="39.6"/>
+    <search_score name="sprank" value="9"/>
+    <search_score name="expect" value="3.53E+01"/>
+   </search_hit>
+   <search_hit hit_rank="5" peptide="TPFYEATK" peptide_prev_aa="R" peptide_next_aa="N" protein="DECOY_sp|Q5T4B2|GT253_HUMAN" num_tot_proteins="1" num_matched_ions="3" tot_num_ions="14" calc_neutral_pep_mass="955.465098" massdiff="0.990855" num_tol_term="2" num_missed_cleavages="0" num_matched_peptides="396">
+    <search_score name="xcorr" value="0.625"/>
+    <search_score name="deltacn" value="1.000"/>
+    <search_score name="spscore" value="50.9"/>
+    <search_score name="sprank" value="5"/>
+    <search_score name="expect" value="3.85E+01"/>
+   </search_hit>
+  </search_result>
+ </spectrum_query>
+ <spectrum_query spectrum="sample_tiny_hela.10046.10046.2" spectrumNativeID="controllerType=0 controllerNumber=1 scan=10046" start_scan="10046" end_scan="10046" precursor_neutral_mass="1409.728532" assumed_charge="2" index="8" retention_time_sec="600.3">
+  <search_result>
+   <search_hit hit_rank="1" peptide="LNLYQLSKMER" peptide_prev_aa="R" peptide_next_aa="G" protein="DECOY_sp|Q53EV4|LRC23_HUMAN" num_tot_proteins="1" num_matched_ions="3" tot_num_ions="20" calc_neutral_pep_mass="1409.733671" massdiff="-0.005138" num_tol_term="2" num_missed_cleavages="1" num_matched_peptides="779">
+    <modification_info modified_peptide="LNLYQLSKM[147]ER">
+     <mod_aminoacid_mass position="9" mass="147.035385" variable="15.994900" source="param"/>
+    </modification_info>
+    <search_score name="xcorr" value="0.676"/>
+    <search_score name="deltacn" value="0.006"/>
+    <search_score name="spscore" value="23.5"/>
+    <search_score name="sprank" value="4"/>
+    <search_score name="expect" value="1.33E+01"/>
+   </search_hit>
+   <search_hit hit_rank="2" peptide="GGLLMCNLLFTR" peptide_prev_aa="R" peptide_next_aa="K" protein="DECOY_sp|Q70Z35|PREX2_HUMAN" num_tot_proteins="1" num_matched_ions="3" tot_num_ions="22" calc_neutral_pep_mass="1409.715912" massdiff="0.012620" num_tol_term="2" num_missed_cleavages="0" num_matched_peptides="779">
+    <modification_info modified_peptide="GGLLM[147]CNLLFTR">
+     <mod_aminoacid_mass position="5" mass="147.035385" variable="15.994900" source="param"/>
+     <mod_aminoacid_mass position="6" mass="160.030649" static="57.021464"/>
+    </modification_info>
+    <search_score name="xcorr" value="0.672"/>
+    <search_score name="deltacn" value="0.006"/>
+    <search_score name="spscore" value="21.4"/>
+    <search_score name="sprank" value="10"/>
+    <search_score name="expect" value="1.38E+01"/>
+   </search_hit>
+   <search_hit hit_rank="3" peptide="FLYPSLSQSNVR" peptide_prev_aa="K" peptide_next_aa="A" protein="DECOY_sp|Q13103|SPP24_HUMAN" num_tot_proteins="1" num_matched_ions="3" tot_num_ions="22" calc_neutral_pep_mass="1409.730314" massdiff="-0.001782" num_tol_term="2" num_missed_cleavages="0" num_matched_peptides="779">
+    <search_score name="xcorr" value="0.668"/>
+    <search_score name="deltacn" value="0.063"/>
+    <search_score name="spscore" value="23.1"/>
+    <search_score name="sprank" value="5"/>
+    <search_score name="expect" value="1.44E+01"/>
+   </search_hit>
+   <search_hit hit_rank="4" peptide="GMDALPPQLELAR" peptide_prev_aa="R" peptide_next_aa="A" protein="DECOY_sp|A6XGL0|YJEN3_HUMAN" num_tot_proteins="1" num_matched_ions="3" tot_num_ions="24" calc_neutral_pep_mass="1409.733685" massdiff="-0.005153" num_tol_term="2" num_missed_cleavages="0" num_matched_peptides="779">
+    <search_score name="xcorr" value="0.626"/>
+    <search_score name="deltacn" value="0.033"/>
+    <search_score name="spscore" value="19.2"/>
+    <search_score name="sprank" value="14"/>
+    <search_score name="expect" value="2.18E+01"/>
+   </search_hit>
+   <search_hit hit_rank="5" peptide="RVEDVQINSGHR" peptide_prev_aa="R" peptide_next_aa="L" protein="DECOY_sp|Q6V1X1|DPP8_HUMAN" num_tot_proteins="1" num_matched_ions="3" tot_num_ions="22" calc_neutral_pep_mass="1408.717124" massdiff="1.011408" num_tol_term="2" num_missed_cleavages="1" num_matched_peptides="779">
+    <search_score name="xcorr" value="0.605"/>
+    <search_score name="deltacn" value="1.000"/>
+    <search_score name="spscore" value="23.8"/>
+    <search_score name="sprank" value="2"/>
+    <search_score name="expect" value="2.67E+01"/>
+   </search_hit>
+  </search_result>
+ </spectrum_query>
+ <spectrum_query spectrum="sample_tiny_hela.10047.10047.3" spectrumNativeID="controllerType=0 controllerNumber=1 scan=10047" start_scan="10047" end_scan="10047" precursor_neutral_mass="1642.846511" assumed_charge="3" index="9" retention_time_sec="600.3">
+  <search_result>
+   <search_hit hit_rank="1" peptide="ITGSGNRAELMTKHK" peptide_prev_aa="K" peptide_next_aa="A" protein="DECOY_sp|Q9H6B1|Z385D_HUMAN" num_tot_proteins="1" num_matched_ions="4" tot_num_ions="56" calc_neutral_pep_mass="1641.862074" massdiff="0.984437" num_tol_term="2" num_missed_cleavages="2" num_matched_peptides="852">
+    <search_score name="xcorr" value="0.756"/>
+    <search_score name="deltacn" value="0.136"/>
+    <search_score name="spscore" value="11.5"/>
+    <search_score name="sprank" value="1"/>
+    <search_score name="expect" value="3.33E+00"/>
+   </search_hit>
+   <search_hit hit_rank="2" peptide="VFRAVAQMDSLDYK" peptide_prev_aa="K" peptide_next_aa="W" protein="DECOY_sp|Q02742|GCNT1_HUMAN" num_tot_proteins="1" num_matched_ions="3" tot_num_ions="52" calc_neutral_pep_mass="1641.818478" massdiff="1.028033" num_tol_term="2" num_missed_cleavages="1" num_matched_peptides="852">
+    <search_score name="xcorr" value="0.653"/>
+    <search_score name="deltacn" value="0.007"/>
+    <search_score name="spscore" value="9.8"/>
+    <search_score name="sprank" value="2"/>
+    <search_score name="expect" value="1.06E+01"/>
+   </search_hit>
+   <search_hit hit_rank="3" peptide="KGKAPPEDDEMGLLK" peptide_prev_aa="K" peptide_next_aa="K" protein="DECOY_sp|Q7Z4N2|TRPM1_HUMAN" num_tot_proteins="1" num_matched_ions="3" tot_num_ions="56" calc_neutral_pep_mass="1642.823608" massdiff="0.022903" num_tol_term="2" num_missed_cleavages="2" num_matched_peptides="852">
+    <modification_info modified_peptide="KGKAPPEDDEM[147]GLLK">
+     <mod_aminoacid_mass position="11" mass="147.035385" variable="15.994900" source="param"/>
+    </modification_info>
+    <search_score name="xcorr" value="0.648"/>
+    <search_score name="deltacn" value="0.002"/>
+    <search_score name="spscore" value="6.3"/>
+    <search_score name="sprank" value="9"/>
+    <search_score name="expect" value="1.11E+01"/>
+   </search_hit>
+   <search_hit hit_rank="4" peptide="KNNLYAPYICIFK" peptide_prev_aa="R" peptide_next_aa="T" protein="DECOY_sp|P09132|SRP19_HUMAN" num_tot_proteins="1" num_matched_ions="3" tot_num_ions="48" calc_neutral_pep_mass="1642.854135" massdiff="-0.007624" num_tol_term="2" num_missed_cleavages="1" num_matched_peptides="852">
+    <modification_info modified_peptide="KNNLYAPYICIFK">
+     <mod_aminoacid_mass position="10" mass="160.030649" static="57.021464"/>
+    </modification_info>
+    <search_score name="xcorr" value="0.647"/>
+    <search_score name="deltacn" value="0.003"/>
+    <search_score name="spscore" value="4.8"/>
+    <search_score name="sprank" value="17"/>
+    <search_score name="expect" value="1.13E+01"/>
+   </search_hit>
+   <search_hit hit_rank="5" peptide="KSINTCYQMKLIK" peptide_prev_aa="R" peptide_next_aa="A" protein="DECOY_sp|Q8NEE6|DRC6_HUMAN" num_tot_proteins="1" num_matched_ions="3" tot_num_ions="48" calc_neutral_pep_mass="1641.858220" massdiff="0.988291" num_tol_term="2" num_missed_cleavages="2" num_matched_peptides="852">
+    <modification_info modified_peptide="KSINTCYQM[147]KLIK">
+     <mod_aminoacid_mass position="6" mass="160.030649" static="57.021464"/>
+     <mod_aminoacid_mass position="9" mass="147.035385" variable="15.994900" source="param"/>
+    </modification_info>
+    <search_score name="xcorr" value="0.645"/>
+    <search_score name="deltacn" value="1.000"/>
+    <search_score name="spscore" value="7.3"/>
+    <search_score name="sprank" value="3"/>
+    <search_score name="expect" value="1.16E+01"/>
+   </search_hit>
+  </search_result>
+ </spectrum_query>
+ <spectrum_query spectrum="sample_tiny_hela.10048.10048.2" spectrumNativeID="controllerType=0 controllerNumber=1 scan=10048" start_scan="10048" end_scan="10048" precursor_neutral_mass="1116.548207" assumed_charge="2" index="10" retention_time_sec="600.4">
+  <search_result>
+   <search_hit hit_rank="1" peptide="NNEKELSAGR" peptide_prev_aa="K" peptide_next_aa="C" protein="DECOY_sp|A2RUB6|CCD66_HUMAN" num_tot_proteins="1" num_matched_ions="3" tot_num_ions="18" calc_neutral_pep_mass="1116.552350" massdiff="-0.004143" num_tol_term="2" num_missed_cleavages="1" num_matched_peptides="643">
+    <search_score name="xcorr" value="0.653"/>
+    <search_score name="deltacn" value="0.085"/>
+    <search_score name="spscore" value="9.5"/>
+    <search_score name="sprank" value="14"/>
+    <search_score name="expect" value="1.68E+01"/>
+   </search_hit>
+   <search_hit hit_rank="2" peptide="RHFCELVR" peptide_prev_aa="K" peptide_next_aa="T" protein="DECOY_sp|Q16644|MAPK3_HUMAN" num_tot_proteins="1" num_matched_ions="3" tot_num_ions="14" calc_neutral_pep_mass="1115.565832" massdiff="0.982374" num_tol_term="2" num_missed_cleavages="1" num_matched_peptides="643">
+    <modification_info modified_peptide="RHFCELVR">
+     <mod_aminoacid_mass position="4" mass="160.030649" static="57.021464"/>
+    </modification_info>
+    <search_score name="xcorr" value="0.598"/>
+    <search_score name="deltacn" value="0.048"/>
+    <search_score name="spscore" value="20.7"/>
+    <search_score name="sprank" value="1"/>
+    <search_score name="expect" value="3.03E+01"/>
+   </search_hit>
+   <search_hit hit_rank="3" peptide="VEEWRKDR" peptide_prev_aa="R" peptide_next_aa="G" protein="DECOY_sp|P24557|THAS_HUMAN" num_tot_proteins="1" num_matched_ions="3" tot_num_ions="14" calc_neutral_pep_mass="1116.567606" massdiff="-0.019399" num_tol_term="2" num_missed_cleavages="2" num_matched_peptides="643">
+    <search_score name="xcorr" value="0.569"/>
+    <search_score name="deltacn" value="0.009"/>
+    <search_score name="spscore" value="11.2"/>
+    <search_score name="sprank" value="8"/>
+    <search_score name="expect" value="4.10E+01"/>
+   </search_hit>
+   <search_hit hit_rank="4" peptide="QKQNEDNIK" peptide_prev_aa="R" peptide_next_aa="A" protein="DECOY_sp|Q9UL16|CFA45_HUMAN" num_tot_proteins="1" num_matched_ions="4" tot_num_ions="16" calc_neutral_pep_mass="1115.557101" massdiff="0.991106" num_tol_term="2" num_missed_cleavages="1" num_matched_peptides="643">
+    <search_score name="xcorr" value="0.565"/>
+    <search_score name="deltacn" value="0.064"/>
+    <search_score name="spscore" value="15.6"/>
+    <search_score name="sprank" value="2"/>
+    <search_score name="expect" value="4.32E+01"/>
+   </search_hit>
+   <search_hit hit_rank="5" peptide="PLVCEETLR" peptide_prev_aa="K" peptide_next_aa="G" protein="DECOY_sp|Q8WZ60|KLHL6_HUMAN" num_tot_proteins="1" num_matched_ions="3" tot_num_ions="16" calc_neutral_pep_mass="1115.564495" massdiff="0.983712" num_tol_term="1" num_missed_cleavages="0" num_matched_peptides="643">
+    <modification_info modified_peptide="PLVCEETLR">
+     <mod_aminoacid_mass position="4" mass="160.030649" static="57.021464"/>
+    </modification_info>
+    <search_score name="xcorr" value="0.528"/>
+    <search_score name="deltacn" value="1.000"/>
+    <search_score name="spscore" value="12.3"/>
+    <search_score name="sprank" value="6"/>
+    <search_score name="expect" value="6.34E+01"/>
+   </search_hit>
+  </search_result>
+ </spectrum_query>
+ <spectrum_query spectrum="sample_tiny_hela.10049.10049.2" spectrumNativeID="controllerType=0 controllerNumber=1 scan=10049" start_scan="10049" end_scan="10049" precursor_neutral_mass="1413.596220" assumed_charge="2" index="11" retention_time_sec="600.4">
+  <search_result>
+   <search_hit hit_rank="1" peptide="KCCGKQQCCGK" peptide_prev_aa="K" peptide_next_aa="Q" protein="DECOY_sp|A0A286YF77|SCGR6_HUMAN" num_tot_proteins="1" num_matched_ions="3" tot_num_ions="20" calc_neutral_pep_mass="1412.578130" massdiff="1.018089" num_tol_term="2" num_missed_cleavages="2" num_matched_peptides="170">
+    <modification_info modified_peptide="KCCGKQQCCGK">
+     <mod_aminoacid_mass position="2" mass="160.030649" static="57.021464"/>
+     <mod_aminoacid_mass position="3" mass="160.030649" static="57.021464"/>
+     <mod_aminoacid_mass position="8" mass="160.030649" static="57.021464"/>
+     <mod_aminoacid_mass position="9" mass="160.030649" static="57.021464"/>
+    </modification_info>
+    <search_score name="xcorr" value="0.731"/>
+    <search_score name="deltacn" value="0.002"/>
+    <search_score name="spscore" value="13.4"/>
+    <search_score name="sprank" value="3"/>
+    <search_score name="expect" value="1.97E+01"/>
+   </search_hit>
+   <search_hit hit_rank="2" peptide="CLDAWMSTGDGGK" peptide_prev_aa="R" peptide_next_aa="N" protein="DECOY_sp|O75973|C1QRF_HUMAN" num_tot_proteins="3" num_matched_ions="3" tot_num_ions="24" calc_neutral_pep_mass="1412.570036" massdiff="1.026184" num_tol_term="2" num_missed_cleavages="0" num_matched_peptides="170">
+    <alternative_protein protein="DECOY_sp|Q5VWW1|C1QL3_HUMAN"/>
+    <alternative_protein protein="DECOY_sp|Q7Z5L3|C1QL2_HUMAN"/>
+    <modification_info modified_peptide="CLDAWM[147]STGDGGK">
+     <mod_aminoacid_mass position="1" mass="160.030649" static="57.021464"/>
+     <mod_aminoacid_mass position="6" mass="147.035385" variable="15.994900" source="param"/>
+    </modification_info>
+    <search_score name="xcorr" value="0.729"/>
+    <search_score name="deltacn" value="0.100"/>
+    <search_score name="spscore" value="15.0"/>
+    <search_score name="sprank" value="2"/>
+    <search_score name="expect" value="2.00E+01"/>
+   </search_hit>
+   <search_hit hit_rank="3" peptide="RCGCEFSGVTNK" peptide_prev_aa="R" peptide_next_aa="G" protein="DECOY_sp|Q8IWY4|SCUB1_HUMAN" num_tot_proteins="1" num_matched_ions="3" tot_num_ions="22" calc_neutral_pep_mass="1413.612919" massdiff="-0.016699" num_tol_term="2" num_missed_cleavages="1" num_matched_peptides="170">
+    <modification_info modified_peptide="RCGCEFSGVTNK">
+     <mod_aminoacid_mass position="2" mass="160.030649" static="57.021464"/>
+     <mod_aminoacid_mass position="4" mass="160.030649" static="57.021464"/>
+    </modification_info>
+    <search_score name="xcorr" value="0.656"/>
+    <search_score name="deltacn" value="0.154"/>
+    <search_score name="spscore" value="15.0"/>
+    <search_score name="sprank" value="1"/>
+    <search_score name="expect" value="3.74E+01"/>
+   </search_hit>
+   <search_hit hit_rank="4" peptide="FCGNPGYTPDTGK" peptide_prev_aa="R" peptide_next_aa="A" protein="DECOY_sp|O14920|IKKB_HUMAN" num_tot_proteins="1" num_matched_ions="3" tot_num_ions="24" calc_neutral_pep_mass="1412.603065" massdiff="0.993154" num_tol_term="2" num_missed_cleavages="0" num_matched_peptides="170">
+    <modification_info modified_peptide="FCGNPGYTPDTGK">
+     <mod_aminoacid_mass position="2" mass="160.030649" static="57.021464"/>
+    </modification_info>
+    <search_score name="xcorr" value="0.555"/>
+    <search_score name="deltacn" value="0.101"/>
+    <search_score name="spscore" value="9.5"/>
+    <search_score name="sprank" value="5"/>
+    <search_score name="expect" value="8.93E+01"/>
+   </search_hit>
+   <search_hit hit_rank="5" peptide="YMNLDWVTDNK" peptide_prev_aa="K" peptide_next_aa="S" protein="DECOY_sp|Q9NYW0|T2R10_HUMAN" num_tot_proteins="1" num_matched_ions="2" tot_num_ions="20" calc_neutral_pep_mass="1413.623451" massdiff="-0.027232" num_tol_term="2" num_missed_cleavages="0" num_matched_peptides="170">
+    <modification_info modified_peptide="YM[147]NLDWVTDNK">
+     <mod_aminoacid_mass position="2" mass="147.035385" variable="15.994900" source="param"/>
+    </modification_info>
+    <search_score name="xcorr" value="0.498"/>
+    <search_score name="deltacn" value="1.000"/>
+    <search_score name="spscore" value="8.6"/>
+    <search_score name="sprank" value="6"/>
+    <search_score name="expect" value="1.45E+02"/>
+   </search_hit>
+  </search_result>
+ </spectrum_query>
+ <spectrum_query spectrum="sample_tiny_hela.10050.10050.2" spectrumNativeID="controllerType=0 controllerNumber=1 scan=10050" start_scan="10050" end_scan="10050" precursor_neutral_mass="1249.594973" assumed_charge="2" index="12" retention_time_sec="600.4">
+  <search_result>
+   <search_hit hit_rank="1" peptide="LVMESVAGDTGR" peptide_prev_aa="R" peptide_next_aa="S" protein="DECOY_sp|Q9Y5H5|PCDA9_HUMAN" num_tot_proteins="1" num_matched_ions="5" tot_num_ions="22" calc_neutral_pep_mass="1249.597237" massdiff="-0.002264" num_tol_term="2" num_missed_cleavages="0" num_matched_peptides="669">
+    <modification_info modified_peptide="LVM[147]ESVAGDTGR">
+     <mod_aminoacid_mass position="3" mass="147.035385" variable="15.994900" source="param"/>
+    </modification_info>
+    <search_score name="xcorr" value="0.940"/>
+    <search_score name="deltacn" value="0.402"/>
+    <search_score name="spscore" value="62.5"/>
+    <search_score name="sprank" value="1"/>
+    <search_score name="expect" value="6.76E-02"/>
+   </search_hit>
+   <search_hit hit_rank="2" peptide="ESLTLCVDWK" peptide_prev_aa="R" peptide_next_aa="G" protein="DECOY_sp|Q02880|TOP2B_HUMAN" num_tot_proteins="1" num_matched_ions="3" tot_num_ions="18" calc_neutral_pep_mass="1249.601274" massdiff="-0.006301" num_tol_term="2" num_missed_cleavages="0" num_matched_peptides="669">
+    <modification_info modified_peptide="ESLTLCVDWK">
+     <mod_aminoacid_mass position="6" mass="160.030649" static="57.021464"/>
+    </modification_info>
+    <search_score name="xcorr" value="0.562"/>
+    <search_score name="deltacn" value="0.273"/>
+    <search_score name="spscore" value="22.4"/>
+    <search_score name="sprank" value="2"/>
+    <search_score name="expect" value="6.64E+00"/>
+   </search_hit>
+   <search_hit hit_rank="3" peptide="KKEMWQQEK" peptide_prev_aa="R" peptide_next_aa="R" protein="DECOY_sp|Q5T2D3|OTUD3_HUMAN" num_tot_proteins="1" num_matched_ions="3" tot_num_ions="16" calc_neutral_pep_mass="1249.612493" massdiff="-0.017520" num_tol_term="2" num_missed_cleavages="2" num_matched_peptides="669">
+    <modification_info modified_peptide="KKEM[147]WQQEK">
+     <mod_aminoacid_mass position="4" mass="147.035385" variable="15.994900" source="param"/>
+    </modification_info>
+    <search_score name="xcorr" value="0.408"/>
+    <search_score name="deltacn" value="0.006"/>
+    <search_score name="spscore" value="20.0"/>
+    <search_score name="sprank" value="4"/>
+    <search_score name="expect" value="4.28E+01"/>
+   </search_hit>
+   <search_hit hit_rank="4" peptide="KGLSGCDSGNKK" peptide_prev_aa="K" peptide_next_aa="N" protein="DECOY_sp|Q9Y6Q3|ZFP37_HUMAN" num_tot_proteins="1" num_matched_ions="3" tot_num_ions="22" calc_neutral_pep_mass="1249.608485" massdiff="-0.013512" num_tol_term="2" num_missed_cleavages="2" num_matched_peptides="669">
+    <modification_info modified_peptide="KGLSGCDSGNKK">
+     <mod_aminoacid_mass position="6" mass="160.030649" static="57.021464"/>
+    </modification_info>
+    <search_score name="xcorr" value="0.406"/>
+    <search_score name="deltacn" value="0.094"/>
+    <search_score name="spscore" value="14.6"/>
+    <search_score name="sprank" value="5"/>
+    <search_score name="expect" value="4.41E+01"/>
+   </search_hit>
+   <search_hit hit_rank="5" peptide="GILSDDTNGTTR" peptide_prev_aa="K" peptide_next_aa="N" protein="DECOY_sp|Q9HAU6|TCTP8_HUMAN" num_tot_proteins="1" num_matched_ions="2" tot_num_ions="22" calc_neutral_pep_mass="1248.594609" massdiff="1.000364" num_tol_term="2" num_missed_cleavages="0" num_matched_peptides="669">
+    <search_score name="xcorr" value="0.368"/>
+    <search_score name="deltacn" value="1.000"/>
+    <search_score name="spscore" value="6.9"/>
+    <search_score name="sprank" value="37"/>
+    <search_score name="expect" value="7.00E+01"/>
+   </search_hit>
+  </search_result>
+ </spectrum_query>
+ <spectrum_query spectrum="sample_tiny_hela.10052.10052.2" spectrumNativeID="controllerType=0 controllerNumber=1 scan=10052" start_scan="10052" end_scan="10052" precursor_neutral_mass="838.444970" assumed_charge="2" index="13" retention_time_sec="600.6">
+  <search_result>
+   <search_hit hit_rank="1" peptide="KCQYLK" peptide_prev_aa="R" peptide_next_aa="C" protein="DECOY_sp|Q96MR9|ZN560_HUMAN" num_tot_proteins="1" num_matched_ions="4" tot_num_ions="10" calc_neutral_pep_mass="838.437109" massdiff="0.007860" num_tol_term="2" num_missed_cleavages="1" num_matched_peptides="494">
+    <modification_info modified_peptide="KCQYLK">
+     <mod_aminoacid_mass position="2" mass="160.030649" static="57.021464"/>
+    </modification_info>
+    <search_score name="xcorr" value="0.833"/>
+    <search_score name="deltacn" value="0.039"/>
+    <search_score name="spscore" value="87.7"/>
+    <search_score name="sprank" value="1"/>
+    <search_score name="expect" value="3.87E+00"/>
+   </search_hit>
+   <search_hit hit_rank="2" peptide="SLTDYIK" peptide_prev_aa="K" peptide_next_aa="D" protein="DECOY_sp|Q9BXT5|TEX15_HUMAN" num_tot_proteins="1" num_matched_ions="4" tot_num_ions="12" calc_neutral_pep_mass="838.443634" massdiff="0.001335" num_tol_term="2" num_missed_cleavages="0" num_matched_peptides="494">
+    <search_score name="xcorr" value="0.800"/>
+    <search_score name="deltacn" value="0.040"/>
+    <search_score name="spscore" value="84.6"/>
+    <search_score name="sprank" value="2"/>
+    <search_score name="expect" value="5.22E+00"/>
+   </search_hit>
+   <search_hit hit_rank="3" peptide="YTLSDLK" peptide_prev_aa="K" peptide_next_aa="I" protein="DECOY_sp|Q96S66|CLCC1_HUMAN" num_tot_proteins="1" num_matched_ions="4" tot_num_ions="12" calc_neutral_pep_mass="838.443634" massdiff="0.001335" num_tol_term="2" num_missed_cleavages="0" num_matched_peptides="494">
+    <search_score name="xcorr" value="0.769"/>
+    <search_score name="deltacn" value="0.165"/>
+    <search_score name="spscore" value="53.3"/>
+    <search_score name="sprank" value="3"/>
+    <search_score name="expect" value="6.96E+00"/>
+   </search_hit>
+   <search_hit hit_rank="4" peptide="ESLSIYK" peptide_prev_aa="K" peptide_next_aa="Q" protein="DECOY_sp|P42356|PI4KA_HUMAN" num_tot_proteins="1" num_matched_ions="3" tot_num_ions="12" calc_neutral_pep_mass="838.443634" massdiff="0.001335" num_tol_term="2" num_missed_cleavages="0" num_matched_peptides="494">
+    <search_score name="xcorr" value="0.642"/>
+    <search_score name="deltacn" value="0.001"/>
+    <search_score name="spscore" value="30.3"/>
+    <search_score name="sprank" value="8"/>
+    <search_score name="expect" value="2.20E+01"/>
+   </search_hit>
+   <search_hit hit_rank="5" peptide="ELAHELK" peptide_prev_aa="R" peptide_next_aa="A" protein="DECOY_sp|P50851|LRBA_HUMAN" num_tot_proteins="1" num_matched_ions="3" tot_num_ions="12" calc_neutral_pep_mass="838.454868" massdiff="-0.009898" num_tol_term="2" num_missed_cleavages="0" num_matched_peptides="494">
+    <search_score name="xcorr" value="0.642"/>
+    <search_score name="deltacn" value="1.000"/>
+    <search_score name="spscore" value="32.3"/>
+    <search_score name="sprank" value="7"/>
+    <search_score name="expect" value="2.21E+01"/>
+   </search_hit>
+  </search_result>
+ </spectrum_query>
+ <spectrum_query spectrum="sample_tiny_hela.10053.10053.3" spectrumNativeID="controllerType=0 controllerNumber=1 scan=10053" start_scan="10053" end_scan="10053" precursor_neutral_mass="1350.622589" assumed_charge="3" index="14" retention_time_sec="600.7">
+  <search_result>
+   <search_hit hit_rank="1" peptide="HFASEVGGEQYK" peptide_prev_aa="K" peptide_next_aa="T" protein="DECOY_sp|P40121|CAPG_HUMAN" num_tot_proteins="1" num_matched_ions="5" tot_num_ions="44" calc_neutral_pep_mass="1350.620430" massdiff="0.002159" num_tol_term="2" num_missed_cleavages="0" num_matched_peptides="444">
+    <search_score name="xcorr" value="0.698"/>
+    <search_score name="deltacn" value="0.170"/>
+    <search_score name="spscore" value="16.0"/>
+    <search_score name="sprank" value="2"/>
+    <search_score name="expect" value="1.05E+01"/>
+   </search_hit>
+   <search_hit hit_rank="2" peptide="KQGMNNCQGAAR" peptide_prev_aa="R" peptide_next_aa="Q" protein="DECOY_sp|Q96M86|DNHD1_HUMAN" num_tot_proteins="1" num_matched_ions="5" tot_num_ions="44" calc_neutral_pep_mass="1349.592837" massdiff="1.029751" num_tol_term="2" num_missed_cleavages="1" num_matched_peptides="444">
+    <modification_info modified_peptide="KQGM[147]NNCQGAAR">
+     <mod_aminoacid_mass position="4" mass="147.035385" variable="15.994900" source="param"/>
+     <mod_aminoacid_mass position="7" mass="160.030649" static="57.021464"/>
+    </modification_info>
+    <search_score name="xcorr" value="0.579"/>
+    <search_score name="deltacn" value="0.011"/>
+    <search_score name="spscore" value="12.7"/>
+    <search_score name="sprank" value="9"/>
+    <search_score name="expect" value="3.73E+01"/>
+   </search_hit>
+   <search_hit hit_rank="3" peptide="KGDKMIQIDQC" peptide_prev_aa="K" peptide_next_aa="-" protein="DECOY_sp|O60575|ISK4_HUMAN" num_tot_proteins="1" num_matched_ions="6" tot_num_ions="40" calc_neutral_pep_mass="1350.627157" massdiff="-0.004568" num_tol_term="2" num_missed_cleavages="2" num_matched_peptides="444">
+    <modification_info modified_peptide="KGDKM[147]IQIDQC">
+     <mod_aminoacid_mass position="5" mass="147.035385" variable="15.994900" source="param"/>
+     <mod_aminoacid_mass position="11" mass="160.030649" static="57.021464"/>
+    </modification_info>
+    <search_score name="xcorr" value="0.573"/>
+    <search_score name="deltacn" value="0.042"/>
+    <search_score name="spscore" value="18.4"/>
+    <search_score name="sprank" value="1"/>
+    <search_score name="expect" value="4.00E+01"/>
+   </search_hit>
+   <search_hit hit_rank="4" peptide="GEGQYEVLVDSR" peptide_prev_aa="R" peptide_next_aa="N" protein="DECOY_sp|P15586|GNS_HUMAN" num_tot_proteins="1" num_matched_ions="6" tot_num_ions="44" calc_neutral_pep_mass="1350.641559" massdiff="-0.018970" num_tol_term="2" num_missed_cleavages="0" num_matched_peptides="444">
+    <search_score name="xcorr" value="0.548"/>
+    <search_score name="deltacn" value="0.032"/>
+    <search_score name="spscore" value="14.8"/>
+    <search_score name="sprank" value="4"/>
+    <search_score name="expect" value="5.19E+01"/>
+   </search_hit>
+   <search_hit hit_rank="5" peptide="VVTSAMVESDWK" peptide_prev_aa="R" peptide_next_aa="Y" protein="DECOY_sp|Q8NCW5|NNRE_HUMAN" num_tot_proteins="1" num_matched_ions="4" tot_num_ions="44" calc_neutral_pep_mass="1350.648953" massdiff="-0.026364" num_tol_term="2" num_missed_cleavages="0" num_matched_peptides="444">
+    <search_score name="xcorr" value="0.531"/>
+    <search_score name="deltacn" value="1.000"/>
+    <search_score name="spscore" value="9.4"/>
+    <search_score name="sprank" value="18"/>
+    <search_score name="expect" value="6.27E+01"/>
+   </search_hit>
+  </search_result>
+ </spectrum_query>
+ <spectrum_query spectrum="sample_tiny_hela.10054.10054.2" spectrumNativeID="controllerType=0 controllerNumber=1 scan=10054" start_scan="10054" end_scan="10054" precursor_neutral_mass="1247.594839" assumed_charge="2" index="15" retention_time_sec="600.7">
+  <search_result>
+   <search_hit hit_rank="1" peptide="RLSSPHTYCK" peptide_prev_aa="K" peptide_next_aa="H" protein="DECOY_sp|Q8N9L1|ZIC4_HUMAN" num_tot_proteins="1" num_matched_ions="4" tot_num_ions="18" calc_neutral_pep_mass="1247.608091" massdiff="-0.013252" num_tol_term="2" num_missed_cleavages="1" num_matched_peptides="608">
+    <modification_info modified_peptide="RLSSPHTYCK">
+     <mod_aminoacid_mass position="9" mass="160.030649" static="57.021464"/>
+    </modification_info>
+    <search_score name="xcorr" value="0.661"/>
+    <search_score name="deltacn" value="0.179"/>
+    <search_score name="spscore" value="27.7"/>
+    <search_score name="sprank" value="1"/>
+    <search_score name="expect" value="1.03E+00"/>
+   </search_hit>
+   <search_hit hit_rank="2" peptide="SSAAKPSTADWK" peptide_prev_aa="K" peptide_next_aa="T" protein="DECOY_sp|Q496Y0|LONF3_HUMAN" num_tot_proteins="1" num_matched_ions="3" tot_num_ions="22" calc_neutral_pep_mass="1247.614616" massdiff="-0.019777" num_tol_term="2" num_missed_cleavages="0" num_matched_peptides="608">
+    <search_score name="xcorr" value="0.543"/>
+    <search_score name="deltacn" value="0.183"/>
+    <search_score name="spscore" value="15.7"/>
+    <search_score name="sprank" value="4"/>
+    <search_score name="expect" value="4.76E+00"/>
+   </search_hit>
+   <search_hit hit_rank="3" peptide="IRQQSEMSNR" peptide_prev_aa="R" peptide_next_aa="M" protein="DECOY_sp|Q8TAT5|NEIL3_HUMAN" num_tot_proteins="1" num_matched_ions="3" tot_num_ions="18" calc_neutral_pep_mass="1247.604068" massdiff="-0.009229" num_tol_term="2" num_missed_cleavages="1" num_matched_peptides="608">
+    <search_score name="xcorr" value="0.444"/>
+    <search_score name="deltacn" value="0.097"/>
+    <search_score name="spscore" value="14.3"/>
+    <search_score name="sprank" value="7"/>
+    <search_score name="expect" value="1.72E+01"/>
+   </search_hit>
+   <search_hit hit_rank="4" peptide="AQQPMEITSAR" peptide_prev_aa="R" peptide_next_aa="Q" protein="DECOY_sp|P26678|PPLA_HUMAN" num_tot_proteins="1" num_matched_ions="3" tot_num_ions="20" calc_neutral_pep_mass="1246.597571" massdiff="0.997268" num_tol_term="2" num_missed_cleavages="0" num_matched_peptides="608">
+    <modification_info modified_peptide="AQQPM[147]EITSAR">
+     <mod_aminoacid_mass position="5" mass="147.035385" variable="15.994900" source="param"/>
+    </modification_info>
+    <search_score name="xcorr" value="0.401"/>
+    <search_score name="deltacn" value="0.028"/>
+    <search_score name="spscore" value="15.5"/>
+    <search_score name="sprank" value="5"/>
+    <search_score name="expect" value="3.02E+01"/>
+   </search_hit>
+   <search_hit hit_rank="5" peptide="EDDKLGEQWK" peptide_prev_aa="K" peptide_next_aa="L" protein="DECOY_sp|P46100|ATRX_HUMAN" num_tot_proteins="1" num_matched_ions="3" tot_num_ions="18" calc_neutral_pep_mass="1246.582981" massdiff="1.011858" num_tol_term="2" num_missed_cleavages="1" num_matched_peptides="608">
+    <search_score name="xcorr" value="0.390"/>
+    <search_score name="deltacn" value="1.000"/>
+    <search_score name="spscore" value="14.4"/>
+    <search_score name="sprank" value="6"/>
+    <search_score name="expect" value="3.48E+01"/>
+   </search_hit>
+  </search_result>
+ </spectrum_query>
+ <spectrum_query spectrum="sample_tiny_hela.10055.10055.2" spectrumNativeID="controllerType=0 controllerNumber=1 scan=10055" start_scan="10055" end_scan="10055" precursor_neutral_mass="1489.718597" assumed_charge="2" index="16" retention_time_sec="600.7">
+  <search_result>
+   <search_hit hit_rank="1" peptide="RGKESDPLYCHK" peptide_prev_aa="R" peptide_next_aa="V" protein="DECOY_sp|Q9Y2E6|DTX4_HUMAN" num_tot_proteins="1" num_matched_ions="3" tot_num_ions="22" calc_neutral_pep_mass="1488.714347" massdiff="1.004250" num_tol_term="2" num_missed_cleavages="2" num_matched_peptides="700">
+    <modification_info modified_peptide="RGKESDPLYCHK">
+     <mod_aminoacid_mass position="10" mass="160.030649" static="57.021464"/>
+    </modification_info>
+    <search_score name="xcorr" value="0.624"/>
+    <search_score name="deltacn" value="0.208"/>
+    <search_score name="spscore" value="15.2"/>
+    <search_score name="sprank" value="3"/>
+    <search_score name="expect" value="7.59E+00"/>
+   </search_hit>
+   <search_hit hit_rank="2" peptide="SLGDAKESTNNGGLK" peptide_prev_aa="K" peptide_next_aa="D" protein="DECOY_sp|Q14527|HLTF_HUMAN" num_tot_proteins="1" num_matched_ions="5" tot_num_ions="28" calc_neutral_pep_mass="1489.737250" massdiff="-0.018654" num_tol_term="2" num_missed_cleavages="1" num_matched_peptides="700">
+    <search_score name="xcorr" value="0.494"/>
+    <search_score name="deltacn" value="0.016"/>
+    <search_score name="spscore" value="21.2"/>
+    <search_score name="sprank" value="1"/>
+    <search_score name="expect" value="3.46E+01"/>
+   </search_hit>
+   <search_hit hit_rank="3" peptide="AWQGVNYFHQIK" peptide_prev_aa="R" peptide_next_aa="E" protein="DECOY_sp|Q9P0K9|FRS1L_HUMAN" num_tot_proteins="1" num_matched_ions="3" tot_num_ions="22" calc_neutral_pep_mass="1489.746633" massdiff="-0.028036" num_tol_term="2" num_missed_cleavages="0" num_matched_peptides="700">
+    <search_score name="xcorr" value="0.486"/>
+    <search_score name="deltacn" value="0.022"/>
+    <search_score name="spscore" value="13.8"/>
+    <search_score name="sprank" value="5"/>
+    <search_score name="expect" value="3.80E+01"/>
+   </search_hit>
+   <search_hit hit_rank="4" peptide="ANIDAKMEMAVHK" peptide_prev_aa="R" peptide_next_aa="Q" protein="DECOY_sp|O95622|ADCY5_HUMAN" num_tot_proteins="1" num_matched_ions="3" tot_num_ions="24" calc_neutral_pep_mass="1488.706455" massdiff="1.012142" num_tol_term="2" num_missed_cleavages="1" num_matched_peptides="700">
+    <modification_info modified_peptide="ANIDAKM[147]EM[147]AVHK">
+     <mod_aminoacid_mass position="7" mass="147.035385" variable="15.994900" source="param"/>
+     <mod_aminoacid_mass position="9" mass="147.035385" variable="15.994900" source="param"/>
+    </modification_info>
+    <search_score name="xcorr" value="0.476"/>
+    <search_score name="deltacn" value="0.059"/>
+    <search_score name="spscore" value="12.7"/>
+    <search_score name="sprank" value="7"/>
+    <search_score name="expect" value="4.30E+01"/>
+   </search_hit>
+   <search_hit hit_rank="5" peptide="QTTASEQQQAAAEK" peptide_prev_aa="K" peptide_next_aa="A" protein="DECOY_sp|P08100|OPSD_HUMAN" num_tot_proteins="1" num_matched_ions="3" tot_num_ions="26" calc_neutral_pep_mass="1489.700865" massdiff="0.017732" num_tol_term="2" num_missed_cleavages="0" num_matched_peptides="700">
+    <search_score name="xcorr" value="0.448"/>
+    <search_score name="deltacn" value="1.000"/>
+    <search_score name="spscore" value="11.3"/>
+    <search_score name="sprank" value="14"/>
+    <search_score name="expect" value="5.96E+01"/>
+   </search_hit>
+  </search_result>
+ </spectrum_query>
+ <spectrum_query spectrum="sample_tiny_hela.10056.10056.2" spectrumNativeID="controllerType=0 controllerNumber=1 scan=10056" start_scan="10056" end_scan="10056" precursor_neutral_mass="1197.570897" assumed_charge="2" index="17" retention_time_sec="600.8">
+  <search_result>
+   <search_hit hit_rank="1" peptide="IMMQRIMDK" peptide_prev_aa="K" peptide_next_aa="I" protein="DECOY_sp|Q9NV70|EXOC1_HUMAN" num_tot_proteins="1" num_matched_ions="3" tot_num_ions="16" calc_neutral_pep_mass="1196.571541" massdiff="0.999356" num_tol_term="2" num_missed_cleavages="1" num_matched_peptides="580">
+    <modification_info modified_peptide="IM[147]M[147]QRIMDK">
+     <mod_aminoacid_mass position="2" mass="147.035385" variable="15.994900" source="param"/>
+     <mod_aminoacid_mass position="3" mass="147.035385" variable="15.994900" source="param"/>
+    </modification_info>
+    <search_score name="xcorr" value="0.488"/>
+    <search_score name="deltacn" value="0.196"/>
+    <search_score name="spscore" value="25.1"/>
+    <search_score name="sprank" value="1"/>
+    <search_score name="expect" value="2.38E+01"/>
+   </search_hit>
+   <search_hit hit_rank="2" peptide="IMMQRIMDK" peptide_prev_aa="K" peptide_next_aa="I" protein="DECOY_sp|Q9NV70|EXOC1_HUMAN" num_tot_proteins="1" num_matched_ions="3" tot_num_ions="16" calc_neutral_pep_mass="1196.571541" massdiff="0.999356" num_tol_term="2" num_missed_cleavages="1" num_matched_peptides="580">
+    <modification_info modified_peptide="IM[147]MQRIM[147]DK">
+     <mod_aminoacid_mass position="2" mass="147.035385" variable="15.994900" source="param"/>
+     <mod_aminoacid_mass position="7" mass="147.035385" variable="15.994900" source="param"/>
+    </modification_info>
+    <search_score name="xcorr" value="0.487"/>
+    <search_score name="deltacn" value="0.195"/>
+    <search_score name="spscore" value="25.1"/>
+    <search_score name="sprank" value="1"/>
+    <search_score name="expect" value="2.40E+01"/>
+   </search_hit>
+   <search_hit hit_rank="3" peptide="KMFELAESSR" peptide_prev_aa="K" peptide_next_aa="D" protein="DECOY_sp|Q9NW68|BSDC1_HUMAN" num_tot_proteins="1" num_matched_ions="3" tot_num_ions="18" calc_neutral_pep_mass="1196.585958" massdiff="0.984939" num_tol_term="2" num_missed_cleavages="1" num_matched_peptides="580">
+    <search_score name="xcorr" value="0.392"/>
+    <search_score name="deltacn" value="0.051"/>
+    <search_score name="spscore" value="19.7"/>
+    <search_score name="sprank" value="3"/>
+    <search_score name="expect" value="6.58E+01"/>
+   </search_hit>
+   <search_hit hit_rank="4" peptide="VLGYKSCEDK" peptide_prev_aa="R" peptide_next_aa="S" protein="DECOY_sp|P26368|U2AF2_HUMAN" num_tot_proteins="1" num_matched_ions="3" tot_num_ions="18" calc_neutral_pep_mass="1197.569974" massdiff="0.000923" num_tol_term="2" num_missed_cleavages="1" num_matched_peptides="580">
+    <modification_info modified_peptide="VLGYKSCEDK">
+     <mod_aminoacid_mass position="7" mass="160.030649" static="57.021464"/>
+    </modification_info>
+    <search_score name="xcorr" value="0.373"/>
+    <search_score name="deltacn" value="0.044"/>
+    <search_score name="spscore" value="21.2"/>
+    <search_score name="sprank" value="2"/>
+    <search_score name="expect" value="8.13E+01"/>
+   </search_hit>
+   <search_hit hit_rank="5" peptide="PFFTMEEAVK" peptide_prev_aa="R" peptide_next_aa="E" protein="DECOY_sp|O14656|TOR1A_HUMAN" num_tot_proteins="1" num_matched_ions="2" tot_num_ions="18" calc_neutral_pep_mass="1197.573997" massdiff="-0.003100" num_tol_term="1" num_missed_cleavages="0" num_matched_peptides="580">
+    <search_score name="xcorr" value="0.356"/>
+    <search_score name="deltacn" value="1.000"/>
+    <search_score name="spscore" value="9.5"/>
+    <search_score name="sprank" value="25"/>
+    <search_score name="expect" value="9.67E+01"/>
+   </search_hit>
+  </search_result>
+ </spectrum_query>
+ <spectrum_query spectrum="sample_tiny_hela.10057.10057.2" spectrumNativeID="controllerType=0 controllerNumber=1 scan=10057" start_scan="10057" end_scan="10057" precursor_neutral_mass="785.477078" assumed_charge="2" index="18" retention_time_sec="600.8">
+  <search_result>
+   <search_hit hit_rank="1" peptide="LIVQGTR" peptide_prev_aa="K" peptide_next_aa="R" protein="DECOY_sp|Q9NPG4|PCD12_HUMAN" num_tot_proteins="1" num_matched_ions="5" tot_num_ions="12" calc_neutral_pep_mass="785.475938" massdiff="0.001141" num_tol_term="2" num_missed_cleavages="0" num_matched_peptides="686">
+    <search_score name="xcorr" value="0.948"/>
+    <search_score name="deltacn" value="0.108"/>
+    <search_score name="spscore" value="123.6"/>
+    <search_score name="sprank" value="1"/>
+    <search_score name="expect" value="5.42E+00"/>
+   </search_hit>
+   <search_hit hit_rank="2" peptide="LLSGLQR" peptide_prev_aa="R" peptide_next_aa="E" protein="DECOY_sp|Q17RN3|FA98C_HUMAN" num_tot_proteins="1" num_matched_ions="5" tot_num_ions="12" calc_neutral_pep_mass="785.475938" massdiff="0.001141" num_tol_term="2" num_missed_cleavages="0" num_matched_peptides="686">
+    <search_score name="xcorr" value="0.845"/>
+    <search_score name="deltacn" value="0.093"/>
+    <search_score name="spscore" value="101.4"/>
+    <search_score name="sprank" value="3"/>
+    <search_score name="expect" value="1.00E+01"/>
+   </search_hit>
+   <search_hit hit_rank="3" peptide="LINSALR" peptide_prev_aa="R" peptide_next_aa="K" protein="DECOY_sp|A8MWV9|SM34A_HUMAN" num_tot_proteins="1" num_matched_ions="5" tot_num_ions="12" calc_neutral_pep_mass="785.475938" massdiff="0.001141" num_tol_term="2" num_missed_cleavages="0" num_matched_peptides="686">
+    <search_score name="xcorr" value="0.767"/>
+    <search_score name="deltacn" value="0.000"/>
+    <search_score name="spscore" value="101.9"/>
+    <search_score name="sprank" value="2"/>
+    <search_score name="expect" value="1.61E+01"/>
+   </search_hit>
+   <search_hit hit_rank="4" peptide="IIQREK" peptide_prev_aa="K" peptide_next_aa="E" protein="DECOY_sp|Q9UPT5|EXOC7_HUMAN" num_tot_proteins="1" num_matched_ions="4" tot_num_ions="10" calc_neutral_pep_mass="785.475938" massdiff="0.001141" num_tol_term="2" num_missed_cleavages="1" num_matched_peptides="686">
+    <search_score name="xcorr" value="0.767"/>
+    <search_score name="deltacn" value="0.000"/>
+    <search_score name="spscore" value="87.8"/>
+    <search_score name="sprank" value="4"/>
+    <search_score name="expect" value="1.61E+01"/>
+   </search_hit>
+   <search_hit hit_rank="4" peptide="LIERQK" peptide_prev_aa="K" peptide_next_aa="Q" protein="DECOY_sp|O14863|ZNT4_HUMAN" num_tot_proteins="1" num_matched_ions="4" tot_num_ions="10" calc_neutral_pep_mass="785.475938" massdiff="0.001141" num_tol_term="2" num_missed_cleavages="1" num_matched_peptides="686">
+    <search_score name="xcorr" value="0.767"/>
+    <search_score name="deltacn" value="1.000"/>
+    <search_score name="spscore" value="87.8"/>
+    <search_score name="sprank" value="4"/>
+    <search_score name="expect" value="1.61E+01"/>
+   </search_hit>
+  </search_result>
+ </spectrum_query>
+ <spectrum_query spectrum="sample_tiny_hela.10058.10058.2" spectrumNativeID="controllerType=0 controllerNumber=1 scan=10058" start_scan="10058" end_scan="10058" precursor_neutral_mass="1123.609113" assumed_charge="2" index="19" retention_time_sec="600.9">
+  <search_result>
+   <search_hit hit_rank="1" peptide="KALEMTFRK" peptide_prev_aa="R" peptide_next_aa="G" protein="DECOY_sp|P00367|DHE3_HUMAN" num_tot_proteins="2" num_matched_ions="4" tot_num_ions="16" calc_neutral_pep_mass="1122.621950" massdiff="0.987163" num_tol_term="2" num_missed_cleavages="2" num_matched_peptides="678">
+    <alternative_protein protein="DECOY_sp|P49448|DHE4_HUMAN"/>
+    <search_score name="xcorr" value="0.801"/>
+    <search_score name="deltacn" value="0.062"/>
+    <search_score name="spscore" value="57.9"/>
+    <search_score name="sprank" value="1"/>
+    <search_score name="expect" value="6.35E+00"/>
+   </search_hit>
+   <search_hit hit_rank="2" peptide="KALSYAEDVK" peptide_prev_aa="R" peptide_next_aa="T" protein="DECOY_sp|Q86VV8|RTTN_HUMAN" num_tot_proteins="1" num_matched_ions="4" tot_num_ions="18" calc_neutral_pep_mass="1122.592090" massdiff="1.017024" num_tol_term="2" num_missed_cleavages="1" num_matched_peptides="678">
+    <search_score name="xcorr" value="0.751"/>
+    <search_score name="deltacn" value="0.037"/>
+    <search_score name="spscore" value="48.8"/>
+    <search_score name="sprank" value="5"/>
+    <search_score name="expect" value="9.84E+00"/>
+   </search_hit>
+   <search_hit hit_rank="3" peptide="KINNIEEHK" peptide_prev_aa="K" peptide_next_aa="K" protein="DECOY_sp|Q8NEV4|MYO3A_HUMAN" num_tot_proteins="1" num_matched_ions="4" tot_num_ions="16" calc_neutral_pep_mass="1123.598572" massdiff="0.010541" num_tol_term="2" num_missed_cleavages="1" num_matched_peptides="678">
+    <search_score name="xcorr" value="0.723"/>
+    <search_score name="deltacn" value="0.000"/>
+    <search_score name="spscore" value="52.0"/>
+    <search_score name="sprank" value="4"/>
+    <search_score name="expect" value="1.26E+01"/>
+   </search_hit>
+   <search_hit hit_rank="4" peptide="KLQHRAEDK" peptide_prev_aa="R" peptide_next_aa="I" protein="DECOY_sp|Q86YW9|MD12L_HUMAN" num_tot_proteins="1" num_matched_ions="4" tot_num_ions="16" calc_neutral_pep_mass="1123.609805" massdiff="-0.000692" num_tol_term="2" num_missed_cleavages="2" num_matched_peptides="678">
+    <search_score name="xcorr" value="0.723"/>
+    <search_score name="deltacn" value="0.001"/>
+    <search_score name="spscore" value="52.5"/>
+    <search_score name="sprank" value="3"/>
+    <search_score name="expect" value="1.26E+01"/>
+   </search_hit>
+   <search_hit hit_rank="5" peptide="KLGPVHCVSK" peptide_prev_aa="R" peptide_next_aa="M" protein="DECOY_sp|P19474|RO52_HUMAN" num_tot_proteins="1" num_matched_ions="4" tot_num_ions="18" calc_neutral_pep_mass="1123.617199" massdiff="-0.008086" num_tol_term="2" num_missed_cleavages="1" num_matched_peptides="678">
+    <modification_info modified_peptide="KLGPVHCVSK">
+     <mod_aminoacid_mass position="7" mass="160.030649" static="57.021464"/>
+    </modification_info>
+    <search_score name="xcorr" value="0.722"/>
+    <search_score name="deltacn" value="1.000"/>
+    <search_score name="spscore" value="48.7"/>
+    <search_score name="sprank" value="6"/>
+    <search_score name="expect" value="1.27E+01"/>
+   </search_hit>
+  </search_result>
+ </spectrum_query>
+ <spectrum_query spectrum="sample_tiny_hela.10059.10059.3" spectrumNativeID="controllerType=0 controllerNumber=1 scan=10059" start_scan="10059" end_scan="10059" precursor_neutral_mass="1122.620420" assumed_charge="3" index="20" retention_time_sec="600.9">
+  <search_result>
+   <search_hit hit_rank="1" peptide="RASPPFHRR" peptide_prev_aa="R" peptide_next_aa="I" protein="DECOY_sp|Q6WRI0|IGS10_HUMAN" num_tot_proteins="1" num_matched_ions="6" tot_num_ions="32" calc_neutral_pep_mass="1122.615894" massdiff="0.004526" num_tol_term="2" num_missed_cleavages="2" num_matched_peptides="581">
+    <search_score name="xcorr" value="1.077"/>
+    <search_score name="deltacn" value="0.214"/>
+    <search_score name="spscore" value="33.9"/>
+    <search_score name="sprank" value="1"/>
+    <search_score name="expect" value="5.77E-01"/>
+   </search_hit>
+   <search_hit hit_rank="2" peptide="GTRSVTYALR" peptide_prev_aa="K" peptide_next_aa="Q" protein="DECOY_sp|Q16517|NNAT_HUMAN" num_tot_proteins="1" num_matched_ions="5" tot_num_ions="36" calc_neutral_pep_mass="1122.614556" massdiff="0.005863" num_tol_term="2" num_missed_cleavages="1" num_matched_peptides="581">
+    <search_score name="xcorr" value="0.847"/>
+    <search_score name="deltacn" value="0.039"/>
+    <search_score name="spscore" value="20.2"/>
+    <search_score name="sprank" value="7"/>
+    <search_score name="expect" value="4.83E+00"/>
+   </search_hit>
+   <search_hit hit_rank="3" peptide="LAEPFRSFR" peptide_prev_aa="K" peptide_next_aa="L" protein="DECOY_sp|Q13200|PSMD2_HUMAN" num_tot_proteins="1" num_matched_ions="5" tot_num_ions="32" calc_neutral_pep_mass="1121.598178" massdiff="1.022242" num_tol_term="2" num_missed_cleavages="1" num_matched_peptides="581">
+    <search_score name="xcorr" value="0.813"/>
+    <search_score name="deltacn" value="0.146"/>
+    <search_score name="spscore" value="22.8"/>
+    <search_score name="sprank" value="4"/>
+    <search_score name="expect" value="6.56E+00"/>
+   </search_hit>
+   <search_hit hit_rank="4" peptide="KWGTPHKNR" peptide_prev_aa="R" peptide_next_aa="T" protein="DECOY_sp|O60292|SI1L3_HUMAN" num_tot_proteins="1" num_matched_ions="3" tot_num_ions="32" calc_neutral_pep_mass="1122.604660" massdiff="0.015760" num_tol_term="2" num_missed_cleavages="2" num_matched_peptides="581">
+    <search_score name="xcorr" value="0.695"/>
+    <search_score name="deltacn" value="0.001"/>
+    <search_score name="spscore" value="15.0"/>
+    <search_score name="sprank" value="10"/>
+    <search_score name="expect" value="1.96E+01"/>
+   </search_hit>
+   <search_hit hit_rank="5" peptide="ALEMLFARR" peptide_prev_aa="R" peptide_next_aa="R" protein="DECOY_sp|P04053|TDT_HUMAN" num_tot_proteins="1" num_matched_ions="3" tot_num_ions="32" calc_neutral_pep_mass="1121.601534" massdiff="1.018886" num_tol_term="2" num_missed_cleavages="1" num_matched_peptides="581">
+    <modification_info modified_peptide="ALEM[147]LFARR">
+     <mod_aminoacid_mass position="4" mass="147.035385" variable="15.994900" source="param"/>
+    </modification_info>
+    <search_score name="xcorr" value="0.695"/>
+    <search_score name="deltacn" value="1.000"/>
+    <search_score name="spscore" value="8.1"/>
+    <search_score name="sprank" value="26"/>
+    <search_score name="expect" value="1.97E+01"/>
+   </search_hit>
+  </search_result>
+ </spectrum_query>
+ <spectrum_query spectrum="sample_tiny_hela.10060.10060.2" spectrumNativeID="controllerType=0 controllerNumber=1 scan=10060" start_scan="10060" end_scan="10060" precursor_neutral_mass="1584.784656" assumed_charge="2" index="21" retention_time_sec="600.9">
+  <search_result>
+   <search_hit hit_rank="1" peptide="KRIDPGLCQNQEK" peptide_prev_aa="R" peptide_next_aa="S" protein="DECOY_sp|Q8TB73|NDNF_HUMAN" num_tot_proteins="1" num_matched_ions="2" tot_num_ions="24" calc_neutral_pep_mass="1584.804225" massdiff="-0.019569" num_tol_term="2" num_missed_cleavages="2" num_matched_peptides="770">
+    <modification_info modified_peptide="KRIDPGLCQNQEK">
+     <mod_aminoacid_mass position="8" mass="160.030649" static="57.021464"/>
+    </modification_info>
+    <search_score name="xcorr" value="0.340"/>
+    <search_score name="deltacn" value="0.000"/>
+    <search_score name="spscore" value="7.1"/>
+    <search_score name="sprank" value="11"/>
+    <search_score name="expect" value="4.01E+01"/>
+   </search_hit>
+   <search_hit hit_rank="1" peptide="VVQQEYMQTGFKK" peptide_prev_aa="R" peptide_next_aa="L" protein="DECOY_sp|Q96C10|DHX58_HUMAN" num_tot_proteins="1" num_matched_ions="2" tot_num_ions="24" calc_neutral_pep_mass="1584.797014" massdiff="-0.012358" num_tol_term="2" num_missed_cleavages="1" num_matched_peptides="770">
+    <search_score name="xcorr" value="0.340"/>
+    <search_score name="deltacn" value="0.002"/>
+    <search_score name="spscore" value="9.0"/>
+    <search_score name="sprank" value="3"/>
+    <search_score name="expect" value="4.01E+01"/>
+   </search_hit>
+   <search_hit hit_rank="2" peptide="KDDTKGGLCYIMGK" peptide_prev_aa="K" peptide_next_aa="C" protein="DECOY_sp|O60662|KLH41_HUMAN" num_tot_proteins="1" num_matched_ions="2" tot_num_ions="26" calc_neutral_pep_mass="1584.763999" massdiff="0.020656" num_tol_term="2" num_missed_cleavages="2" num_matched_peptides="770">
+    <modification_info modified_peptide="KDDTKGGLCYIMGK">
+     <mod_aminoacid_mass position="9" mass="160.030649" static="57.021464"/>
+    </modification_info>
+    <search_score name="xcorr" value="0.340"/>
+    <search_score name="deltacn" value="0.000"/>
+    <search_score name="spscore" value="6.5"/>
+    <search_score name="sprank" value="15"/>
+    <search_score name="expect" value="4.04E+01"/>
+   </search_hit>
+   <search_hit hit_rank="3" peptide="KAEKMLWWEYGK" peptide_prev_aa="R" peptide_next_aa="R" protein="DECOY_sp|P54803|GALC_HUMAN" num_tot_proteins="1" num_matched_ions="2" tot_num_ions="22" calc_neutral_pep_mass="1583.780621" massdiff="1.004035" num_tol_term="2" num_missed_cleavages="2" num_matched_peptides="770">
+    <modification_info modified_peptide="KAEKM[147]LWWEYGK">
+     <mod_aminoacid_mass position="5" mass="147.035385" variable="15.994900" source="param"/>
+    </modification_info>
+    <search_score name="xcorr" value="0.340"/>
+    <search_score name="deltacn" value="0.000"/>
+    <search_score name="spscore" value="7.7"/>
+    <search_score name="sprank" value="7"/>
+    <search_score name="expect" value="4.04E+01"/>
+   </search_hit>
+   <search_hit hit_rank="4" peptide="KHMNYHRIVDQK" peptide_prev_aa="K" peptide_next_aa="R" protein="DECOY_sp|Q86V15|CASZ1_HUMAN" num_tot_proteins="1" num_matched_ions="2" tot_num_ions="22" calc_neutral_pep_mass="1583.799065" massdiff="0.985591" num_tol_term="2" num_missed_cleavages="2" num_matched_peptides="770">
+    <modification_info modified_peptide="KHM[147]NYHRIVDQK">
+     <mod_aminoacid_mass position="3" mass="147.035385" variable="15.994900" source="param"/>
+    </modification_info>
+    <search_score name="xcorr" value="0.339"/>
+    <search_score name="deltacn" value="1.000"/>
+    <search_score name="spscore" value="7.7"/>
+    <search_score name="sprank" value="7"/>
+    <search_score name="expect" value="4.05E+01"/>
+   </search_hit>
+  </search_result>
+ </spectrum_query>
+ <spectrum_query spectrum="sample_tiny_hela.10061.10061.2" spectrumNativeID="controllerType=0 controllerNumber=1 scan=10061" start_scan="10061" end_scan="10061" precursor_neutral_mass="1019.469105" assumed_charge="2" index="22" retention_time_sec="601.0">
+  <search_result>
+   <search_hit hit_rank="1" peptide="WQSWAWR" peptide_prev_aa="R" peptide_next_aa="E" protein="DECOY_sp|A8K8P3|SFI1_HUMAN" num_tot_proteins="1" num_matched_ions="3" tot_num_ions="12" calc_neutral_pep_mass="1018.477334" massdiff="0.991771" num_tol_term="2" num_missed_cleavages="0" num_matched_peptides="457">
+    <search_score name="xcorr" value="0.624"/>
+    <search_score name="deltacn" value="0.012"/>
+    <search_score name="spscore" value="41.9"/>
+    <search_score name="sprank" value="2"/>
+    <search_score name="expect" value="5.88E+00"/>
+   </search_hit>
+   <search_hit hit_rank="2" peptide="KVMYYDGK" peptide_prev_aa="K" peptide_next_aa="I" protein="DECOY_sp|P48995|TRPC1_HUMAN" num_tot_proteins="1" num_matched_ions="4" tot_num_ions="14" calc_neutral_pep_mass="1018.479353" massdiff="0.989752" num_tol_term="2" num_missed_cleavages="1" num_matched_peptides="457">
+    <modification_info modified_peptide="KVM[147]YYDGK">
+     <mod_aminoacid_mass position="3" mass="147.035385" variable="15.994900" source="param"/>
+    </modification_info>
+    <search_score name="xcorr" value="0.616"/>
+    <search_score name="deltacn" value="0.170"/>
+    <search_score name="spscore" value="42.0"/>
+    <search_score name="sprank" value="1"/>
+    <search_score name="expect" value="6.41E+00"/>
+   </search_hit>
+   <search_hit hit_rank="3" peptide="DTHPIYMK" peptide_prev_aa="K" peptide_next_aa="S" protein="DECOY_sp|Q8NEV8|EXPH5_HUMAN" num_tot_proteins="1" num_matched_ions="3" tot_num_ions="14" calc_neutral_pep_mass="1019.474602" massdiff="-0.005497" num_tol_term="2" num_missed_cleavages="0" num_matched_peptides="457">
+    <modification_info modified_peptide="DTHPIYM[147]K">
+     <mod_aminoacid_mass position="7" mass="147.035385" variable="15.994900" source="param"/>
+    </modification_info>
+    <search_score name="xcorr" value="0.511"/>
+    <search_score name="deltacn" value="0.000"/>
+    <search_score name="spscore" value="32.8"/>
+    <search_score name="sprank" value="5"/>
+    <search_score name="expect" value="2.15E+01"/>
+   </search_hit>
+   <search_hit hit_rank="3" peptide="SELQQCQK" peptide_prev_aa="R" peptide_next_aa="R" protein="DECOY_sp|Q8TF30|WHAMM_HUMAN" num_tot_proteins="1" num_matched_ions="3" tot_num_ions="14" calc_neutral_pep_mass="1019.470594" massdiff="-0.001489" num_tol_term="2" num_missed_cleavages="0" num_matched_peptides="457">
+    <modification_info modified_peptide="SELQQCQK">
+     <mod_aminoacid_mass position="6" mass="160.030649" static="57.021464"/>
+    </modification_info>
+    <search_score name="xcorr" value="0.511"/>
+    <search_score name="deltacn" value="0.007"/>
+    <search_score name="spscore" value="32.8"/>
+    <search_score name="sprank" value="5"/>
+    <search_score name="expect" value="2.15E+01"/>
+   </search_hit>
+   <search_hit hit_rank="4" peptide="ESPEDTSKK" peptide_prev_aa="K" peptide_next_aa="D" protein="DECOY_sp|P09467|F16P1_HUMAN" num_tot_proteins="1" num_matched_ions="3" tot_num_ions="16" calc_neutral_pep_mass="1019.477119" massdiff="-0.008014" num_tol_term="2" num_missed_cleavages="1" num_matched_peptides="457">
+    <search_score name="xcorr" value="0.508"/>
+    <search_score name="deltacn" value="1.000"/>
+    <search_score name="spscore" value="28.7"/>
+    <search_score name="sprank" value="7"/>
+    <search_score name="expect" value="2.25E+01"/>
+   </search_hit>
+  </search_result>
+ </spectrum_query>
+ <spectrum_query spectrum="sample_tiny_hela.10062.10062.2" spectrumNativeID="controllerType=0 controllerNumber=1 scan=10062" start_scan="10062" end_scan="10062" precursor_neutral_mass="1149.606976" assumed_charge="2" index="23" retention_time_sec="601.0">
+  <search_result>
+   <search_hit hit_rank="1" peptide="VAWFAEWLK" peptide_prev_aa="K" peptide_next_aa="D" protein="DECOY_sp|Q13007|IL24_HUMAN" num_tot_proteins="1" num_matched_ions="4" tot_num_ions="16" calc_neutral_pep_mass="1148.601866" massdiff="1.005110" num_tol_term="2" num_missed_cleavages="0" num_matched_peptides="842">
+    <search_score name="xcorr" value="0.963"/>
+    <search_score name="deltacn" value="0.043"/>
+    <search_score name="spscore" value="78.8"/>
+    <search_score name="sprank" value="1"/>
+    <search_score name="expect" value="1.77E+00"/>
+   </search_hit>
+   <search_hit hit_rank="2" peptide="KQMKGMWIK" peptide_prev_aa="K" peptide_next_aa="A" protein="DECOY_sp|P50454|SERPH_HUMAN" num_tot_proteins="1" num_matched_ions="4" tot_num_ions="16" calc_neutral_pep_mass="1148.619841" massdiff="0.987135" num_tol_term="2" num_missed_cleavages="2" num_matched_peptides="842">
+    <search_score name="xcorr" value="0.922"/>
+    <search_score name="deltacn" value="0.146"/>
+    <search_score name="spscore" value="57.3"/>
+    <search_score name="sprank" value="3"/>
+    <search_score name="expect" value="2.74E+00"/>
+   </search_hit>
+   <search_hit hit_rank="3" peptide="LKGHGSSSHLK" peptide_prev_aa="R" peptide_next_aa="V" protein="DECOY_sp|Q96N21|AP4AT_HUMAN" num_tot_proteins="1" num_matched_ions="4" tot_num_ions="20" calc_neutral_pep_mass="1149.625455" massdiff="-0.018479" num_tol_term="2" num_missed_cleavages="1" num_matched_peptides="842">
+    <search_score name="xcorr" value="0.787"/>
+    <search_score name="deltacn" value="0.038"/>
+    <search_score name="spscore" value="41.7"/>
+    <search_score name="sprank" value="7"/>
+    <search_score name="expect" value="1.13E+01"/>
+   </search_hit>
+   <search_hit hit_rank="4" peptide="KFSDAVDQLK" peptide_prev_aa="K" peptide_next_aa="I" protein="DECOY_sp|P49792|RBP2_HUMAN" num_tot_proteins="7" num_matched_ions="4" tot_num_ions="18" calc_neutral_pep_mass="1149.602989" massdiff="0.003988" num_tol_term="2" num_missed_cleavages="1" num_matched_peptides="842">
+    <alternative_protein protein="DECOY_sp|Q99666|RGPD5_HUMAN"/>
+    <alternative_protein protein="DECOY_sp|A6NKT7|RGPD3_HUMAN"/>
+    <alternative_protein protein="DECOY_sp|O14715|RGPD8_HUMAN"/>
+    <alternative_protein protein="DECOY_sp|P0DJD0|RGPD1_HUMAN"/>
+    <alternative_protein protein="DECOY_sp|P0DJD1|RGPD2_HUMAN"/>
+    <alternative_protein protein="DECOY_sp|Q7Z3J3|RGPD4_HUMAN"/>
+    <search_score name="xcorr" value="0.757"/>
+    <search_score name="deltacn" value="0.013"/>
+    <search_score name="spscore" value="41.7"/>
+    <search_score name="sprank" value="6"/>
+    <search_score name="expect" value="1.55E+01"/>
+   </search_hit>
+   <search_hit hit_rank="5" peptide="IPDLYSDSLK" peptide_prev_aa="K" peptide_next_aa="S" protein="DECOY_sp|Q8NFU7|TET1_HUMAN" num_tot_proteins="1" num_matched_ions="3" tot_num_ions="18" calc_neutral_pep_mass="1149.591755" massdiff="0.015221" num_tol_term="2" num_missed_cleavages="0" num_matched_peptides="842">
+    <search_score name="xcorr" value="0.747"/>
+    <search_score name="deltacn" value="1.000"/>
+    <search_score name="spscore" value="32.1"/>
+    <search_score name="sprank" value="15"/>
+    <search_score name="expect" value="1.72E+01"/>
+   </search_hit>
+  </search_result>
+ </spectrum_query>
+ </msms_run_summary>
+</msms_pipeline_analysis>

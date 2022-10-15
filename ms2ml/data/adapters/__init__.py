@@ -7,6 +7,7 @@ data into the common series of objects.
 
 from .base import BaseAdapter
 from .msp import MSPAdapter
-from .spectronaut import SpectronautAdapter  # noqa F401
+from .mzml import MZMLAdapter
+from .spectronaut import SpectronautAdapter
 
-__all__ = ["BaseAdapter", "MSPAdapter", "SPectronautAdapter"]
+__all__ = ["BaseAdapter", "MSPAdapter", "SpectronautAdapter", "MZMLAdapter"]
