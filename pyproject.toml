@@ -17,6 +17,7 @@ pandas = "^1.4.4"
 pandas-stubs = { version = "^1.4.4.220919", python = ">=3.8,<3.11" }
 uniplot = "^0.7.0"
 tqdm = "^4.64.1"
+importlib-metadata = { version = "^5.0.0", python = ">=3.8,<3.9" }
 
 [tool.poetry.group.lint.dependencies]
 black = "^22.8.0"
