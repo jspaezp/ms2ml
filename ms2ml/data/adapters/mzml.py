@@ -1,6 +1,7 @@
 import re
 from typing import Callable, Optional
 
+from pyteomics import auxiliary as aux
 from pyteomics.mzml import read as read_mzml
 
 from ms2ml.annotation_classes import RetentionTime
@@ -48,9 +49,16 @@ class MZMLAdapter(BaseAdapter):
                 template = re.sub(r"(?<=scan\=)\d+", "{}", self._index_example)
                 self._index_template = template
 
+            reader.reset()
+
+            reader.iterfind('referenceableParamGroup[@id="CommonInstrumentParams"]')
+            instrument_data = aux.cvquery(next(reader))
+            self.instrument = list(instrument_data.values())[0]
+
     def parse(self):
         with read_mzml(self.file) as reader:
             for spec in reader:
+                spec["instrument"] = self.instrument
                 yield self._process_elem(spec)
 
     def _to_elem(self, spec_dict):
@@ -93,6 +101,7 @@ class MZMLAdapter(BaseAdapter):
         mz = spec_dict.pop("m/z array")
         intensity = spec_dict.pop("intensity array")
         ms_level = spec_dict.pop("ms level")
+        instrument = spec_dict.pop("instrument")
 
         # TODO figure out how to get the analyzer
         spec_out = Spectrum(
@@ -102,6 +111,7 @@ class MZMLAdapter(BaseAdapter):
             precursor_mz=precursor_mz,
             precursor_charge=precursor_charge,
             analyzer=None,
+            instrument=instrument,
             retention_time=rt,
             extras=spec_dict,
             config=self.config,
@@ -116,23 +126,23 @@ class MZMLAdapter(BaseAdapter):
 
     def __getitem__(self, idx):
         with read_mzml(self.file) as reader:
-            try:
-                spec = reader[idx]
-            except TypeError:
-                spec = None
-                _ = "TypeError: 'NoneType' object is not subscriptable"
-                err = f"Unable to find index {idx} in {self.file},"
-                err += f" an example index is '{self._index_example}'"
-                err = IndexError(err)
+            spec = None
+            if hasattr(self, "_index_template"):
+                try:
+                    spec = reader[self._index_template.format(idx)]
+                except TypeError:
+                    pass
 
-                if hasattr(self, "_index_template"):
-                    try:
-                        spec = reader[self._index_template.format(idx)]
-                    except TypeError:
-                        pass
-
-                if spec is None:
+            if spec is None:
+                try:
+                    spec = reader[idx]
+                except TypeError:
+                    _ = "TypeError: 'NoneType' object is not subscriptable"
+                    err = f"Unable to find index {idx} in {self.file},"
+                    err += f" an example index is '{self._index_example}'"
+                    err = IndexError(err)
                     raise err
 
+        spec["instrument"] = self.instrument
         out = self._process_elem(spec)
         return out
