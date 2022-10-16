@@ -20,7 +20,7 @@ import numpy as np
 from .annotation_classes import AnnotatedIon, RetentionTime
 from .config import Config, get_default_config
 from .peptide import Peptide
-from .utils import annotate_peaks
+from .utils import annotate_peaks, get_tolerance
 
 
 @dataclass
@@ -60,6 +60,103 @@ class Spectrum:
 
         if self.retention_time is None:
             self.retention_time = RetentionTime(rt=np.nan, units="minutes")
+
+    def filter_mz_range(self, min_mz, max_mz) -> Spectrum:
+        """Filters the spectrum to a given m/z range.
+
+        Note:
+            This is an in-place operation.
+
+        Returns:
+            The spectrum with the filtered m/z range.
+
+        Examples:
+            >>> spectrum = Spectrum._sample()
+            >>> spectrum.mz
+            array([  50.     ,  147.11333, 1000.     , 1500.     , 2000.     ])
+            >>> spectrum.filter_mz_range(124, 1600).mz
+            array([ 147.11333, 1000.     , 1500.     ])
+        """
+        mask = (self.mz >= min_mz) & (self.mz <= max_mz)
+        self.mz, self.intensity = self.mz[mask], self.intensity[mask]
+
+        return self
+
+    def remove_precursor(self):
+        """Removes the precursor peak from the spectrum in place."""
+        if self.precursor_mz is None:
+            warnings.warn("Precursor m/z not set. Cannot remove precursor.")
+            return self
+
+        tolerance = self.config.g_tolerances[self.ms_level - 1]
+        tolerance_unit = self.config.g_tolerance_units[self.ms_level - 1]
+
+        tol = get_tolerance(
+            tolerance=tolerance, theoretical=self.precursor_mz, unit=tolerance_unit
+        )
+        mask = np.abs(self.mz - self.precursor_mz) > tol
+        self.mz, self.intensity = self.mz[mask], self.intensity[mask]
+        return self
+
+    def intensity_cutoff(self, cutoff: float, max_peaks: int) -> Spectrum:
+        """Filters the spectrum to a given intensity cutoff.
+
+        Args:
+            cutoff: The intensity cutoff.
+                All peaks with less than that intensity will be deleted.
+            max_peaks: The maximum number of peaks to keep.
+
+        Returns:
+            A new Spectrum object with the filtered intensity cutoff.
+
+        Examples:
+            >>> spectrum = Spectrum._sample()
+            >>> spectrum.intensity
+            array([ 50., 200.,   1.,   2.,   3.])
+            >>> spectrum.intensity_cutoff(2, max_peaks=3).intensity
+            array([ 50.0, 200.,  3.])
+        """
+        mask = self.intensity >= cutoff
+        self.mz, self.intensity = self.mz[mask], self.intensity[mask]
+
+        if len(self.mz) > max_peaks:
+            ind = len(self.mz) - np.argsort(self.intensity)
+            mask = ind <= max_peaks
+            self.mz, self.intensity = self.mz[mask], self.intensity[mask]
+
+        return self
+
+    def normalize_intensity(self, method: str = "max") -> Spectrum:
+        """Normalizes the spectrum intensities.
+
+        Args:
+            method: The method to use for normalization.
+                Can be one of "max", "sum", "rank", "log".
+
+        Returns:
+            The normalized spectrum.
+
+        Examples:
+            >>> spectrum = Spectrum._sample()
+            >>> spectrum.intensity
+            array([ 50., 200.,   1.,   2.,   3.])
+            >>> spectrum.normalize_intensity("max").intensity
+            array([0.25 , 1.   , 0.005, 0.01 , 0.015])
+        """
+        if method == "max":
+            self.intensity = self.intensity / np.max(self.intensity)
+        elif method == "sum":
+            self.intensity = self.intensity / np.sum(self.intensity)
+        elif method == "rank":
+            self.intensity = self.intensity / np.argsort(self.intensity)
+        elif method == "log":
+            self.intensity = np.log(self.intensity)
+        elif method == "sqrt":
+            self.intensity = np.sqrt(self.intensity)
+        else:
+            raise ValueError(f"Normalization method {method} not recognized.")
+
+        return self
 
     # TODO add this to config
     def bin_spectrum(
