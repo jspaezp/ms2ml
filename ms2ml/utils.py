@@ -1,4 +1,4 @@
-from typing import Callable, Optional, Sequence, Tuple
+from __future__ import annotations
 
 import numpy as np
 
@@ -12,7 +12,7 @@ def mz(mass: float, charge: int) -> float:
 
 def get_tolerance(
     tolerance: float = 25.0,
-    theoretical: Optional[float] = None,
+    theoretical: float | None = None,
     unit: MassError = "ppm",
 ) -> float:
     """Calculates the toleranc in daltons from either a dalton tolerance or a ppm.
@@ -91,69 +91,49 @@ def is_in_tolerance(
     return (lower <= theoretical) & (theoretical <= upper)
 
 
-def is_sorted(
-    lst: Sequence,
-    key: Callable = lambda x: x,
-) -> bool:
-    """Is_sorted Checks if a list is sorted.
+def find_matching_sorted(
+    A, B, max_diff=0.5, in_range_fun=None
+) -> list(tuple[int, int]):
+    """Finds the matching between two sorted lists of floats.
 
-    Returns
-    -------
-        bool: Wether at least 1 element is out of order
+    Args:
+        A (List[float]): Sorted list of floats
+        B (List[float]): Sorted list of floats
+        max_diff (float, optional): Maximum allowed difference between
+            elements in A and B. Defaults to 0.5.
+        in_range_fun (Callable, optional): Function that takes two floats
+            and returns True if they are in some definition of range.
+            Defaults to None.
 
-    Examples
-    --------
-        >>> is_sorted([1, 2, 3, 4])
-        True
-        >>> is_sorted([1, 2, 2, 3])
-        True
-        >>> is_sorted([4, 2, 2, 3])
-        False
-
-    Args
-    ----
-        lst (List): List to check if it is sorted
-        key (Callable, optional):
-            Function to use as the key to compare.
-            Defaults to lambda x:x.
-    """
-    for i, el in enumerate(lst[1:]):
-        if key(el) < key(lst[i]):  # i is the index of the previous element
-            return False
-    return True
-
-
-def sort_if_needed(
-    lst: list,
-    key: Callable = lambda x: x,
-) -> list:
-    """Sorts a list IN PLACE if it is not already sorted.
-
-    Examples
-    --------
-    >>> foo = [1, 16, 3, 4]
-    >>> _ = sort_if_needed(foo)
-    >>> foo
-    [1, 3, 4, 16]
-    >>> foo = [[1, "A"], [16, "B"], [3, "C"], [4, "D"]]
-    >>> _ = sort_if_needed(foo, key=lambda x: x[0])
-    >>> foo
-    [[1, 'A'], [3, 'C'], [4, 'D'], [16, 'B']]
-    >>> foo = np.array([1, 16, 3, 4])
-    >>> # sort_if_needed(foo) # breaks for arrays
-
-    Args
-    ----
-        lst : List to be sorted
-        key (Callable, optional): Function to use as the key for sorting.
-            Defaults to lambda x:x.
+    Returns:
+        List[Tuple[int, int], None, None]: Generator of tuples
     """
 
-    # TODO benchmark if this is faster than just sorting
-    if not is_sorted(lst, key):
-        lst.sort(key=key)
+    if in_range_fun is None:
 
-    return lst
+        def in_range_fun(x, y):
+            return abs(x - y) <= max_diff
+
+    elems = []
+    min_ib = 0
+
+    for ia, a in enumerate(A):
+        min_val = a - max_diff
+        for ib, b in enumerate(B[min_ib:], start=min_ib):
+            if b < min_val:
+                min_ib = ib
+                continue
+            elif in_range_fun(a, b):
+                elems.append((ia, ib))
+
+            if b > a + max_diff:
+                break
+
+    if len(elems) == 0:
+        ia, ib = [], []
+    else:
+        ia, ib = zip(*elems)
+    return np.array(ia, dtype=int), np.array(ib, dtype=int)
 
 
 def sort_all(keys, *args):
@@ -164,7 +144,7 @@ def sort_all(keys, *args):
         >>> keys = np.array([1, 3, 2, 4])
         >>> foo = np.array([1, 2, 3, 4])
         >>> bar = np.array([5, 6, 7, 8])
-        >>> foo, bar = sort_all(keys, foo, bar)
+        >>> keys, foo, bar = sort_all(keys, foo, bar)
         >>> foo
         array([1, 3, 2, 4])
         >>> bar
@@ -177,107 +157,99 @@ def sort_all(keys, *args):
     """
 
     index = np.argsort(keys)
+    out_args = [keys] + [x for x in args]
+    out = [np.array(x)[index] for x in out_args]
+    return out
 
-    # TODO make error message for the case where this fails
-    # due to a list being passed ...
-    return (x[index] for x in args)
+
+def find_matching(A, B, max_diff=0.5, in_range_fun=None) -> tuple[np.array, np.array]:
+    """Finds the matching between two lists of floats.
+
+    Args:
+        A (List[float]): List of floats
+        B (List[float]): List of floats
+        max_diff (float, optional): Maximum allowed difference between
+            elements in A and B. Defaults to 0.5.
+        in_range_fun (Callable, optional): Function that takes two floats
+            and returns True if they are in some definition of range.
+            Defaults to None.
+
+    Returns:
+        np.array, np.array
+    """
+
+    a_indices = np.array(range(len(A)), dtype=int)
+    b_indices = np.array(range(len(B)), dtype=int)
+
+    A, a_indices = sort_all(A, a_indices)
+    B, b_indices = sort_all(B, b_indices)
+
+    ia, ib = find_matching_sorted(A, B, max_diff, in_range_fun)
+
+    return a_indices[ia], b_indices[ib]
 
 
 def annotate_peaks(
-    theo_mz,
-    mz,
+    theo_mz: np.array,
+    mz: np.array,
     tolerance: float = 25.0,
     unit: MassError = "ppm",
-) -> Tuple[np.ndarray, np.ndarray]:
+) -> tuple[np.ndarray, np.ndarray]:
     """Annotate_peaks Assigns m/z peaks to annotations.
 
-    Returns
-    -------
-    Dict[str, float]:
-        A dictionary with the keys being the names of the ions and the values being
-        the intensities that were asigned to such ion.
+    Arguments:
+        theo_mz {np.array}: Theoretical m/z values
+        mz {np.array}: Observed m/z values
+        tolerance {float}: Tolerance value to be used (Default value = 25.0)
+        unit {MassError}: Lietrally da for daltons or ppm for ...
+            ppm (Default value = "ppm")
 
-    Examples
-    --------
-    >>> theoretical_peaks = np.array([100.0, 200.0, 300.0, 500.0])
-    >>> theoretical_labels = np.array(["a", "b", "c", "d"])
-    >>> mzs = np.array([10, 100.0, 100.001, 150.0, 200.0, 300.0, 400.0])
-    >>> ints = np.array([0.1, 1.0, 0.2, 5.0, 31.0, 2.0, 3.0])
-    >>> x, y = annotate_peaks(theoretical_peaks, mzs)
-    >>> x
-    array([1, 2, 4, 5])
-    >>> y
-    array([0, 0, 1, 2])
-    >>> theoretical_labels[y]
-    array(['a', 'a', 'b', 'c'], dtype='<U1')
-    >>> ints[x]
-    array([ 1. ,  0.2, 31. ,  2. ])
+    Returns:
+        np.array, np.array:
+            The two arrays are the same length to each other.
+            They contain [1] the indices in the theoretical m/z array.
+            that match [2] the indices in the observed m/z array.
 
-    Args
-    ----
-    theoretical_peaks:
-        Dictionary specifying the names and masses of theoretical peaks
-    mzs:
-        Array of the masses to be annotated.
-    tolerance:
-        Tolerance to be used to count an observed and a theoretical m/z as a match.
-        Defaults to 25.
-    unit:
-        The unit of the formerly specified tolerance (da or ppm).
-        Defaults to "ppm".
+    Examples:
+        >>> dumm1 = np.array(
+        ...     [
+        ...         1500.0,
+        ...         2000.0,
+        ...         1000.0,
+        ...     ]
+        ... )
+        >>> dumm2 = np.array([1000.001, 1600.001, 2000.2])
+        >>> annotate_peaks(dumm1, dumm2, 1, "da")
+        (array([2, 1]), array([0, 2]))
+        >>> (
+        ...     dumm1[annotate_peaks(dumm1, dumm2, 1, "da")[1]],
+        ...     dumm2[annotate_peaks(dumm1, dumm2, 1, "da")[0]],
+        ... )
+        (array([1500., 1000.]), array([2000.2  , 1600.001]))
+        >>> theo_dumm1 = (np.array(range(20)) * 0.01) + 1000
+        >>> obs_dumm2 = np.array([1000.001, 1600.001, 2000.2])
+        >>> annotate_peaks(theo_dumm1, obs_dumm2, 1, "da")
+        (array([ 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12,
+           13, 14, 15, 16, 17, 18, 19]),
+           array([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]))
+        >>> theoretical_peaks = np.array([100.0, 200.0, 300.0, 500.0])
+        >>> theoretical_labels = np.array(["a", "b", "c", "d"])
+        >>> mzs = np.array([10, 100.0, 100.001, 150.0, 200.0, 300.0, 400.0])
+        >>> ints = np.array([0.1, 1.0, 0.2, 5.0, 31.0, 2.0, 3.0])
+        >>> x, y = annotate_peaks(theoretical_peaks, mzs)
+        >>> x
+        array([0, 0, 1, 2])
+        >>> y
+        array([1, 2, 4, 5])
+        >>> theoretical_labels[x]
+        array(['a', 'a', 'b', 'c'], dtype='<U1')
+        >>> ints[y]
+        array([ 1. ,  0.2, 31. ,  2. ])
     """
     max_delta = get_tolerance(tolerance=tolerance, theoretical=max(mz), unit=unit)
 
-    mzs, mz_idx = sort_all(mz, mz, np.array(range(len(mz))))
-    theo_peaks, theo_idx = sort_all(theo_mz, theo_mz, np.array(range(len(theo_mz))))
+    def diff_fun(theo, obs):
+        tol = get_tolerance(tolerance=tolerance, theoretical=theo, unit=unit)
+        return abs(theo - obs) <= tol
 
-    mz_pairs = zip(mzs, mz_idx)
-    theo_peaks = zip(theo_peaks, theo_idx)
-
-    curr_theo_val, curr_theo_idx = next(theo_peaks)
-
-    mz_indices = []
-    annot_indices = []
-
-    for mz, idx in mz_pairs:
-        deltamass = mz - curr_theo_val
-        try:
-            # Skip values that cannot match the current theoretical peak
-            while deltamass >= max_delta:
-                curr_theo_val, curr_theo_idx = next(theo_peaks)
-                deltamass = mz - curr_theo_val
-        except StopIteration:
-            pass
-
-        in_deltam = abs(deltamass) <= max_delta
-        if in_deltam and abs(deltamass) <= get_tolerance(
-            curr_theo_val, tolerance, unit
-        ):
-            mz_indices.append(idx)
-            annot_indices.append(curr_theo_idx)
-    else:
-        try:
-            while True:
-                curr_theo_val, curr_theo_idx = next(theo_peaks)
-                deltamass = mz - curr_theo_val
-                if deltamass < -max_delta:
-                    break
-                in_deltam = abs(deltamass) <= max_delta
-                if in_deltam and abs(deltamass) <= get_tolerance(
-                    curr_theo_val, tolerance, unit
-                ):
-                    mz_indices.append(idx)
-                    annot_indices.append(curr_theo_idx)
-        except StopIteration:
-            pass
-
-    # Remember to handle normalization prior to annotation
-    # max_int = max([v for v in annots.values()] + [0])
-    # annots = {k: v / max_int for k, v in annots.items()}
-
-    # TODO benchmark if checking the tolerance directly
-    # is faster than checking the delta mass
-
-    # The first element is the indices of the m/z values that were annotated
-    # The second element is the indices of the fragment values that matched the mzs
-    return np.array(mz_indices), np.array(annot_indices)
+    return find_matching(theo_mz, mz, max_delta, diff_fun)

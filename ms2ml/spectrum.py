@@ -139,6 +139,44 @@ class Spectrum:
     def tic(self, value) -> None:
         self._tic = value
 
+    def sic(self, mzs: np.array, resolution: sum) -> np.array:
+        """Returns the selected ion current for a given set of m/z values.
+
+        Args:
+            mzs: The m/z values to calculate the SIC for.
+            resolution: The function used to resolve ambiguities when multiple
+                peaks match.  possible options are `sum` and `max`.
+
+        Returns:
+            An array of SIC values. This array will have the same length as the
+            input mzs array.
+
+        Examples:
+            >>> spectrum = Spectrum._sample()
+            >>> spectrum.mz
+            array([  50.     ,  147.11333, 1000.     , 1500.     , 2000.     ])
+            >>> spectrum.intensity
+            array([ 50., 200.,   1.,   2.,   3.])
+            >>> spectrum.sic(
+            ...     np.array([1000.0, 1000.00001, 1500.0, 2000.0, 20_000.0]),
+            ...     resolution=sum,
+            ... )
+            array([1., 1., 2., 3., 0.])
+        """
+
+        theo_mz_indices, obs_mz_indices = annotate_peaks(
+            theo_mz=mzs,
+            mz=self.mz,
+            tolerance=self.config.g_tolerances[self.ms_level - 1],
+            unit=self.config.g_tolerance_units[self.ms_level - 1],
+        )
+        outs = []
+        for i, _ in enumerate(mzs):
+            ints_subset = self.intensity[obs_mz_indices[theo_mz_indices == i]]
+            outs.append(resolution(ints_subset))
+
+        return np.array(outs)
+
     @staticmethod
     def _sample():
         """Returns a sample Spectrum object."""
@@ -284,6 +322,11 @@ class AnnotatedPeptideSpectrum(Spectrum):
         raise NotImplementedError
 
     def _annotate_peaks(self) -> tuple[np.ndarray, np.ndarray]:
+        """Annotates the peaks of the spectrum.
+
+        Internal function that returns what indices in the observed mz array match the
+        theoretical mz array.
+        """
         if self.precursor_peptide is None:
             raise ValueError(
                 "No precursor peptide provided. Which is required to annotate the peaks"
@@ -297,7 +340,7 @@ class AnnotatedPeptideSpectrum(Spectrum):
         tolerance = self.config.g_tolerances[self.ms_level - 1]
         tolerance_unit = self.config.g_tolerance_units[self.ms_level - 1]
 
-        mz_indices, annot_indices = annotate_peaks(
+        annot_indices, mz_indices = annotate_peaks(
             theo_mz=theo_mzs, mz=self.mz, tolerance=tolerance, unit=tolerance_unit
         )
         return annot_indices, mz_indices
@@ -315,6 +358,11 @@ class AnnotatedPeptideSpectrum(Spectrum):
         """
         Returs a dictionary with the fragment ion names as keys and the
         corresponding intensities as values.
+
+        Note:
+            The current implementation only keeps the last peak that matches
+            the theoretical mass. future implementations should either keep all peaks
+            or only the highest peak, or add the peaks.
 
         Examples:
             >>> spec = AnnotatedPeptideSpectrum._sample()
