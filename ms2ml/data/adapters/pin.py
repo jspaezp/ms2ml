@@ -49,6 +49,12 @@ class PinAdapter(PinParser, BaseAdapter):
             collate_fn=collate_fn,
         )
         PinParser.__init__(self, file)
+
+        if self.pin_flavour == "sage":
+            self._to_elem = self._to_elem_sage
+        elif self.pin_flavour == "comet":
+            self._to_elem = self._to_elem_comet
+
         self.mzml_adapters = {}
 
         if raw_file_locations is None:
@@ -72,6 +78,37 @@ class PinAdapter(PinParser, BaseAdapter):
                 yield self._process_elem(spec)
 
     def _to_elem(self, spec_dict) -> AnnotatedPeptideSpectrum:
+        raise NotImplementedError
+
+    def _to_elem_sage(self, spec_dict) -> AnnotatedPeptideSpectrum:
+        # TODO improve this ahdnling of carbamidomethyl
+        seq = spec_dict["peptide"].replace("(57.0215)", "")
+        seq = seq.replace("(", "[+").replace(")", "]")
+        seq = f"{seq}/{spec_dict['charge']}"
+        pep = Peptide.from_proforma_seq(seq, config=self.config)
+
+        if self.file not in self.mzml_adapters:
+            # sage pin files have results for a single mzml file
+            mzml_file = Path(self.file).with_suffix(".mzML")
+            if mzml_file.exists():
+                mzml_file = mzml_file.resolve()
+                self.mzml_adapters[self.file] = MZMLAdapter(str(mzml_file), self.config)
+            elif Path(self.raw_file_locations[0]).is_file():
+                self.mzml_adapters[self.file] = MZMLAdapter(
+                    self.raw_file_locations[0], self.config
+                )
+            else:
+                self.mzml_adapters[self.file] = MZMLAdapter(
+                    self._find_raw_file(mzml_file.name), self.config
+                )
+
+        spec = self.mzml_adapters[self.file][spec_dict["scannr"]]
+        spec = spec.annotate(pep)
+        spec.extras.update(spec_dict)
+
+        return spec
+
+    def _to_elem_comet(self, spec_dict) -> AnnotatedPeptideSpectrum:
         seq = f"{spec_dict['PeptideSequence']}/{spec_dict['PrecursorCharge']}"
         pep = Peptide.from_proforma_seq(seq, config=self.config)
 

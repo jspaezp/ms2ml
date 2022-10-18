@@ -40,3 +40,25 @@ def test_mzml_adapter_works(shared_datadir):
 
     for x in col_names:
         assert x in elem.extras, f"{x} not in extras"
+
+
+def test_mzml_adapter_works_sage(shared_datadir):
+    file = shared_datadir / "pin" / "sample_tiny_hela.sage.pin"
+    raw_location = shared_datadir / "mzml" / "sample_tiny_hela.mzML"
+
+    spec_adapter = PinAdapter(
+        file=str(file),
+        config=Config(),
+        collate_fn=list,
+        raw_file_locations=raw_location,
+    )
+
+    parsed = spec_adapter.parse()
+    elem = next(parsed)
+
+    assert isinstance(elem, AnnotatedPeptideSpectrum)
+    assert elem.precursor_charge == 2
+    assert elem.mz.shape == (46,)
+    binned = elem.bin_spectrum(start=100, end=2000, binsize=0.5)
+    assert binned.shape == (3799,)
+    assert elem.encode_fragments().shape == (120,)

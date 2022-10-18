@@ -1896,7 +1896,7 @@ test = ["pre-commit", "pytest (>=6.0)", "pytest-timeout"]
 
 [[package]]
 name = "tinycss2"
-version = "1.2.0"
+version = "1.2.1"
 description = "A tiny CSS parser"
 category = "dev"
 optional = false
@@ -3607,8 +3607,8 @@ terminado = [
     {file = "terminado-0.16.0.tar.gz", hash = "sha256:fac14374eb5498bdc157ed32e510b1f60d5c3c7981a9f5ba018bb9a64cec0c25"},
 ]
 tinycss2 = [
-    {file = "tinycss2-1.2.0-py3-none-any.whl", hash = "sha256:9f16c0a652838606c50b1b660c2021df608d9f7ec5a21673d8a35b0dad1b1718"},
-    {file = "tinycss2-1.2.0.tar.gz", hash = "sha256:b0e04b0d8682c96dabca57654d3650c2d79f8bd0f1a6fc57b0939598ec3f4f5e"},
+    {file = "tinycss2-1.2.1-py3-none-any.whl", hash = "sha256:2b80a96d41e7c3914b8cda8bc7f705a4d9c49275616e886103dd839dfc847847"},
+    {file = "tinycss2-1.2.1.tar.gz", hash = "sha256:8cff3a8f066c2ec677c06dbc7b45619804a6938478d9d73c284b29d14ecb0627"},
 ]
 tomli = [
     {file = "tomli-2.0.1-py3-none-any.whl", hash = "sha256:939de3e7a6161af0c887ef91b7d41a53e7c5a1ca976325f429cb46ea9bc30ecc"},
