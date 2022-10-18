@@ -213,6 +213,10 @@ def annotate_peaks(
             They contain [1] the indices in the theoretical m/z array.
             that match [2] the indices in the observed m/z array.
 
+            In other words ...
+            z, w = annotate_peaks(x, y)
+            peak x[z[i]] matches peak y[w[i]], being i any index.
+
     Examples:
         >>> dumm1 = np.array(
         ...     [
@@ -256,3 +260,37 @@ def annotate_peaks(
         return abs(theo - obs) <= tol
 
     return find_matching(theo_mz, mz, max_delta, diff_fun)
+
+
+def allign_intensities(
+    mz1, mz2, int1, int2, tolerance: float = 25.0, unit: MassError = "ppm"
+):
+    """allign_intensities
+
+    Arguments:
+        mz1 {np.array}: Array of m/z values
+        mz2 {np.array}: Array of m/z values
+        int1 {np.array}: Intensities for mz1
+        int2 {np.array}: Intensities for mz2
+        tolerance {float}: Tolerance value to be used (Default value = 25.0)
+        unit {str}:
+           Lietrally da for daltons or ppm for ppm to use to calculate the mass errors
+           (Default value = "ppm")
+
+    Returns:
+        np.array, np.array:
+            The two arrays are the same length to each other.
+            They contain the matched intensities between the input mz arrays.
+    """
+    x, y = annotate_peaks(mz1, mz2, tolerance, unit)
+    int1_matched, int1_unmatched = int1[x], np.delete(int1, x)
+    int2_matched, int2_unmatched = int2[y], np.delete(int2, y)
+
+    int1_out = np.concatenate(
+        [int1_matched, int1_unmatched, np.zeros_like(int2_unmatched)]
+    )
+    int2_out = np.concatenate(
+        [int2_matched, np.zeros_like(int1_unmatched), int2_unmatched]
+    )
+
+    return int1_out, int2_out
