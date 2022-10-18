@@ -196,7 +196,7 @@ Check:
   - [ ] Fix all flake8/pylint complains ...
 
 
-# Simial projects:
+# Similar projects:
 
 - https://matchms.readthedocs.io/en/latest/:
     - Matchms is an open-access Python package to import, process, clean,
@@ -213,6 +213,17 @@ Check:
     - DLOmix from Mathias Wilhelm’s group
     - Tensorflow centric implementatino of ml models for proteomcs
 
+- https://github.com/wfondrie/depthcharge
+    - Depthcharge is a deep learning toolkit for building state-of-the-art
+      models to analyze mass spectra generated from peptides other and molecules.
+    - It seems to focus on the model generation, rather than proving flexibility
+      in encoding.
+
+- https://github.com/bittremieux/spectrum_utils
+    - spectrum_utils is a Python package for efficient mass spectrometry
+      data processing and visualization.
+    - Many of the spectrum processing aspects are similar but there
+      is no focus in parsing or exporting encoding.
 
 # Contribution
 
