@@ -1,12 +1,15 @@
 from __future__ import annotations
 
+from typing import Callable
+
 import numpy as np
+from numpy.typing import NDArray
 
 from .constants import PROTON
 from .types import MassError
 
 
-def mz(mass: float, charge: int) -> float:
+def mz(mass: float | NDArray, charge: int) -> float | NDArray:
     return (mass + (charge * PROTON)) / charge
 
 
@@ -92,8 +95,8 @@ def is_in_tolerance(
 
 
 def find_matching_sorted(
-    A, B, max_diff=0.5, in_range_fun=None
-) -> list(tuple[int, int]):
+    A, B, max_diff=0.5, in_range_fun: Callable | None = None
+) -> tuple[NDArray, NDArray]:
     """Finds the matching between two sorted lists of floats.
 
     Args:
@@ -162,7 +165,7 @@ def sort_all(keys, *args):
     return out
 
 
-def find_matching(A, B, max_diff=0.5, in_range_fun=None) -> tuple[np.array, np.array]:
+def find_matching(A, B, max_diff=0.5, in_range_fun=None) -> tuple[NDArray, NDArray]:
     """Finds the matching between two lists of floats.
 
     Args:
@@ -190,8 +193,8 @@ def find_matching(A, B, max_diff=0.5, in_range_fun=None) -> tuple[np.array, np.a
 
 
 def annotate_peaks(
-    theo_mz: np.array,
-    mz: np.array,
+    theo_mz: NDArray,
+    mz: NDArray,
     tolerance: float = 25.0,
     unit: MassError = "ppm",
 ) -> tuple[np.ndarray, np.ndarray]:

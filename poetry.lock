@@ -1208,14 +1208,14 @@ test = ["coverage", "nbval", "pytest", "pytest-cov", "requests", "requests-unixs
 
 [[package]]
 name = "notebook-shim"
-version = "0.1.0"
+version = "0.2.0"
 description = "A shim layer for notebook traits and config"
 category = "dev"
 optional = false
 python-versions = ">=3.7"
 
 [package.dependencies]
-jupyter-server = ">=1.8,<2.0"
+jupyter-server = ">=1.8,<3"
 
 [package.extras]
 test = ["pytest", "pytest-console-scripts", "pytest-tornasync"]
@@ -1896,18 +1896,18 @@ test = ["pre-commit", "pytest (>=6.0)", "pytest-timeout"]
 
 [[package]]
 name = "tinycss2"
-version = "1.1.1"
+version = "1.2.0"
 description = "A tiny CSS parser"
 category = "dev"
 optional = false
-python-versions = ">=3.6"
+python-versions = ">=3.7"
 
 [package.dependencies]
 webencodings = ">=0.4"
 
 [package.extras]
 doc = ["sphinx", "sphinx_rtd_theme"]
-test = ["coverage[toml]", "pytest", "pytest-cov", "pytest-flake8", "pytest-isort"]
+test = ["flake8", "isort", "pytest"]
 
 [[package]]
 name = "tomli"
@@ -3021,8 +3021,8 @@ notebook = [
     {file = "notebook-6.5.1.tar.gz", hash = "sha256:f69fd3b13df092af3a66c8797fa8ce00608db71cade89105ac4178b8d8d154aa"},
 ]
 notebook-shim = [
-    {file = "notebook_shim-0.1.0-py3-none-any.whl", hash = "sha256:02432d55a01139ac16e2100888aa2b56c614720cec73a27e71f40a5387e45324"},
-    {file = "notebook_shim-0.1.0.tar.gz", hash = "sha256:7897e47a36d92248925a2143e3596f19c60597708f7bef50d81fcd31d7263e85"},
+    {file = "notebook_shim-0.2.0-py3-none-any.whl", hash = "sha256:481711abddfb2e5305b83cf0efe18475824eb47d1ba9f87f66a8c574b8b5c9e4"},
+    {file = "notebook_shim-0.2.0.tar.gz", hash = "sha256:fdb81febb05932c6d19e44e10382ce05469cac5e1b6e99b49be6159ddb5e4804"},
 ]
 numpy = [
     {file = "numpy-1.23.4-cp310-cp310-macosx_10_9_x86_64.whl", hash = "sha256:95d79ada05005f6f4f337d3bb9de8a7774f259341c70bc88047a1f7b96a4bcb2"},
@@ -3607,8 +3607,8 @@ terminado = [
     {file = "terminado-0.16.0.tar.gz", hash = "sha256:fac14374eb5498bdc157ed32e510b1f60d5c3c7981a9f5ba018bb9a64cec0c25"},
 ]
 tinycss2 = [
-    {file = "tinycss2-1.1.1-py3-none-any.whl", hash = "sha256:fe794ceaadfe3cf3e686b22155d0da5780dd0e273471a51846d0a02bc204fec8"},
-    {file = "tinycss2-1.1.1.tar.gz", hash = "sha256:b2e44dd8883c360c35dd0d1b5aad0b610e5156c2cb3b33434634e539ead9d8bf"},
+    {file = "tinycss2-1.2.0-py3-none-any.whl", hash = "sha256:9f16c0a652838606c50b1b660c2021df608d9f7ec5a21673d8a35b0dad1b1718"},
+    {file = "tinycss2-1.2.0.tar.gz", hash = "sha256:b0e04b0d8682c96dabca57654d3650c2d79f8bd0f1a6fc57b0939598ec3f4f5e"},
 ]
 tomli = [
     {file = "tomli-2.0.1-py3-none-any.whl", hash = "sha256:939de3e7a6161af0c887ef91b7d41a53e7c5a1ca976325f429cb46ea9bc30ecc"},

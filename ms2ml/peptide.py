@@ -1,4 +1,6 @@
-from typing import Dict, Iterator, List, Optional, Tuple
+from __future__ import annotations
+
+from typing import Iterator
 
 import numpy as np
 from pyteomics.proforma import ProForma, parse, to_proforma
@@ -61,8 +63,8 @@ class Peptide(ProForma):
 
     @classmethod
     def from_proforma_seq(
-        cls, seq, config: Optional[Config] = None, extras=None
-    ) -> "Peptide":
+        cls, seq, config: Config | None = None, extras=None
+    ) -> Peptide:
         """Generates a peptide from a proforma sequence.
 
         Examples:
@@ -85,7 +87,7 @@ class Peptide(ProForma):
         return cls.from_proforma_seq(*args, **kwargs)
 
     @classmethod
-    def from_ProForma(cls, proforma: ProForma, config, extras=None) -> "Peptide":
+    def from_ProForma(cls, proforma: ProForma, config, extras=None) -> Peptide:
         """Creates a peptide from a pyteomics.proforma.ProForma object.
 
         Examples:
@@ -231,7 +233,7 @@ class Peptide(ProForma):
         out = out[1:]
         return out
 
-    def annotated_ion_series(self, ion_type: str, charge: int) -> List[AnnotatedIon]:
+    def annotated_ion_series(self, ion_type: str, charge: int) -> list[AnnotatedIon]:
         """Returns a list of annotated ions.
 
         Examples:
@@ -265,7 +267,7 @@ class Peptide(ProForma):
         return tmp
 
     @property
-    def ion_series_dict(self) -> Dict[str, AnnotatedIon]:
+    def ion_series_dict(self) -> dict[str, AnnotatedIon]:
         """Returns a dictionary of all ion series for the peptide.
 
         Raises:
@@ -486,7 +488,7 @@ class Peptide(ProForma):
         return np.array(vector)
 
     @classmethod
-    def from_vector(cls, aa_vector: List[int], mod_vector, config: Config):
+    def from_vector(cls, aa_vector: list[int], mod_vector, config: Config):
         """Converts vectors back to peptides.
 
         Examples:
@@ -514,7 +516,7 @@ class Peptide(ProForma):
         peptide = Peptide.from_proforma_seq(sequence, config)
         return peptide
 
-    def __iter__(self) -> Iterator[Tuple[str, Optional[List[str]]]]:
+    def __iter__(self) -> Iterator[tuple[str, list[str] | None]]:
         """Iterates over the peptide sequence.
 
         Yields:

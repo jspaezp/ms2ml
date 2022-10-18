@@ -4,8 +4,8 @@ Implements data classes that provide a consistent interface for.
 annotated data.
 """
 
-from dataclasses import dataclass
-from typing import Optional
+from dataclasses import dataclass, field
+from typing import Literal, Optional
 
 
 @dataclass
@@ -16,6 +16,8 @@ class AnnotatedIon:
     ion_series: str
     intensity: float = 0
     neutral_loss: Optional[str] = None
+    mass_error: Optional[float] = field(default=None, repr=False)
+    mass_error_units: Optional[Literal["da", "ppm"]] = field(default=None, repr=False)
 
     @property
     def fragment_positions(self):
@@ -49,5 +51,28 @@ class RetentionTime:
     """Simple dataclass to hold retention time information."""
 
     rt: float
-    units: str
+    units: Literal["s", "min", "h"] = "s"
     run: Optional[str] = None
+
+    def __post_init__(self):
+        """Converts the retention time to seconds."""
+        self.rtinseconds = self.seconds()
+
+    def seconds(self):
+        """Converts the retention time to seconds."""
+        if self.units == "s" or self.units == "seconds":
+            return self.rt
+        elif self.units.startswith("min"):
+            return self.rt * 60
+        elif self.units == "h":
+            return self.rt * 60 * 60
+        else:
+            raise ValueError(
+                f"Unknown units {self.units},"
+                " must be one of s, min, h "
+                "(international system approved units)"
+            )
+
+    def minutes(self):
+        """Converts the retention time to minutes."""
+        return self.seconds() / 60

@@ -18,11 +18,29 @@ class PinAdapter(PinParser, BaseAdapter):
         self,
         file: PathLike[Any],
         config: Config,
-        in_hook: Callable = None,
-        out_hook: Callable = None,
-        collate_fn: Callable[..., Any] = None,
-        raw_file_locations: list[PathLike] = None,
+        in_hook: Callable | None = None,
+        out_hook: Callable | None = None,
+        collate_fn: Callable[..., Any] | None = None,
+        raw_file_locations: list[PathLike] | None = None,
     ):
+        """Provides an adapter for pin files.
+
+        Args:
+            file (PathLike[Any]): Path to the file to be parsed.
+            config (Config): The config object to use.
+            in_hook (Callable, optional): A function to apply to the
+                input of the adapter. Defaults to None.
+            out_hook (Callable, optional): A function to apply to the
+                output of the adapter. Defaults to None.
+            collate_fn (Callable[..., Any], optional):
+                A function to use to collate the output of the adapter.
+                Defaults to pad_collate.
+            raw_file_locations (list[PathLike], optional):
+                A list of locations to search for raw files,
+                if none is provided, attempts to find the files recursively
+                in the current working directory. Defaults to None.
+
+        """
         BaseAdapter.__init__(
             self,
             config,
@@ -40,9 +58,18 @@ class PinAdapter(PinParser, BaseAdapter):
         else:
             self.raw_file_locations = raw_file_locations
 
-    def parse_file(self, file) -> Iterator[AnnotatedPeptideSpectrum]:
-        for spec in super().parse_file(file):
-            yield self._process_elem(spec)
+    def parse_file(self, file: PathLike[Any]) -> Iterator[AnnotatedPeptideSpectrum]:
+        """Parses a pin file and yields one spectrum at a time.
+
+        The spectra are yielded as AnnotatedPeptideSpectrum"""
+        if file != self.file:
+            adapter = PinAdapter(
+                file, self.config, self.in_hook, self.out_hook, self.collate_fn
+            )
+            yield from adapter.parse_file(file)
+        else:
+            for spec in super().parse_file(file):
+                yield self._process_elem(spec)
 
     def _to_elem(self, spec_dict) -> AnnotatedPeptideSpectrum:
         seq = f"{spec_dict['PeptideSequence']}/{spec_dict['PrecursorCharge']}"
@@ -50,7 +77,7 @@ class PinAdapter(PinParser, BaseAdapter):
 
         if spec_dict["RawFile"] not in self.mzml_adapters:
             self.mzml_adapters[spec_dict["RawFile"]] = MZMLAdapter(
-                self.find_raw_file(spec_dict["RawFile"]), self.config
+                self._find_raw_file(spec_dict["RawFile"]), self.config
             )
 
         spec = self.mzml_adapters[spec_dict["RawFile"]][spec_dict["SpectrumIndex"]]
@@ -63,7 +90,7 @@ class PinAdapter(PinParser, BaseAdapter):
         elem = super()._process_elem(elem)
         return elem
 
-    def find_raw_file(self, raw_file: str) -> str:
+    def _find_raw_file(self, raw_file: str) -> str:
         outs = []
         for loc in self.raw_file_locations:
             tmp = list(Path(loc).rglob(f"*{raw_file}*"))
