@@ -384,11 +384,11 @@ class Peptide(ProForma):
         Examples:
             >>> foo = Peptide.from_sequence("AMC")
             >>> foo.mod_to_onehot()
-            array([[1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 1, 0, 0, 0, 0, 0, 0, 0, 0],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0]], dtype=int32)
+            array([[1, 0, 0, 0, 0, 0, 0],
+            [1, 0, 0, 0, 0, 0, 0],
+            [1, 0, 0, 0, 0, 0, 0],
+            [0, 1, 0, 0, 0, 0, 0],
+            [1, 0, 0, 0, 0, 0, 0]], dtype=int32)
         """
         vector = self.mod_to_vector()
 
@@ -540,10 +540,17 @@ class Peptide(ProForma):
             else:
                 out = []
                 for y in x:
-                    if y.name in self.config.encoding_mod_alias:
-                        solved_name = self.config.encoding_mod_alias[y.name]
+                    # Mass modififications (only deinfed by mass, such as open mods)
+                    # or underfined aliases .... do not have a name
+                    if not hasattr(y, "name"):
+                        modname = str(y)
                     else:
-                        solved_name = MemoizedUnimodResolver.resolve(y.name)["id"]
+                        modname = y.name
+
+                    if modname in self.config.encoding_mod_alias:
+                        solved_name = self.config.encoding_mod_alias[modname]
+                    else:
+                        solved_name = MemoizedUnimodResolver.resolve(modname)["id"]
                         solved_name = f"[U:{str(solved_name)}]"
 
                     out.append(solved_name)

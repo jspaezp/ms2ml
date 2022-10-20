@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "ms2ml"
-version = "0.0.8"
+version = "0.0.10"
 description = "Provides an intermediate layer between mass spec data and ML applications, such as encoding."
 authors = ["J. Sebastian Paez <jspaezp@users.noreply.github.com>"]
 license = "Apache 2.0"

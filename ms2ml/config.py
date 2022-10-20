@@ -9,7 +9,7 @@ maximum length supported, labels and order of the encoded ions ...
 
 import string
 import warnings
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import List, Tuple
 
 from .annotation_classes import AnnotatedIon
@@ -18,6 +18,35 @@ from .types import MassError
 # TODO cosnsider wether we want a more strict enforcement
 # of the requirement for configurations to be defined
 # and passed
+
+
+def _default_mod_aliases():
+    out = {
+        "Phospho": "[U:21]",
+        "TMT6plex": "[U:737]",
+        "TMT10plex": "[U:737]",
+        "Deamidation": "[U:7]",
+        "Acetyl": "[U:1]",
+        "Oxidation": "[U:35]",
+        "Hydroxilation": "[U:35]",
+        "Trimethyl": "[U:37]",
+    }
+    return out
+
+
+def _default_mod_order():
+    encoding_mod_order = tuple(
+        [
+            None,
+            "[U:4]",
+            "[U:21]",
+            "[U:35]",
+            "[U:7]",
+            "[U:1]",
+            "__unknown1__",
+        ]
+    )
+    return encoding_mod_order
 
 
 @dataclass
@@ -106,28 +135,8 @@ class Config:
     )
 
     # TODO consider wether to remove the square brackets
-    encoding_mod_order = [
-        None,
-        "[U:4]",
-        "[U:21]",
-        "[U:35]",
-        "[U:737]",
-        "[U:7]",
-        "[U:1]",
-        "__unknown1__",
-        "__unknown2__",
-        "__unknown3__",
-    ]
-    encoding_mod_alias = {
-        "Phospho": "[U:21]",
-        "TMT6plex": "[U:737]",
-        "TMT10plex": "[U:737]",
-        "Deamidation": "[U:7]",
-        "Acetyl": "[U:1]",
-        "Oxidation": "[U:35]",
-        "Hydroxilation": "[U:35]",
-        "Trimethyl": "[U:37]",
-    }
+    encoding_mod_order: tuple[str, None] = field(default_factory=_default_mod_order)
+    encoding_mod_alias: dict[str, str] = field(default_factory=_default_mod_aliases)
 
     @property
     def fragment_labels(self) -> List[str]:

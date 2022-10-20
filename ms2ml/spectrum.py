@@ -271,10 +271,14 @@ class Spectrum:
             tolerance=self.config.g_tolerances[self.ms_level - 1],
             unit=self.config.g_tolerance_units[self.ms_level - 1],
         )
+
         outs = []
         for i, _ in enumerate(mzs):
             ints_subset = self.intensity[obs_mz_indices[theo_mz_indices == i]]
-            outs.append(resolution(ints_subset))
+            if len(ints_subset) == 0:
+                outs.append(0)
+            else:
+                outs.append(resolution(ints_subset))
 
         return np.array(outs)
 

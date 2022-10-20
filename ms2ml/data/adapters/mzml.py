@@ -41,7 +41,7 @@ class MZMLAdapter(BaseAdapter):
         self.file = str(file)
         self.config = config
         self.out_hook = out_hook
-        self.reader = read_mzml(self.file)
+        self.reader = read_mzml(self.file, use_index=True, huge_tree=True)
 
         # controllerType=0 controllerNumber=1 scan=2634
         self._index_example = next(self.reader)["id"]
@@ -82,7 +82,9 @@ class MZMLAdapter(BaseAdapter):
             selected_ion = selected_ion[0]
 
             precursor_mz = selected_ion["selected ion m/z"]
-            _ = selected_ion["peak intensity"]
+
+            # ocasionally the peak intensity will be missing, I am not sure why
+            # _ = selected_ion["peak intensity"]
             precursor_charge = selected_ion["charge state"]
 
             precursor.update(selected_ion)

@@ -253,6 +253,9 @@ def annotate_peaks(
         >>> ints[y]
         array([ 1. ,  0.2, 31. ,  2. ])
     """
+    if len(theo_mz) == 0 or len(mz) == 0:
+        return np.array([], dtype=int), np.array([], dtype=int)
+
     max_delta = get_tolerance(tolerance=tolerance, theoretical=max(mz), unit=unit)
 
     def diff_fun(theo, obs):
