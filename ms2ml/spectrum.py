@@ -43,7 +43,7 @@ class Spectrum:
     mz: np.ndarray
     intensity: np.ndarray
     ms_level: int
-    precursor_mz: float
+    precursor_mz: float | None
     precursor_charge: int | None = None
     instrument: str | None = None
     analyzer: str | None = None
@@ -60,6 +60,10 @@ class Spectrum:
 
         if self.retention_time is None:
             self.retention_time = RetentionTime(rt=np.nan, units="minutes")
+
+    def _reset_cache(self):
+        """Resets the cached properties."""
+        delattr(self, "_tic")
 
     def filter_mz_range(self, min_mz, max_mz) -> Spectrum:
         """Filters the spectrum to a given m/z range.
@@ -309,6 +313,7 @@ class Spectrum:
 
         spec_dict = dataclasses.asdict(self)
         spec_dict["config"] = self.config
+        spec_dict["retention_time"] = self.retention_time
         spec = AnnotatedPeptideSpectrum(precursor_peptide=peptide, **spec_dict)
         return spec
 

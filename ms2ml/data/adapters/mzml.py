@@ -41,25 +41,26 @@ class MZMLAdapter(BaseAdapter):
         self.file = str(file)
         self.config = config
         self.out_hook = out_hook
+        self.reader = read_mzml(self.file)
 
-        with read_mzml(self.file) as reader:
-            # controllerType=0 controllerNumber=1 scan=2634
-            self._index_example = next(reader)["id"]
-            if "scan" in self._index_example:
-                template = re.sub(r"(?<=scan\=)\d+", "{}", self._index_example)
-                self._index_template = template
+        # controllerType=0 controllerNumber=1 scan=2634
+        self._index_example = next(self.reader)["id"]
+        if "scan" in self._index_example:
+            template = re.sub(r"(?<=scan\=)\d+", "{}", self._index_example)
+            self._index_template = template
 
-            reader.reset()
+        self.reader.reset()
 
-            reader.iterfind('referenceableParamGroup[@id="CommonInstrumentParams"]')
-            instrument_data = aux.cvquery(next(reader))
-            self.instrument = list(instrument_data.values())[0]
+        self.reader.iterfind('referenceableParamGroup[@id="CommonInstrumentParams"]')
+        instrument_data: dict
+        instrument_data = aux.cvquery(next(self.reader))  # type: ignore[operator]
+        self.instrument = list(instrument_data.values())[0]
 
     def parse(self):
-        with read_mzml(self.file) as reader:
-            for spec in reader:
-                spec["instrument"] = self.instrument
-                yield self._process_elem(spec)
+        self.reader.reset()
+        for spec in self.reader:
+            spec["instrument"] = self.instrument
+            yield self._process_elem(spec)
 
     def _to_elem(self, spec_dict):
         if "centroid spectrum" not in spec_dict:
@@ -95,6 +96,10 @@ class MZMLAdapter(BaseAdapter):
             precursor_mz = None
             precursor_charge = None
 
+        else:
+            msg = f"Only MS1 and MSn spectra supported. got: {spec_dict}"
+            raise NotImplementedError(msg)
+
         rt = min([x["scan start time"] for x in spec_dict["scanList"]["scan"]])
         rt = RetentionTime(rt=float(rt), units=rt.unit_info, run=self.file)
 
@@ -125,24 +130,25 @@ class MZMLAdapter(BaseAdapter):
         return f"MS2ML MZML Adapter for {self.file}"
 
     def __getitem__(self, idx):
-        with read_mzml(self.file) as reader:
-            spec = None
-            if hasattr(self, "_index_template"):
-                try:
-                    spec = reader[self._index_template.format(idx)]
-                except TypeError:
-                    pass
+        reader = self.reader
 
-            if spec is None:
-                try:
-                    spec = reader[idx]
-                except TypeError:
-                    _ = "TypeError: 'NoneType' object is not subscriptable"
-                    err = f"Unable to find index {idx} in {self.file},"
-                    err += f" an example index is '{self._index_example}'"
-                    err = IndexError(err)
-                    raise err
+        spec = None
+        if hasattr(self, "_index_template"):
+            try:
+                spec = reader[self._index_template.format(idx)]
+            except TypeError:
+                pass
 
-        spec["instrument"] = self.instrument
+        if spec is None:
+            try:
+                spec = reader[idx]
+            except TypeError:
+                _ = "TypeError: 'NoneType' object is not subscriptable"
+                err = f"Unable to find index {idx} in {self.file},"
+                err += f" an example index is '{self._index_example}'"
+                err = IndexError(err)
+                raise err
+
+        spec["instrument"] = self.instrument  # type: ignore
         out = self._process_elem(spec)
         return out

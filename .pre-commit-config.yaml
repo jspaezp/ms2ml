@@ -6,7 +6,7 @@ repos:
   - id: check-yaml
     exclude: "mkdocs.yml"
   - id: end-of-file-fixer
-    exclude: "(.*.svg)|(tests/data/mgf/.*.mgf)"
+    exclude: "(.*.svg)|(tests/data/mgf/.*.mgf)|(tests/data/msp/*.msp)"
   - id: trailing-whitespace
     exclude: "(tests/data/mgf/.*.mgf)"
 - repo: https://github.com/charliermarsh/ruff-pre-commit
@@ -45,21 +45,15 @@ repos:
       args: ["-f", "requirements.txt", "-o", "requirements.txt"]
 - repo: local
   hooks:
-  - id: pydocstringformatter
-    name: pydocstringformatter
-    entry: poetry run pydocstringformatter elfragmentador
-    language: system
-    always_run: true
-    include: ".*.py"
   - id: pytest
     name: pytest-check
     entry: poetry run python -m pytest -x
     language: system
     pass_filenames: false
     always_run: true
-#   - id: build_docs
-#     name: build_docs
-#     entry: poetry run python -m mkdocs build --strict
-#     language: system
-#     pass_filenames: false
-#     always_run: true
+  - id: build_docs
+    name: build_docs
+    entry: poetry run python -m mkdocs build --strict
+    language: system
+    pass_filenames: false
+    always_run: true
