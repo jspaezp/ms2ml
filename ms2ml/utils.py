@@ -335,3 +335,17 @@ def allign_intensities(
     )
 
     return int1_out, int2_out
+
+
+def lazy(func):
+    """Decorator that makes a property lazy-evaluated."""
+
+    attr_name = f"_lazy_{func.__name__}"
+
+    @property
+    def _lazy_property(self):
+        if not hasattr(self, attr_name):
+            setattr(self, attr_name, func(self))
+        return getattr(self, attr_name)
+
+    return _lazy_property

@@ -8,8 +8,7 @@ from pyteomics.proforma import ProForma, parse, to_proforma
 from .annotation_classes import AnnotatedIon
 from .config import Config, get_default_config
 from .constants import ION_OFFSET, OH, PROTON, WATER
-from .proforma_utils import MemoizedUnimodResolver
-from .utils import mz
+from .utils import lazy, mz
 
 
 class Peptide(ProForma):
@@ -123,7 +122,7 @@ class Peptide(ProForma):
     def ProForma(self):
         return ProForma(self.sequence, self.properties)
 
-    @property
+    @lazy
     def mass(self) -> float:
         """Calculates the mass of a peptide
 
@@ -170,41 +169,38 @@ class Peptide(ProForma):
         """Returns the length of the peptide sequence."""
         return len(self.sequence)
 
-    @property
+    @lazy
     def _position_masses(self) -> np.float32:
         """Calculates the masses of each termini and aminoacid.
 
         It is used as a basis to calculate the mass of ion series.
         """
-        if not hasattr(self, "_position_masses_cache"):
-            out = []
-            for i in range(0, len(self) + 1):
-                curr_chunk = self[max(0, i - 1) : i]
+        out = []
+        for i in range(0, len(self) + 1):
+            curr_chunk = self[max(0, i - 1) : i]
 
-                # This line is the limiting factor when annotating peptides ...
-                curr_mass = curr_chunk.mass
-                out.append(curr_mass)
-
-            # A placeholder for the mass of the C-terminus
-            curr_mass = self[0:0].mass
+            # This line is the limiting factor when annotating peptides ...
+            curr_mass = curr_chunk.mass
             out.append(curr_mass)
 
-            out2 = []
-            for i, curr_mass in enumerate(out):
-                if i > len(self):
-                    curr_mass -= PROTON
-                elif i == 0:
-                    curr_mass -= OH
-                else:
-                    curr_mass -= WATER
+        # A placeholder for the mass of the C-terminus
+        curr_mass = self[0:0].mass
+        out.append(curr_mass)
 
-                out2.append(curr_mass)
+        out2 = []
+        for i, curr_mass in enumerate(out):
+            if i > len(self):
+                curr_mass -= PROTON
+            elif i == 0:
+                curr_mass -= OH
+            else:
+                curr_mass -= WATER
 
-            self._position_masses_cache = np.float32(out2)
+            out2.append(curr_mass)
 
-        return self._position_masses_cache
+        return np.float32(out2)
 
-    @property
+    @lazy
     def _forward(self):
         """Calculates the masses of all fragments of the peptide in the forward.
 
@@ -217,18 +213,12 @@ class Peptide(ProForma):
         The forward series is used as a basis for the a, b anc c ion series
         The backwards series is used as a basis for the x, y and z ion series
         """
-        if not hasattr(self, "_forward_cache"):
-            self._forward_cache = self._position_masses.cumsum()
-
-        return self._forward_cache
+        return self._position_masses.cumsum()
 
     @property
     def _backward(self):
         """See the forward property."""
-        if not hasattr(self, "_backward_cache"):
-            self._backward_cache = self._position_masses[::-1].cumsum()
-
-        return self._backward_cache
+        return self._position_masses[::-1].cumsum()
 
     def ion_series(self, ion_type: str, charge: int) -> np.float32:
         """Calculates all the masses of an ion type.
@@ -289,7 +279,7 @@ class Peptide(ProForma):
         self.ion_series_cache[ion_type][charge] = tmp
         return tmp
 
-    @property
+    @lazy
     def ion_series_dict(self) -> dict[str, AnnotatedIon]:
         """Returns a dictionary of all ion series for the peptide.
 
@@ -302,41 +292,32 @@ class Peptide(ProForma):
             {'y1^1': AnnotatedIon(mass=array(147.11334, dtype=float32), ...
             charge=2, position=6, ion_series='b', intensity=0, neutral_loss=None)}
         """
-        if not hasattr(self, "_ion_series_dict"):
-            if self.charge is None:
-                raise ValueError("Peptide charge is not set")
+        if self.charge is None:
+            raise ValueError("Peptide charge is not set")
 
-            possible_charges = [x for x in self.config.ion_charges if x <= self.charge]
-            tmp = {}
-            for ion_type in self.config.ion_series:
-                for charge in possible_charges:
-                    curr_series = self.annotated_ion_series(ion_type, charge)
-                    for x in curr_series:
-                        tmp[x.label(self.config.ion_naming_convention)] = x
+        possible_charges = [x for x in self.config.ion_charges if x <= self.charge]
+        tmp = {}
+        for ion_type in self.config.ion_series:
+            for charge in possible_charges:
+                curr_series = self.annotated_ion_series(ion_type, charge)
+                for x in curr_series:
+                    tmp[x.label(self.config.ion_naming_convention)] = x
 
-            self._ion_series_dict = tmp
-
-        return self._ion_series_dict
+        return tmp
 
     # TODO implement a setter for the charge ...
 
-    @property
+    @lazy
     def theoretical_ion_labels(self) -> np.ndarray:
-        if not hasattr(self, "_theoretical_ion_labels"):
-            labels = list(self.ion_series_dict.keys())
-            self._theoretical_ion_labels = np.array(labels)
+        labels = list(self.ion_series_dict.keys())
+        return np.array(labels)
 
-        return self._theoretical_ion_labels
-
-    @property
+    @lazy
     def theoretical_ion_masses(self) -> np.ndarray:
-        if not hasattr(self, "_theoretical_ion_masses"):
-            ions = self.ion_series_dict.values()
-            masses = [x.mass for x in ions]
-            masses = np.array(masses)
-            self._theoretical_ion_masses = masses
-
-        return self._theoretical_ion_masses
+        ions = self.ion_series_dict.values()
+        masses = [x.mass for x in ions]
+        masses = np.array(masses)
+        return masses
 
     def aa_to_onehot(self):
         """Converts the peptide sequence to a one-hot encoding.
@@ -468,18 +449,13 @@ class Peptide(ProForma):
             array([ 0,  1,  13,  3, 27])
         """
         aas = [x[0] for x in self]
+        enc_order = self.config.encoding_aa_order_mapping
 
-        array_lst = []
-        for x in aas:
-            if x in self.config.encoding_aa_order:
-                array_lst.append(self.config.encoding_aa_order.index(x))
-            else:
-                # TODO: make so it warns once when an aminoacid
-                # is used that is not in the encoding_aa_order
-                # set(aas).difference(self.config.encoding_aa_order)
-                pass
+        # TODO: make so it warns once when an aminoacid
+        # is used that is not in the encoding_aa_order
+        # set(aas).difference(self.config.encoding_aa_order)
 
-        vector = np.array(array_lst)
+        vector = np.array([enc_order[x] for x in aas if x in enc_order], dtype=int)
         return vector
 
     def mod_to_vector(self):
@@ -494,19 +470,20 @@ class Peptide(ProForma):
         """
         mods = [x[1] for x in self]
         vector = []
+        order_mapping = self.config.encoding_mod_order_mapping
 
         for x in mods:
             if hasattr(x, "__iter__"):
                 if len(x) > 1:
-                    error_msg = (
-                        "Multiple modifications on the same aminoacid are not supported"
-                    )
-                    error_msg = f"{error_msg} got:({x})"
+                    error_msg = "Multiple modifications on the"
+                    error_msg += " same aminoacid are not supported"
+                    error_msg += f" got:({x})"
 
                     # TODO consider is more informative messages are required
                     raise ValueError(error_msg)
                 x = x[0]
-            vector.append(self.config.encoding_mod_order.index(x))
+
+            vector.append(order_mapping[x])
 
         return np.array(vector)
 
@@ -555,37 +532,13 @@ class Peptide(ProForma):
             [('n_term', None), ('A', None), ('M', None),
             ('S', ['[U:21]']), ('C', ['[U:4]']), ('c_term', None)]
         """
+        yield from self.__iter_base
 
-        def resolve_mod_list(x):
-            """Resolves the names in a list of modifications to unimod Ids."""
-            if x is None:
-                return None
-            else:
-                out = []
-                for y in x:
-                    # Mass modififications (only deinfed by mass, such as open mods)
-                    # or underfined aliases .... do not have a name
-
-                    # Write a better error message if the mod is not found
-                    if y.value in self.config.encoding_mod_alias:
-                        modname = y.value
-                    else:
-                        if not hasattr(y, "name"):
-                            modname = str(y)
-                        else:
-                            modname = y.name
-
-                    if modname in self.config.encoding_mod_alias:
-                        solved_name = self.config.encoding_mod_alias[modname]
-                    else:
-                        solved_name = MemoizedUnimodResolver.resolve(modname)["id"]
-                        solved_name = f"[U:{str(solved_name)}]"
-
-                    out.append(solved_name)
-
-            return out
-
+    @lazy
+    def __iter_base(self):
+        iter_out = []
         fixed_mods = self.properties["fixed_modifications"]
+        resolve_mod_list = self.config._resolve_mod_list
         mod_rules = {}
         for mod in fixed_mods:
             for target in mod.targets:
@@ -593,7 +546,7 @@ class Peptide(ProForma):
                     mod_rules[target] = []
                 mod_rules[target].append(mod.modification_tag)
 
-        yield tuple(["n_term", resolve_mod_list(self.properties["n_term"])])
+        iter_out.append(tuple(["n_term", resolve_mod_list(self.properties["n_term"])]))
 
         for aa, mods in self.sequence:
             if aa in mod_rules:
@@ -601,6 +554,7 @@ class Peptide(ProForma):
                     mods = []
                 mods.extend(mod_rules[aa])
 
-            yield tuple([aa, resolve_mod_list(mods)])
+            iter_out.append(tuple([aa, resolve_mod_list(mods)]))
 
-        yield tuple(["c_term", resolve_mod_list(self.properties["c_term"])])
+        iter_out.append(tuple(["c_term", resolve_mod_list(self.properties["c_term"])]))
+        return iter_out

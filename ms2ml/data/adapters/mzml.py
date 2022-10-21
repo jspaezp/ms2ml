@@ -1,6 +1,8 @@
 import re
+from functools import lru_cache
 from typing import Callable, Optional
 
+from loguru import logger
 from pyteomics import auxiliary as aux
 from pyteomics.mzml import read as read_mzml
 
@@ -32,6 +34,7 @@ class MZMLAdapter(BaseAdapter):
             collate_fn (Callable, optional): A function to use to collate the
                 output of the adapter. Defaults to pad_collate.
         """
+        logger.debug(f"Loading mzML file: {file}")
         super().__init__(
             config=config,
             out_hook=out_hook,
@@ -55,6 +58,7 @@ class MZMLAdapter(BaseAdapter):
         instrument_data: dict
         instrument_data = aux.cvquery(next(self.reader))  # type: ignore[operator]
         self.instrument = list(instrument_data.values())[0]
+        logger.debug(f"Done loading mzML file: {file}")
 
     def parse(self):
         self.reader.reset()
@@ -131,6 +135,7 @@ class MZMLAdapter(BaseAdapter):
     def __repr__(self):
         return f"MS2ML MZML Adapter for {self.file}"
 
+    @lru_cache(maxsize=10)
     def __getitem__(self, idx):
         reader = self.reader
 

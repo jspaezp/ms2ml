@@ -18,6 +18,7 @@ from .annotation_classes import AnnotatedIon
 from .constants import C_TERMINUS, N_TERMINUS, STD_AA_MASS
 from .proforma_utils import MemoizedUnimodResolver
 from .types import MassError
+from .utils import lazy
 
 # TODO cosnsider wether we want a more strict enforcement
 # of the requirement for configurations to be defined
@@ -142,7 +143,7 @@ class Config:
     encoding_mod_order: tuple[str, None] = field(default_factory=_default_mod_order)
     encoding_mod_alias: dict[str, str] = field(default_factory=_default_mod_aliases)
 
-    @property
+    @lazy
     def fragment_labels(self) -> List[str]:
         """
         Returns a list of the labels that are used to encode the fragments.
@@ -152,16 +153,6 @@ class Config:
             >>> config.fragment_labels
             ['y1^1', 'y1^2', ... 'b30^2']
         """
-        if not hasattr(self, "_fragment_labels_cache"):
-            self._fragment_labels_cache = self._framgnet_labels()
-
-        return self._fragment_labels_cache
-
-    @property
-    def num_fragment_embeddings(self) -> int:
-        return len(self.fragment_labels)
-
-    def _framgnet_labels(self) -> List[str]:
         labels: List[str] = []
         for field in self.ion_encoding_nesting:
             _labels = labels
@@ -177,6 +168,10 @@ class Config:
                         labels.append(x)
         return labels
 
+    @property
+    def num_fragment_embeddings(self) -> int:
+        return len(self.fragment_labels)
+
     def ion_labeller(self, ion: AnnotatedIon) -> str:
         """Labels an ion
 
@@ -190,38 +185,81 @@ class Config:
         """
         return self.ion_naming_convention.format_map(ion.asdict())
 
-    @property
+    @lazy
     def aa_masses(self):
-        if not hasattr(self, "_aa_masses_cache"):
-            masses = STD_AA_MASS.copy()
-            masses["n_term"] = N_TERMINUS
-            masses["c_term"] = C_TERMINUS
-            aa_mass = [masses.get(aa, 0) for aa in self.encoding_aa_order]
-            self._aa_masses_cache = np.array(aa_mass)
+        masses = STD_AA_MASS.copy()
+        masses["n_term"] = N_TERMINUS
+        masses["c_term"] = C_TERMINUS
+        aa_mass = [masses.get(aa, 0) for aa in self.encoding_aa_order]
+        return np.array(aa_mass)
 
-        return self._aa_masses_cache
-
-    @property
+    @lazy
     def mod_masses(self):
-        if not hasattr(self, "_mod_masses_cache"):
-            mod_mass = []
-            for mod in self.encoding_mod_order:
-                if mod is None:
-                    mod_mass.append(0.0)
+        mod_mass = []
+        for mod in self.encoding_mod_order:
+            if mod is None:
+                mod_mass.append(0.0)
 
-                elif "[U:" in mod:
-                    mod_id = int(mod.split(":")[1].split("]")[0])
-                    mod_mass.append(MemoizedUnimodResolver.mod_id_mass(mod_id))
+            elif "[U:" in mod:
+                mod_id = int(mod.split(":")[1].split("]")[0])
+                mod_mass.append(MemoizedUnimodResolver.mod_id_mass(mod_id))
 
-                elif "unknown" in mod:
-                    mod_mass.append(0.0)
+            elif "unknown" in mod:
+                mod_mass.append(0.0)
 
+            else:
+                raise ValueError(f"Unknown mod {mod}")
+
+        return np.array(mod_mass)
+
+    @lazy
+    def encoding_mod_order_mapping(self) -> dict[str | None, int]:
+        return {mod: i for i, mod in enumerate(self.encoding_mod_order)}
+
+    @lazy
+    def encoding_aa_order_mapping(self) -> dict[str | None, int]:
+        return {aa: i for i, aa in enumerate(self.encoding_aa_order)}
+
+    def _resolve_mod_list(self, x):
+        """Resolves the names in a list of modifications to unimod Ids."""
+        if isinstance(x, list):
+            return [self._resolve_mod_list(y) for y in x]
+
+        if not hasattr(self, "__mod_resol_cache"):
+            setattr(self, "__mod_resol_cache", {None: None})
+
+        cache = getattr(self, "__mod_resol_cache")
+
+        if x is None:
+            return None
+
+        if x.value in cache:
+            return cache[x.value]
+
+        # TODO consider moving this logic to the mod resolver class
+        def _internal(y):
+            # Mass modififications (only deinfed by mass, such as open mods)
+            # or underfined aliases .... do not have a name
+
+            # Write a better error message if the mod is not found
+            if y.value in self.encoding_mod_alias:
+                modname = y.value
+            else:
+                if not hasattr(y, "name"):
+                    modname = str(y)
                 else:
-                    raise ValueError(f"Unknown mod {mod}")
+                    modname = y.name
 
-            self._mod_masses_cache = np.array(mod_mass)
+            if modname in self.encoding_mod_alias:
+                solved_name = self.encoding_mod_alias[modname]
+            else:
+                solved_name = MemoizedUnimodResolver.resolve(modname)["id"]
+                solved_name = f"[U:{str(solved_name)}]"
 
-        return self._mod_masses_cache
+            return solved_name
+
+        cache[x.value] = _internal(x)
+        return cache[x.value]
 
     def validate(self):
         raise NotImplementedError

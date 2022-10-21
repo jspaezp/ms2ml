@@ -41,6 +41,9 @@ def test_mzml_adapter_works(shared_datadir):
     for x in col_names:
         assert x in elem.extras, f"{x} not in extras"
 
+    for _ in spec_adapter.parse():
+        continue
+
 
 def test_mzml_adapter_works_sage(shared_datadir):
     file = shared_datadir / "pin" / "sample_tiny_hela.sage.pin"
