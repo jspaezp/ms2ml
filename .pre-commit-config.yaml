@@ -6,7 +6,7 @@ repos:
   - id: check-yaml
     exclude: "mkdocs.yml"
   - id: end-of-file-fixer
-    exclude: "(.*.svg)|(tests/data/mgf/.*.mgf)|(tests/data/msp/*.msp)"
+    exclude: "(.*.svg)|(tests/data/mgf/.*.mgf)|(tests/data/msp/.*.msp)"
   - id: trailing-whitespace
     exclude: "(tests/data/mgf/.*.mgf)"
 - repo: https://github.com/psf/black

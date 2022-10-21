@@ -12,7 +12,11 @@ import warnings
 from dataclasses import dataclass, field
 from typing import List, Tuple
 
+import numpy as np
+
 from .annotation_classes import AnnotatedIon
+from .constants import C_TERMINUS, N_TERMINUS, STD_AA_MASS
+from .proforma_utils import MemoizedUnimodResolver
 from .types import MassError
 
 # TODO cosnsider wether we want a more strict enforcement
@@ -35,6 +39,7 @@ def _default_mod_aliases():
 
 
 def _default_mod_order():
+    # TODO consider wether to remove the square brackets
     encoding_mod_order = tuple(
         [
             None,
@@ -134,7 +139,6 @@ class Config:
         ["n_term"] + list(string.ascii_uppercase) + ["c_term", "__missing__"]
     )
 
-    # TODO consider wether to remove the square brackets
     encoding_mod_order: tuple[str, None] = field(default_factory=_default_mod_order)
     encoding_mod_alias: dict[str, str] = field(default_factory=_default_mod_aliases)
 
@@ -185,6 +189,39 @@ class Config:
             'z3^2'
         """
         return self.ion_naming_convention.format_map(ion.asdict())
+
+    @property
+    def aa_masses(self):
+        if not hasattr(self, "_aa_masses_cache"):
+            masses = STD_AA_MASS.copy()
+            masses["n_term"] = N_TERMINUS
+            masses["c_term"] = C_TERMINUS
+            aa_mass = [masses.get(aa, 0) for aa in self.encoding_aa_order]
+            self._aa_masses_cache = np.array(aa_mass)
+
+        return self._aa_masses_cache
+
+    @property
+    def mod_masses(self):
+        if not hasattr(self, "_mod_masses_cache"):
+            mod_mass = []
+            for mod in self.encoding_mod_order:
+                if mod is None:
+                    mod_mass.append(0.0)
+
+                elif "[U:" in mod:
+                    mod_id = int(mod.split(":")[1].split("]")[0])
+                    mod_mass.append(MemoizedUnimodResolver.mod_id_mass(mod_id))
+
+                elif "unknown" in mod:
+                    mod_mass.append(0.0)
+
+                else:
+                    raise ValueError(f"Unknown mod {mod}")
+
+            self._mod_masses_cache = np.array(mod_mass)
+
+        return self._mod_masses_cache
 
     def validate(self):
         raise NotImplementedError

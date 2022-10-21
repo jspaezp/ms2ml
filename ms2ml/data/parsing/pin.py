@@ -21,7 +21,7 @@ class PinParser(BaseParser):
 
     # Sample Peptide -> K.AAASGK.A
     # it is {prev.aa}.{peptide}.{next.aa}
-    PEPTIDE_REGEX = re.compile(r"^(.)+\.(.+)\.(.)+$")
+    PEPTIDE_REGEX = re.compile(r"^(.)+?\.(.+)\.(.)+?$")
 
     def __init__(self, file=None) -> None:
         BaseParser.__init__(self)

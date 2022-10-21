@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "ms2ml"
-version = "0.0.10"
+version = "0.0.11"
 description = "Provides an intermediate layer between mass spec data and ML applications, such as encoding."
 authors = ["J. Sebastian Paez <jspaezp@users.noreply.github.com>"]
 license = "Apache 2.0"
@@ -18,6 +18,7 @@ pandas-stubs = { version = "^1.4.4.220919", python = ">=3.8,<3.11" }
 uniplot = "^0.7.0"
 tqdm = "^4.64.1"
 importlib-metadata = { version = "^5.0.0", python = ">=3.8,<3.9" }
+loguru = "^0.6.0"
 
 [tool.poetry.group.lint.dependencies]
 black = "^22.8.0"

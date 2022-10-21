@@ -125,6 +125,26 @@ class Peptide(ProForma):
 
     @property
     def mass(self) -> float:
+        """Calculates the mass of a peptide
+
+        Examples:
+            >>> p = Peptide.from_sequence("MYPEPTIDE")
+            >>> p.mass
+            1093.46377747225
+        """
+        curr_mass = 0.0
+
+        # TODO check if this is vectorizable
+        # n and c temrini are accounted for ... assuming they are used
+        curr_mass += np.einsum("ij,j->", self.aa_to_onehot(), self.config.aa_masses)
+        curr_mass += np.einsum("ij,j->", self.mod_to_onehot(), self.config.mod_masses)
+
+        # labile mods
+        # unlocalized
+        return curr_mass
+
+    @property
+    def mass_pyteomics(self) -> float:
         """Returns the mass of the peptide."""
         # TODO see if this can be optimized
         mass = super().mass
@@ -159,7 +179,10 @@ class Peptide(ProForma):
         if not hasattr(self, "_position_masses_cache"):
             out = []
             for i in range(0, len(self) + 1):
-                curr_mass = self[max(0, i - 1) : i].mass
+                curr_chunk = self[max(0, i - 1) : i]
+
+                # This line is the limiting factor when annotating peptides ...
+                curr_mass = curr_chunk.mass
                 out.append(curr_mass)
 
             # A placeholder for the mass of the C-terminus
@@ -542,10 +565,15 @@ class Peptide(ProForma):
                 for y in x:
                     # Mass modififications (only deinfed by mass, such as open mods)
                     # or underfined aliases .... do not have a name
-                    if not hasattr(y, "name"):
-                        modname = str(y)
+
+                    # Write a better error message if the mod is not found
+                    if y.value in self.config.encoding_mod_alias:
+                        modname = y.value
                     else:
-                        modname = y.name
+                        if not hasattr(y, "name"):
+                            modname = str(y)
+                        else:
+                            modname = y.name
 
                     if modname in self.config.encoding_mod_alias:
                         solved_name = self.config.encoding_mod_alias[modname]

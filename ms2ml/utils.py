@@ -94,8 +94,46 @@ def is_in_tolerance(
     return (lower <= theoretical) & (theoretical <= upper)
 
 
+def binary_search_gte(arr, val):
+    """Binary search for a value in an array.
+
+    This variation finds the first element that is greater than the
+    value provided.
+
+    Args:
+        arr (np.array): Array to search in
+        val (float): Value to search for
+
+    Returns:
+        int: Index of the value
+    """
+    left = 0
+    right = len(arr) - 1
+    while left <= right:
+        mid = (left + right) // 2
+        # print(f"left: {arr[left]}, right: {arr[right]}, mid: {arr[mid]}, val: {val}")
+        if arr[mid] == val:
+            return mid
+        elif arr[mid] < val:
+            left = mid + 1
+        else:
+            right = mid - 1
+
+    return left
+
+
+def test_binary_gte():
+    arr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+    assert binary_search_gte(arr, 1) == 0
+
+    arr2 = [3, 6, 9, 12, 15, 18, 21, 24, 27, 30]
+    assert binary_search_gte(arr2, 1) == 0
+    assert binary_search_gte(arr2, 2) == 0
+    assert binary_search_gte(arr2, 10) == 3
+
+
 def find_matching_sorted(
-    A, B, max_diff=0.5, in_range_fun: Callable | None = None
+    A, B, max_diff=0.5, in_range_fun: Callable | None = None  # type: ignore
 ) -> tuple[NDArray, NDArray]:
     """Finds the matching between two sorted lists of floats.
 
@@ -122,14 +160,14 @@ def find_matching_sorted(
 
     for ia, a in enumerate(A):
         min_val = a - max_diff
+        min_ib = binary_search_gte(B, min_val)
         for ib, b in enumerate(B[min_ib:], start=min_ib):
             if b < min_val:
                 min_ib = ib
                 continue
             elif in_range_fun(a, b):
                 elems.append((ia, ib))
-
-            if b > a + max_diff:
+            else:
                 break
 
     if len(elems) == 0:
@@ -159,7 +197,7 @@ def sort_all(keys, *args):
         *args: Arrays to be sorted
     """
 
-    index = np.argsort(keys)
+    index = np.argsort(keys, kind="mergesort")
     out_args = [keys] + [x for x in args]
     out = [np.array(x)[index] for x in out_args]
     return out
