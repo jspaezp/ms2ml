@@ -71,4 +71,5 @@ class MemoizedUnimodResolver:
 
         logger.debug(f"Resolving mod_id: {mod_id}")
         mod = cls.solver().database[mod_id]
+        logger.debug(f"Resolved to {mod}")
         return mod["mono_mass"]

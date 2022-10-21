@@ -6,11 +6,11 @@ Such as the masses of aminoacids, supported modifications, length of the encodin
 maximum length supported, labels and order of the encoded ions ...
 """
 
+from __future__ import annotations
 
 import string
 import warnings
 from dataclasses import dataclass, field
-from typing import List, Tuple
 
 import numpy as np
 
@@ -99,32 +99,32 @@ class Config:
     # = each tuple object is meant to define an MS level
     # = For instance, in tolerances, the first tolerance is for MS1
     # = and the second for MS2
-    g_tolerances: Tuple[float, ...] = (50, 50)
+    g_tolerances: tuple[float, ...] = (50, 50)
 
-    g_tolerance_units: Tuple[MassError, ...] = ("ppm", "ppm")
+    g_tolerance_units: tuple[MassError, ...] = ("ppm", "ppm")
 
     # = Number of isotopes to check for each ion, 0 means that only
     # = the monoisotopic peak us used
-    g_isotopes: Tuple[int, ...] = (0, 0)
+    g_isotopes: tuple[int, ...] = (0, 0)
 
     # Peptide Configs
     peptide_max_length: int = 30
 
     # Precursor Configs
-    precursor_charges: Tuple[int, ...] = (1, 2, 3, 4, 5, 6)
+    precursor_charges: tuple[int, ...] = (1, 2, 3, 4, 5, 6)
 
     # Fragment Configs
     # TODO consider wether to unify this the same way the general configs
     # = use positions within a tuple to denote MS levels
-    fragment_positions: Tuple[int, ...] = tuple(range(1, 31))
+    fragment_positions: tuple[int, ...] = tuple(range(1, 31))
 
     # Ion config
     ion_series: str = "yb"
-    ion_charges: Tuple[int, ...] = (1, 2)
+    ion_charges: tuple[int, ...] = (1, 2)
     # = Neutral Losss Configs
-    ion_neutral_losses: Tuple[str, ...] = ()
+    ion_neutral_losses: tuple[str, ...] = ()
 
-    ion_encoding_nesting: Tuple[str, ...] = (
+    ion_encoding_nesting: tuple[str, ...] = (
         "ion_charges",
         "fragment_positions",
         "ion_series",
@@ -133,10 +133,10 @@ class Config:
 
     # Modifications
     mod_ambiguity_threshold: float = 0.99
-    mod_fixed_mods: Tuple[str] = ("[U:4]@C",)
+    mod_fixed_mods: tuple[str] = ("[U:4]@C",)
 
     # Encoding Configs
-    encoding_aa_order: Tuple[str] = tuple(
+    encoding_aa_order: tuple[str] = tuple(
         ["n_term"] + list(string.ascii_uppercase) + ["c_term", "__missing__"]
     )
 
@@ -144,7 +144,7 @@ class Config:
     encoding_mod_alias: dict[str, str] = field(default_factory=_default_mod_aliases)
 
     @lazy
-    def fragment_labels(self) -> List[str]:
+    def fragment_labels(self) -> list[str]:
         """
         Returns a list of the labels that are used to encode the fragments.
 
@@ -153,7 +153,7 @@ class Config:
             >>> config.fragment_labels
             ['y1^1', 'y1^2', ... 'b30^2']
         """
-        labels: List[str] = []
+        labels: list[str] = []
         for field in self.ion_encoding_nesting:
             _labels = labels
             labels = []
