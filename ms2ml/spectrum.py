@@ -136,6 +136,8 @@ class Spectrum:
     def normalize_intensity(self, method: str = "max") -> Spectrum:
         """Normalizes the spectrum intensities.
 
+        The normalization is done in place!!
+
         Args:
             method: The method to use for normalization.
                 Can be one of "max", "sum", "rank", "log".
@@ -147,8 +149,14 @@ class Spectrum:
             >>> spectrum = Spectrum._sample()
             >>> spectrum.intensity
             array([ 50., 200.,   1.,   2.,   3.])
-            >>> spectrum.normalize_intensity("max").intensity
+            >>> Spectrum._sample().normalize_intensity("max").intensity
             array([0.25 , 1.   , 0.005, 0.01 , 0.015])
+            >>> Spectrum._sample().normalize_intensity("sum").intensity
+            array([0.1953125 , 0.78125   , 0.00390625, 0.0078125 , 0.01171875])
+            >>> Spectrum._sample().normalize_intensity("log").intensity
+            array([3.91202301, 5.29831737, 0.        , 0.69314718, 1.09861229])
+            >>> Spectrum._sample().normalize_intensity("sqrt").intensity
+            array([ 7.07106781, 14.14213562,  1.        ,  1.41421356,  1.73205081])
         """
         if method == "max":
             self.intensity = self.intensity / np.max(self.intensity)
