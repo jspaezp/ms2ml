@@ -1,7 +1,15 @@
+from importlib import resources
 from typing import Dict
 
 from loguru import logger
+from pyteomics.mass import Unimod
 from pyteomics.proforma import UnimodResolver
+
+
+class LocalUnimodResolver(UnimodResolver):
+    def load_database(self):
+        unimod = Unimod("file://" + str(resources.path("ms2ml.unimod", "unimod.xml")))
+        return unimod
 
 
 class MemoizedUnimodResolver:
@@ -17,6 +25,8 @@ class MemoizedUnimodResolver:
         >>> MemoizedUnimodResolver.resolve("Phospho")
         {'composition': Composition({'H': 1, 'O': 3, 'P': 1}),
         'name': 'Phospho', 'id': 21, 'mass': 79.966331, 'provider': 'unimod'}
+        >>> MemoizedUnimodResolver.mod_id_mass(21)
+        79.966331
     """
 
     _cache: Dict[str, Dict] = {
@@ -41,7 +51,7 @@ class MemoizedUnimodResolver:
     def solver(cls):
         if cls._solver is None:
             logger.debug("Initializing UnimodResolver")
-            cls._solver = UnimodResolver()
+            cls._solver = LocalUnimodResolver()
 
         return cls._solver
 

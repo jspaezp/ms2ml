@@ -9,10 +9,17 @@ maximum length supported, labels and order of the encoded ions ...
 from __future__ import annotations
 
 import string
+import sys
 import warnings
-from dataclasses import dataclass, field
+from dataclasses import asdict, dataclass, field
+
+if sys.version_info <= (3, 11):
+    import tomli as tomllib
+else:
+    import tomllib
 
 import numpy as np
+import tomli_w
 
 from .annotation_classes import AnnotatedIon
 from .constants import C_TERMINUS, N_TERMINUS, STD_AA_MASS
@@ -261,7 +268,40 @@ class Config:
         cache[x.value] = _internal(x)
         return cache[x.value]
 
-    def validate(self):
+    def asdict(self):
+        """Returns a dictionary representation of the config."""
+        return asdict(self)
+
+    # def validate(self):
+    #     raise NotImplementedError
+
+    def to_toml(self, path: str):
+        """Writes the config to a toml file."""
+
+        out = {}
+        for k, v in self.asdict().items():
+            if isinstance(v, tuple):
+                v = [x if x is not None else "__NONE__" for x in v]
+            out[k] = v
+        with open(path, "wb") as f:
+            tomli_w.dump(out, f)
+
+    @staticmethod
+    def from_toml(path: str):
+        """Loads a config from a toml file."""
+        with open(path, "rb") as f:
+            config = tomllib.load(f)
+
+        out_config = {}
+        for k, v in config.items():
+            if isinstance(v, list):
+                v = tuple(x if x != "__NONE__" else None for x in v)
+            out_config[k] = v
+
+        return Config(**out_config)
+
+    def from_comet(path: str, *args, **kwargs):
+        """Loads a config from a comet params file."""
         raise NotImplementedError
 
 

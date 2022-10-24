@@ -20,7 +20,7 @@ import numpy as np
 from .annotation_classes import AnnotatedIon, RetentionTime
 from .config import Config, get_default_config
 from .peptide import Peptide
-from .utils import annotate_peaks, get_tolerance
+from .utils import annotate_peaks, clear_lazy_cache, get_tolerance, lazy
 
 
 @dataclass
@@ -61,9 +61,7 @@ class Spectrum:
         if self.retention_time is None:
             self.retention_time = RetentionTime(rt=np.nan, units="minutes")
 
-    def _reset_cache(self):
-        """Resets the cached properties."""
-        delattr(self, "_tic")
+    # TODO add filter_top(n) method
 
     def filter_mz_range(self, min_mz, max_mz) -> Spectrum:
         """Filters the spectrum to a given m/z range.
@@ -78,11 +76,16 @@ class Spectrum:
             >>> spectrum = Spectrum._sample()
             >>> spectrum.mz
             array([  50.     ,  147.11333, 1000.     , 1500.     , 2000.     ])
+            >>> spectrum.tic
+            256.0
             >>> spectrum.filter_mz_range(124, 1600).mz
             array([ 147.11333, 1000.     , 1500.     ])
+            >>> spectrum.filter_mz_range(124, 1600).tic
+            203.0
         """
         mask = (self.mz >= min_mz) & (self.mz <= max_mz)
         self.mz, self.intensity = self.mz[mask], self.intensity[mask]
+        clear_lazy_cache(self)
 
         return self
 
@@ -218,27 +221,23 @@ class Spectrum:
 
         return binned
 
-    @property
+    @lazy
     def base_peak(self) -> float:
         """Returns the base peak intensity of the spectrum."""
-        if not hasattr(self, "_base_peak"):
-            self._base_peak = np.max(self.intensity)
-        return self._base_peak
+        return np.max(self.intensity)
 
     @base_peak.setter
     def base_peak(self, value) -> None:
         self._base_peak = value
 
-    @property
+    @lazy
     def tic(self) -> float:
         """Returns the total ion current of the spectrum."""
-        if not hasattr(self, "_tic"):
-            self._tic = np.sum(self.intensity)
-        return self._tic
+        return np.sum(self.intensity)
 
     @tic.setter
     def tic(self, value) -> None:
-        self._tic = value
+        self._lazy_tic = value
 
     def sic(self, mzs: np.array, resolution: sum) -> np.array:
         """Returns the selected ion current for a given set of m/z values.
@@ -459,7 +458,9 @@ class AnnotatedPeptideSpectrum(Spectrum):
     def _mz_indices(self) -> np.ndarray:
         return self._indices[1]
 
-    @property
+    # TODO implement getting individual ion series, same API as peptide
+
+    @lazy
     def fragment_intensities(self) -> dict[str, float]:
         """
         Returs a dictionary with the fragment ion names as keys and the
@@ -475,14 +476,9 @@ class AnnotatedPeptideSpectrum(Spectrum):
             >>> spec.fragment_intensities
             {'y1^1': 200.0}
         """
-        if not hasattr(self, "_fragment_intensities"):
-            self._fragment_intensities = {
-                label: v.intensity for label, v in self.fragments.items()
-            }
+        return {label: v.intensity for label, v in self.fragments.items()}
 
-        return self._fragment_intensities
-
-    @property
+    @lazy
     def fragments(self) -> dict[str, AnnotatedIon]:
         """
         Returs a dictionary with the fragment ion names as keys and the
@@ -502,28 +498,25 @@ class AnnotatedPeptideSpectrum(Spectrum):
                 " fragments"
             )
 
-        if not hasattr(self, "_fragments"):
-            if len(self._annot_indices) == 0:
-                return {}
+        if len(self._annot_indices) == 0:
+            return {}
 
-            labels = self.precursor_peptide.theoretical_ion_labels[self._annot_indices]
-            intensities = self.intensity[self._mz_indices]
-            mzs = self.mz[self._mz_indices]
+        labels = self.precursor_peptide.theoretical_ion_labels[self._annot_indices]
+        intensities = self.intensity[self._mz_indices]
+        mzs = self.mz[self._mz_indices]
 
-            frags: dict[str, AnnotatedIon] = {}
+        frags: dict[str, AnnotatedIon] = {}
 
-            for label, i, _ in zip(labels, intensities, mzs):
-                # TODO implement ambiguity resoluitions
-                frag = frags.get(label, None)
-                if frag is None:
-                    frags[label] = self.precursor_peptide.ion_series_dict[label]
-                    frags[label].intensity = 0.0
+        for label, i, _ in zip(labels, intensities, mzs):
+            # TODO implement ambiguity resoluitions
+            frag = frags.get(label, None)
+            if frag is None:
+                frags[label] = self.precursor_peptide.ion_series_dict[label]
+                frags[label].intensity = 0.0
 
-                frags[label].intensity += i
+            frags[label].intensity += i
 
-            self._fragments = frags
-
-        return self._fragments
+        return frags
 
     def __getitem__(self, index) -> float:
         """
@@ -536,12 +529,9 @@ class AnnotatedPeptideSpectrum(Spectrum):
         """
         return self.fragment_intensities.get(index, 0.0)
 
-    @property
+    @lazy
     def _indices(self) -> tuple[np.ndarray, np.ndarray]:
-        if not hasattr(self, "_indices_"):
-            self._indices_ = self._annotate_peaks()
-
-        return self._indices_
+        return self._annotate_peaks()
 
     def encode_fragments(self) -> np.float32:
         """Encodes the fragment ions as a numpy array

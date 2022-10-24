@@ -13,6 +13,21 @@ def mz(mass: float | NDArray, charge: int) -> float | NDArray:
     return (mass + (charge * PROTON)) / charge
 
 
+def ppm_diff(
+    theoretical: NDArray | float, observed: NDArray | float
+) -> NDArray | float:
+    """Calculates the ppm difference between two values.
+
+    Args:
+        theoretical (float): Theoretical value
+        observed (float): Observed value
+
+    Returns:
+        float: ppm difference
+    """
+    return (observed - theoretical) / theoretical * 10**6
+
+
 def get_tolerance(
     tolerance: float = 25.0,
     theoretical: float | None = None,
@@ -349,3 +364,14 @@ def lazy(func):
         return getattr(self, attr_name)
 
     return _lazy_property
+
+
+def clear_lazy_cache(self):
+    """Clears the lazy cache of the object.
+
+    This method is intended to be used when a modification is made
+    in-place on classes that use the @lazy decorator for properties.
+    """
+    for attr in dir(self):
+        if attr.startswith("_lazy_"):
+            delattr(self, attr)

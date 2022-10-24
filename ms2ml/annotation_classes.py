@@ -48,11 +48,26 @@ class AnnotatedIon:
 
 @dataclass
 class RetentionTime:
-    """Simple dataclass to hold retention time information."""
+    """Simple dataclass to hold retention time information.
+
+    Examples:
+        >>> rt = RetentionTime(rt=1.2, units="min")
+        >>> rt.seconds()
+        72.0
+        >>> rt.minutes()
+        1.2
+        >>> rt = RetentionTime(rt=700, units="s")
+        >>> rt.seconds()
+        700
+        >>> rt.minutes()
+        11.666666666666666
+    """
 
     rt: float
-    units: Literal["s", "min", "h"] = "s"
+    units: Literal["s", "seconds", "min", "h"] = "s"
     run: Optional[str] = None
+
+    # TODO implement iRT conversion
 
     def __post_init__(self):
         """Converts the retention time to seconds."""

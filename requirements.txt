@@ -265,6 +265,9 @@ sqlalchemy==1.4.42 ; python_full_version > "3.8.0" and python_version < "3.11" \
     --hash=sha256:f0f574465b78f29f533976c06b913e54ab4980b9931b69aa9d306afff13a9471 \
     --hash=sha256:fa5b7eb2051e857bf83bade0641628efe5a88de189390725d3e6033a1fff4257 \
     --hash=sha256:fdb94a3d1ba77ff2ef11912192c066f01e68416f554c194d769391638c8ad09a
+tomli-w==1.0.0 ; python_version >= "3.8" and python_version < "3.12" \
+    --hash=sha256:9f2a07e8be30a0729e533ec968016807069991ae2fd921a78d42f429ae5f4463 \
+    --hash=sha256:f463434305e0336248cac9c2dc8076b707d8a12d019dd349f5c1e382dd1ae1b9
 tqdm==4.64.1 ; python_version >= "3.8" and python_version < "3.12" \
     --hash=sha256:5f4f682a004951c1b450bc753c710e9280c5746ce6ffedee253ddbcbf54cf1e4 \
     --hash=sha256:6fee160d6ffcd1b1c68c65f14c829c22832bc401726335ce92c52d395944a6a1
@@ -276,6 +279,6 @@ uniplot==0.7.0 ; python_version >= "3.8" and python_version < "3.12" \
 win32-setctime==1.1.0 ; python_version >= "3.8" and python_version < "3.12" and sys_platform == "win32" \
     --hash=sha256:15cf5750465118d6929ae4de4eb46e8edae9a5634350c01ba582df868e932cb2 \
     --hash=sha256:231db239e959c2fe7eb1d7dc129f11172354f98361c4fa2d6d2d7e278baa8aad
-zipp==3.9.0 ; python_version >= "3.8" and python_version < "3.9" \
-    --hash=sha256:3a7af91c3db40ec72dd9d154ae18e008c69efe8ca88dde4f9a731bb82fe2f9eb \
-    --hash=sha256:972cfa31bc2fedd3fa838a51e9bc7e64b7fb725a8c00e7431554311f180e9980
+zipp==3.10.0 ; python_version >= "3.8" and python_version < "3.9" \
+    --hash=sha256:4fcb6f278987a6605757302a6e40e896257570d11c51628968ccb2a47e80c6c1 \
+    --hash=sha256:7a7262fd930bd3e36c50b9a64897aec3fafff3dfdeec9623ae22b40e93f99bb8

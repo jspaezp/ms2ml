@@ -166,6 +166,13 @@ Check:
 
 # TODO
 
+- General
+    - Convert cached properties to the lazy decodator
+- [ ] Config
+    - [ ] Convert config from config files of search engines
+        - [ ] comet
+        - [ ] msfragger
+    - [ ] Import/export to toml
 - [x] Spectrum converter (extended object that allow to go from spectrum to ms encodings)
     - [x] Spectrum Tensor batch
     - [x] Annotation option (adding a peptide object).
@@ -174,7 +181,7 @@ Check:
 - [x] Peptide converter
     - [x] One hot
     - [x] Numeric encoding
-    - [ ] Peptide Tensor Batch
+    - [x] Peptide Tensor Batch
 - [x] Readers from mass spec data
     - [ ] Decide which other to implement/have available
 - [ ] Dataset Objects (torch dataset objects)
@@ -185,8 +192,8 @@ Check:
     - [ ] Annotated Spectrum Dataset
         - [ ] HDF5/sqlite caching
 - [ ] *Documentation, Documentation, Documentation*
-    - [ ] Spectrum Class and subclasses
-    - [ ] Peptide Class and subclasses
+    - [x] Spectrum Class and subclasses
+    - [x] Peptide Class and subclasses
     - [ ] Helper Annotation classes
 
 
