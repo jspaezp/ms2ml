@@ -5,6 +5,8 @@
 ![GitHub Actions](https://img.shields.io/github/workflow/status/jspaezp/ms2ml/CI%20Testing/release?style=flat-square)
 ![License](https://img.shields.io/pypi/l/ms2ml?style=flat-square)
 
+![](./docs/assets/ms2ml_logo.png)
+
 # ms2ml
 
 Documentation site: https://jspaezp.github.io/ms2ml/encoding_options/
