@@ -51,13 +51,9 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: ['3.8', '3.9', '3.10']
+        python-version: ['3.8', '3.9', '3.10', '3.11']
         poetry-version: ['1.2.0',]
         experimental: [false]
-        include:
-          - python-version: '3.11-dev'
-            poetry-version: '1.2.0'
-            experimental: true
 
     continue-on-error: ${{ matrix.experimental }}
 

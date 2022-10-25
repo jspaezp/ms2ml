@@ -4,6 +4,7 @@ version = "0.0.13"
 description = "Provides an intermediate layer between mass spec data and ML applications, such as encoding."
 authors = ["J. Sebastian Paez <jspaezp@users.noreply.github.com>"]
 license = "Apache 2.0"
+include = ["ms2ml/unimod/unimod.xml"]
 
 [tool.poetry.dependencies]
 python = ">=3.8,<3.12"
@@ -86,7 +87,7 @@ commands =
     poetry run pytest --import-mode importlib
 
 [tox]
-envlist = py{38,39,310}
+envlist = py{38,39,310,311}
 isolated_build = true
 """
 
