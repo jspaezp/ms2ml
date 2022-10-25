@@ -280,7 +280,7 @@ class Peptide(ProForma):
         return tmp
 
     @lazy
-    def ion_series_dict(self) -> dict[str, AnnotatedIon]:
+    def ion_dict(self) -> dict[str, AnnotatedIon]:
         """Returns a dictionary of all ion series for the peptide.
 
         Raises:
@@ -288,7 +288,7 @@ class Peptide(ProForma):
 
         Examples:
             >>> p = Peptide.from_sequence("PEPPINK/2")
-            >>> p.ion_series_dict
+            >>> p.ion_dict
             {'y1^1': AnnotatedIon(mass=array(147.11334, dtype=float32), ...
             charge=2, position=6, ion_series='b', intensity=0, neutral_loss=None)}
         """
@@ -309,12 +309,12 @@ class Peptide(ProForma):
 
     @lazy
     def theoretical_ion_labels(self) -> np.ndarray:
-        labels = list(self.ion_series_dict.keys())
+        labels = list(self.ion_dict.keys())
         return np.array(labels)
 
     @lazy
     def theoretical_ion_masses(self) -> np.ndarray:
-        ions = self.ion_series_dict.values()
+        ions = self.ion_dict.values()
         masses = [x.mass for x in ions]
         masses = np.array(masses)
         return masses

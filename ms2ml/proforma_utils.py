@@ -8,7 +8,8 @@ from pyteomics.proforma import UnimodResolver
 
 class LocalUnimodResolver(UnimodResolver):
     def load_database(self):
-        unimod = Unimod("file://" + str(resources.path("ms2ml.unimod", "unimod.xml")))
+        with resources.path("ms2ml.unimod", "unimod.xml") as f:
+            unimod = Unimod("file://" + str(f))
         return unimod
 
 

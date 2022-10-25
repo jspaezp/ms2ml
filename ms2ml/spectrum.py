@@ -14,6 +14,7 @@ import dataclasses
 import math
 import warnings
 from dataclasses import dataclass, field
+from typing import Any
 
 import numpy as np
 
@@ -61,13 +62,44 @@ class Spectrum:
         if self.retention_time is None:
             self.retention_time = RetentionTime(rt=np.nan, units="minutes")
 
-    # TODO add filter_top(n) method
+    def replace(self, *args: Any, **kwargs: Any) -> Spectrum:
+        """Replaces the attributes of the spectrum with the given values.
 
-    def filter_mz_range(self, min_mz, max_mz) -> Spectrum:
+        Arguments are passed to the class Spectrum constructor.
+
+        Returns:
+            Spectrum, A new Spectrum object with the replaced attributes.
+        """
+        return dataclasses.replace(self, *args, **kwargs)
+
+    def filter_top(self, n: int) -> Spectrum:
+        """Filters the spectrum to the top n peaks.
+
+
+        Args:
+            n: The number of peaks to keep.
+
+        Returns:
+            The spectrum with the filtered top n peaks.
+
+        Examples:
+            >>> spectrum = Spectrum._sample()
+            >>> spectrum.intensity
+            array([ 50., 200.,   1.,   2.,   3.])
+            >>> spectrum.filter_top(2).intensity
+            array([ 50., 200.])
+            >>> Spectrum._sample().filter_top(3).intensity
+            array([  3.,  50., 200.])
+        """
+        ind = np.argsort(self.intensity)
+        ind = ind[-n:]
+        mz, intensity = self.mz[ind], self.intensity[ind]
+        out = self.replace(mz=mz, intensity=intensity)
+        clear_lazy_cache(out)
+        return out
+
+    def filter_mz_range(self, min_mz: float, max_mz: float) -> Spectrum:
         """Filters the spectrum to a given m/z range.
-
-        Note:
-            This is an in-place operation.
 
         Returns:
             The spectrum with the filtered m/z range.
@@ -78,19 +110,25 @@ class Spectrum:
             array([  50.     ,  147.11333, 1000.     , 1500.     , 2000.     ])
             >>> spectrum.tic
             256.0
-            >>> spectrum.filter_mz_range(124, 1600).mz
+            >>> spectrum = spectrum.filter_mz_range(124, 1600)
+            >>> spectrum.mz
             array([ 147.11333, 1000.     , 1500.     ])
             >>> spectrum.filter_mz_range(124, 1600).tic
             203.0
         """
         mask = (self.mz >= min_mz) & (self.mz <= max_mz)
-        self.mz, self.intensity = self.mz[mask], self.intensity[mask]
-        clear_lazy_cache(self)
+        mz, intensity = self.mz[mask], self.intensity[mask]
+        out = self.replace(mz=mz, intensity=intensity)
+        clear_lazy_cache(out)
+        return out
 
-        return self
+    def remove_precursor(self) -> Spectrum:
+        """Removes the precursor peak from the spectrum
 
-    def remove_precursor(self):
-        """Removes the precursor peak from the spectrum in place."""
+        Returns:
+            Spectrum, A new Spectrum object with the precursor peak removed.
+
+        """
         if self.precursor_mz is None:
             warnings.warn("Precursor m/z not set. Cannot remove precursor.")
             return self
@@ -102,16 +140,18 @@ class Spectrum:
             tolerance=tolerance, theoretical=self.precursor_mz, unit=tolerance_unit
         )
         mask = np.abs(self.mz - self.precursor_mz) > tol
-        self.mz, self.intensity = self.mz[mask], self.intensity[mask]
-        return self
+        mz, intensity = self.mz[mask], self.intensity[mask]
+        out = self.replace(mz=mz, intensity=intensity)
+        clear_lazy_cache(out)
 
-    def intensity_cutoff(self, cutoff: float, max_peaks: int) -> Spectrum:
+        return out
+
+    def intensity_cutoff(self, cutoff: float) -> Spectrum:
         """Filters the spectrum to a given intensity cutoff.
 
         Args:
             cutoff: The intensity cutoff.
                 All peaks with less than that intensity will be deleted.
-            max_peaks: The maximum number of peaks to keep.
 
         Returns:
             A new Spectrum object with the filtered intensity cutoff.
@@ -120,23 +160,20 @@ class Spectrum:
             >>> spectrum = Spectrum._sample()
             >>> spectrum.intensity
             array([ 50., 200.,   1.,   2.,   3.])
-            >>> spectrum.intensity_cutoff(2, max_peaks=3).intensity
+            >>> spectrum.intensity_cutoff(2.1).intensity
             array([ 50.0, 200.,  3.])
+            >>> spectrum.intensity
+            array([ 50., 200.,   1.,   2.,   3.])
         """
         mask = self.intensity >= cutoff
-        self.mz, self.intensity = self.mz[mask], self.intensity[mask]
+        mz, intensity = self.mz[mask], self.intensity[mask]
+        out = self.replace(mz=mz, intensity=intensity)
+        clear_lazy_cache(out)
 
-        if len(self.mz) > max_peaks:
-            ind = len(self.mz) - np.argsort(self.intensity)
-            mask = ind <= max_peaks
-            self.mz, self.intensity = self.mz[mask], self.intensity[mask]
-
-        return self
+        return out
 
     def normalize_intensity(self, method: str = "max") -> Spectrum:
         """Normalizes the spectrum intensities.
-
-        The normalization is done in place!!
 
         Args:
             method: The method to use for normalization.
@@ -159,27 +196,58 @@ class Spectrum:
             array([ 7.07106781, 14.14213562,  1.        ,  1.41421356,  1.73205081])
         """
         if method == "max":
-            self.intensity = self.intensity / np.max(self.intensity)
+            intensity = self.intensity / np.max(self.intensity)
         elif method == "sum":
-            self.intensity = self.intensity / np.sum(self.intensity)
+            intensity = self.intensity / np.sum(self.intensity)
         elif method == "rank":
-            self.intensity = self.intensity / np.argsort(self.intensity)
+            intensity = self.intensity / np.argsort(self.intensity)
         elif method == "log":
-            self.intensity = np.log(self.intensity)
+            intensity = np.log(self.intensity)
         elif method == "sqrt":
-            self.intensity = np.sqrt(self.intensity)
+            intensity = np.sqrt(self.intensity)
         else:
             raise ValueError(f"Normalization method {method} not recognized.")
 
-        return self
+        out = self.replace(intensity=intensity)
+        clear_lazy_cache(out)
+        return out
 
-    # TODO add this to config
+    def encode_spec_bins(self) -> np.typing.NDArray[np.float]:
+        """Encodes the spectrum into bins.
+
+        For a version of this function that takes arguments indead of reading the
+        options from the config, see `Spectrum.bin_spectrum`.
+
+        Uses the following options from the config:
+            Config.encoding_spec_bin_start,
+            Config.encoding_spec_bin_end,
+            Config.encoding_spec_bin_n_bins,
+            Config.encoding_spec_bin_binsize,
+            Config.encoding_spec_bin_relative,
+            Config.encoding_spec_bin_offset,
+
+        Returns:
+            The encoded spectrum.
+
+        Examples:
+            >>> Spectrum._sample().encode_spec_bins().shape
+            (19999,)
+        """
+        return self.bin_spectrum(
+            start=self.config.encoding_spec_bin_start,
+            end=self.config.encoding_spec_bin_end,
+            n_bins=self.config.encoding_spec_bin_n_bins,
+            binsize=self.config.encoding_spec_bin_binsize,
+            relative=self.config.encoding_spec_bin_relative,
+            offset=self.config.encoding_spec_bin_offset,
+        )
+
     def bin_spectrum(
         self,
         start: float,
         end: float,
-        binsize: float = None,
-        n_bins: int = None,
+        binsize: float | None = None,
+        n_bins: int | None = None,
         relative: bool = False,
         offset: float = 0,
         get_breaks: bool = False,
@@ -519,7 +587,7 @@ class AnnotatedPeptideSpectrum(Spectrum):
             # TODO implement ambiguity resoluitions
             frag = frags.get(label, None)
             if frag is None:
-                frags[label] = self.precursor_peptide.ion_series_dict[label]
+                frags[label] = self.precursor_peptide.ion_dict[label]
                 frags[label].intensity = 0.0
 
             frags[label].intensity += i

@@ -150,6 +150,13 @@ class Config:
     encoding_mod_order: tuple[str, None] = field(default_factory=_default_mod_order)
     encoding_mod_alias: dict[str, str] = field(default_factory=_default_mod_aliases)
 
+    encoding_spec_bin_start: float = field(repr=False, default=0.0)
+    encoding_spec_bin_end: float = field(repr=False, default=2000.0)
+    encoding_spec_bin_binsize: float | None = field(repr=False, default=0.1)
+    encoding_spec_bin_n_bins: int | None = field(repr=False, default=None)
+    encoding_spec_bin_relative: bool = field(repr=False, default=False)
+    encoding_spec_bin_offset: float = field(repr=False, default=0.0)
+
     @lazy
     def fragment_labels(self) -> list[str]:
         """
@@ -282,6 +289,8 @@ class Config:
         for k, v in self.asdict().items():
             if isinstance(v, tuple):
                 v = [x if x is not None else "__NONE__" for x in v]
+            elif v is None:
+                v = "__NONE__"
             out[k] = v
         with open(path, "wb") as f:
             tomli_w.dump(out, f)
@@ -296,6 +305,8 @@ class Config:
         for k, v in config.items():
             if isinstance(v, list):
                 v = tuple(x if x != "__NONE__" else None for x in v)
+            elif v == "__NONE__":
+                v = None
             out_config[k] = v
 
         return Config(**out_config)
