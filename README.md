@@ -174,16 +174,9 @@ Check:
     - [ ] Convert config from config files of search engines
         - [ ] comet
         - [ ] msfragger
-    - [ ] Import/export to toml
-- [x] Spectrum converter (extended object that allow to go from spectrum to ms encodings)
-    - [x] Spectrum Tensor batch
-    - [x] Annotation option (adding a peptide object).
+- [ ] Spectrum converter (extended object that allow to go from spectrum to ms encodings)
         - [ ] sum/max combination
         - [ ] decimal precision
-- [x] Peptide converter
-    - [x] One hot
-    - [x] Numeric encoding
-    - [x] Peptide Tensor Batch
 - [x] Readers from mass spec data
     - [ ] Decide which other to implement/have available
 - [ ] Dataset Objects (torch dataset objects)
@@ -194,8 +187,6 @@ Check:
     - [ ] Annotated Spectrum Dataset
         - [ ] HDF5/sqlite caching
 - [ ] *Documentation, Documentation, Documentation*
-    - [x] Spectrum Class and subclasses
-    - [x] Peptide Class and subclasses
     - [ ] Helper Annotation classes
 
 

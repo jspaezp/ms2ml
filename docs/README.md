@@ -1,4 +1,16 @@
+![Pypi version](https://img.shields.io/pypi/v/ms2ml?style=flat-square)
+![Pypi Downloads](https://img.shields.io/pypi/dm/ms2ml?style=flat-square)
+![Github Activity](https://img.shields.io/github/last-commit/jspaezp/ms2ml?style=flat-square)
+![Python versions](https://img.shields.io/pypi/pyversions/ms2ml?style=flat-square)
+![GitHub Actions](https://img.shields.io/github/workflow/status/jspaezp/ms2ml/CI%20Testing/release?style=flat-square)
+![License](https://img.shields.io/pypi/l/ms2ml?style=flat-square)
+
+![](assets/ms2ml_logo.png)
+
 # ms2ml
+
+Documentation site: https://jspaezp.github.io/ms2ml/encoding_options/
+GitHub: https://github.com/jspaezp/ms2ml
 
 **This package is in early development, I am actively taking ideas and requests**
 
@@ -7,6 +19,34 @@ The idea of this package is to have an intermeiate layer between the pyteomics p
 Since ML applications do not take MS data as input directly, it is necessary to convert/encode it. This package is meant to handle that aspect.
 
 This project is meant to be opinionated but not arbitrary. By that I mean that it should attempt to enforce the "better way" of doing things (not give flexibility to do everything every way) but all design decisions are open to discussion (ideally though github).
+
+## Installation
+
+```shell
+pip install ms2ml
+```
+
+## Usage
+
+```python
+from ms2ml.config import Config
+from ms2ml.data.adapters import MSPAdapter
+
+# From proteometools
+my_file = "FTMS_HCD_20_annotated_2019-11-12.msp"
+
+def post_hook(spec):
+    return {
+        "aa": spec.precursor_peptide.aa_to_onehot(),
+        "mods": spec.precursor_peptide.mod_to_vector(),
+    }
+
+my_adapter = MSPAdapter(file=my_file, config=Config(), out_hook=post_hook)
+bundled = my_adapter.bundle(my_adapter.parse())
+print({k: f"{type(v): of shape: {v.shape}}" for k, v in bundled.items()})
+# {'aa': "<class 'numpy.ndarray'>: of shape: (N, 42, 29)",
+#  'mods': "<class 'numpy.ndarray'>: of shape: (N, 42)"}
+```
 
 ## Core parts
 
@@ -69,15 +109,15 @@ Check:
 
 # TODO
 
-- [x] Spectrum converter (extended object that allow to go from spectrum to ms encodings)
-    - [x] Spectrum Tensor batch
-    - [x] Annotation option (adding a peptide object).
+- General
+    - Convert cached properties to the lazy decodator
+- [ ] Config
+    - [ ] Convert config from config files of search engines
+        - [ ] comet
+        - [ ] msfragger
+- [ ] Spectrum converter (extended object that allow to go from spectrum to ms encodings)
         - [ ] sum/max combination
         - [ ] decimal precision
-- [x] Peptide converter
-    - [x] One hot
-    - [x] Numeric encoding
-    - [ ] Peptide Tensor Batch
 - [x] Readers from mass spec data
     - [ ] Decide which other to implement/have available
 - [ ] Dataset Objects (torch dataset objects)
@@ -88,8 +128,6 @@ Check:
     - [ ] Annotated Spectrum Dataset
         - [ ] HDF5/sqlite caching
 - [ ] *Documentation, Documentation, Documentation*
-    - [ ] Spectrum Class and subclasses
-    - [ ] Peptide Class and subclasses
     - [ ] Helper Annotation classes
 
 
@@ -97,6 +135,36 @@ Check:
   - [ ] remove D100 from the exclusions in linting (missing docstring in module)
   - [ ] remove D104 (missing docstring in package)
   - [ ] Fix all flake8/pylint complains ...
+
+
+# Similar projects:
+
+- https://matchms.readthedocs.io/en/latest/:
+    - Matchms is an open-access Python package to import, process, clean,
+      and compare mass spectrometry data (MS/MS). It allows to implement
+      and run an easy-to-follow, easy-to-reproduce workflow from raw mass
+      spectra to pre- and post-processed spectral data.
+    - Tailored for small molecule data
+
+- https://gitlab.com/roettgerlab/ms2ai:
+    - MS2AI from Tobias Rehfeldt (who is also part of the ProteomicsML project)
+    - Uses maxquant to for a full PRIDE to ml workflow.
+
+- https://github.com/wilhelm-lab/dlomix
+    - DLOmix from Mathias Wilhelm’s group
+    - Tensorflow centric implementatino of ml models for proteomcs
+
+- https://github.com/wfondrie/depthcharge
+    - Depthcharge is a deep learning toolkit for building state-of-the-art
+      models to analyze mass spectra generated from peptides other and molecules.
+    - It seems to focus on the model generation, rather than proving flexibility
+      in encoding.
+
+- https://github.com/bittremieux/spectrum_utils
+    - spectrum_utils is a Python package for efficient mass spectrometry
+      data processing and visualization.
+    - Many of the spectrum processing aspects are similar but there
+      is no focus in parsing or exporting encoding.
 
 # Contribution
 
