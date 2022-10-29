@@ -11,13 +11,23 @@ from .base import BaseParser
 def _decompress_peaks(
     compressed_mzs: bytes, compressed_int: bytes, num_peaks: int
 ) -> Tuple[np.ndarray, np.ndarray]:
-    """Decompress the m/z and intensity arrays from the Bibliospec format.
+    r"""Decompress the m/z and intensity arrays from the Bibliospec format.
 
     The implementation of the compression is based on the C++ code in the
     Bibliospec source code.
 
     The compression is using concatenation of the intensity or mz arrray
     from a struct and then using zlib to compress the resulting byte array.
+
+    Examples:
+        >>> mzs = np.array([1, 2, 3, 4, 5])
+        >>> intensities = np.array([1.0, 2.0, 3.0, 4.0, 5.0])
+        >>> compressed_mzs, compressed_int = _compress_peaks(mzs, intensities)
+        >>> (compressed_mzs, compressed_int)
+        (b'x\xdac`\x00\x81\x0f\xf6\x0c\x10\xe0\x00\xa18\xa0\xb4\x00\x94\x16q\x00\x006\x7f\x02\\',
+         b'x\xdac`h\xb0g``p\x00" n\x00\xe2\x05\x0e\x00\x1b\x03\x03 ')
+        >>> _decompress_peaks(compressed_mzs, compressed_int, 5)
+        (array([1., 2., 3., 4., 5.]), array([1., 2., 3., 4., 5.]))
     """
     # [0, 15, 32, 47] could work ....maybe ...
     if len(compressed_mzs) != (4 * num_peaks):
@@ -32,6 +42,24 @@ def _decompress_peaks(
     assert len(intensities) == len(mzs)
 
     return np.array(mzs), np.array(intensities)
+
+
+def _compress_peaks(mzs: np.ndarray, intensities: np.ndarray) -> Tuple[bytes, bytes]:
+    """Compress the m/z and intensity arrays to the Bibliospec format.
+
+    The implementation of the compression is based on the C++ code in the
+    Bibliospec source code.
+
+    The compression is using concatenation of the intensity or mz arrray
+    from a struct and then using zlib to compress the resulting byte array.
+    """
+    mzs = struct.pack("d" * len(mzs), *mzs)
+    intensities = struct.pack("f" * len(intensities), *intensities)
+
+    compressed_mzs = zlib.compress(mzs, 9)
+    compressed_int = zlib.compress(intensities, 9)
+
+    return compressed_mzs, compressed_int
 
 
 class BibliosPecParser(BaseParser):

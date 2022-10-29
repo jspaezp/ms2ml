@@ -23,6 +23,15 @@ from .config import Config, get_default_config
 from .peptide import Peptide
 from .utils import annotate_peaks, clear_lazy_cache, get_tolerance, lazy
 
+try:
+    from matplotlib import pyplot as plt
+    from spectrum_utils.plot import spectrum as plotspec
+    from spectrum_utils.spectrum import MsmsSpectrum as sus_MsmsSpectrum
+except ImportError:
+    sus_MsmsSpectrum = None
+    plotspec = None
+    plt = None
+
 
 @dataclass
 class Spectrum:
@@ -396,6 +405,25 @@ class Spectrum:
         spec = AnnotatedPeptideSpectrum(precursor_peptide=peptide, **spec_dict)
         return spec
 
+    def to_sus(self):
+        if sus_MsmsSpectrum is None:
+            raise ImportError(
+                "The spectrum_utils library is not installed. "
+                "Please install it with `pip install spectrum_utils`."
+            )
+        msmsspec = sus_MsmsSpectrum(
+            identifier="RandomSpec",
+            mz=self.mz,
+            precursor_mz=self.precursor_mz,
+            intensity=self.intensity,
+            precursor_charge=self.precursor_charge,
+        )
+        return msmsspec
+
+    def plot(self, ax=None, **kwargs) -> plt.Axes:
+        msmsspec = self.to_sus()
+        return plotspec(msmsspec, ax=ax, **kwargs)
+
 
 def _bin_spectrum(
     mz: np.ndarray,
@@ -644,6 +672,17 @@ class AnnotatedPeptideSpectrum(Spectrum):
             ['y1^1', ...]
         """
         return self.config.fragment_labels
+
+    def to_sus(self):
+        msmsspec = super().to_sus()
+        msmsspec = msmsspec.annotate_proforma(
+            proforma_str=self.precursor_peptide.to_proforma(),
+            fragment_tol_mass=self.config.g_tolerance_units[self.ms_level - 1],
+            fragment_tol_mode=self.config.g_tolerance_units[self.ms_level - 1],
+            ion_types=self.config.ion_series,
+            neutral_losses=True,
+        )
+        return msmsspec
 
     @staticmethod
     def _sample():
