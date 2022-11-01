@@ -1198,8 +1198,8 @@ python-versions = ">=3.8"
 
 [package.dependencies]
 numpy = [
-    {version = ">=1.21.0", markers = "python_version >= \"3.10\""},
     {version = ">=1.20.3", markers = "python_version < \"3.10\""},
+    {version = ">=1.21.0", markers = "python_version >= \"3.10\""},
 ]
 python-dateutil = ">=2.8.1"
 pytz = ">=2020.1"
@@ -1470,7 +1470,7 @@ python-versions = ">=3.7"
 
 [[package]]
 name = "pyteomics"
-version = "4.5.5"
+version = "4.5.6"
 description = "A framework for proteomics data analysis."
 category = "main"
 optional = false
@@ -3273,8 +3273,8 @@ pyrsistent = [
     {file = "pyrsistent-0.18.1.tar.gz", hash = "sha256:d4d61f8b993a7255ba714df3aca52700f8125289f84f704cf80916517c46eb96"},
 ]
 pyteomics = [
-    {file = "pyteomics-4.5.5-py2.py3-none-any.whl", hash = "sha256:4ac9be43cf1dec258ef2803f44c537a1fbc6c2817cbea6c2b15ec3ca6038ae70"},
-    {file = "pyteomics-4.5.5.tar.gz", hash = "sha256:c762164d437d2d136153ce8b75235ea23cf460e7163ab69b97cd1c39f489263e"},
+    {file = "pyteomics-4.5.6-py2.py3-none-any.whl", hash = "sha256:0e279c085370e8085c84997adb8f9e16425facf2d088ba80f2b7e6bcb59cfebe"},
+    {file = "pyteomics-4.5.6.tar.gz", hash = "sha256:8c6e79068f18d853218967a312c22861422df69fdcf62499a258526f687b126f"},
 ]
 pytest = [
     {file = "pytest-7.2.0-py3-none-any.whl", hash = "sha256:892f933d339f068883b6fd5a459f03d85bfcb355e4981e146d2c7616c21fef71"},
