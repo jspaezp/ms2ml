@@ -31,7 +31,6 @@ class BaseAdapter(ABC):
         self.in_hook = in_hook
         self.out_hook = out_hook
         self.collate_fn = collate_fn
-        super().__init__()
 
     def _process_elem(self, elem):
         """Process an element.

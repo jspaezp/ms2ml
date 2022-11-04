@@ -66,7 +66,6 @@ class MemoizedUnimodResolver:
             raise ValueError(f"Invalid mod_id: {mod_id}")
 
         if mod_id not in cls._cache:
-
             # TODO move this to real logging
             logger.debug(f"Resolving {mod_id}")
             cls._cache[mod_id_name] = cls.solver().resolve(mod_id, strict=False)
@@ -76,7 +75,6 @@ class MemoizedUnimodResolver:
 
     @classmethod
     def mod_id_mass(cls, mod_id: int = 21) -> float:
-
         if str(mod_id) in cls._id_cache:
             return cls._id_cache[str(mod_id)]["mono_mass"]
 

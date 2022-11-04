@@ -83,11 +83,17 @@ class Config:
             level. For instance ("ppm", "Da") means that the tolerance for ms1 is
             in ppm, and for ms2 in Da.
         g_isotopes:
-        peptide_max_length:
+        peptide_length_range:
+            A tuple of ints, where the first int is the minimum length of peptides.
         precursor_charges:
+            A tuple of ints, where each int is a possible precursor charge.
         fragment_positions:
+            A tuple of ints, where each int is a possible fragment position.
         ion_series:
+            A string of characters, where each character is a possible ion series.
+            An example,a dn the default is ('by')
         ion_charges:
+            A tuple of ints, where each int is a possible ion charge.
         ion_neutral_losses:
         ion_encoding_nesting:
         ion_naming_convention:
@@ -115,7 +121,7 @@ class Config:
     g_isotopes: tuple[int, ...] = (0, 0)
 
     # Peptide Configs
-    peptide_max_length: int = 30
+    peptide_length_range: tuple[int, int] = (5, 30)
 
     # Precursor Configs
     precursor_charges: tuple[int, ...] = (1, 2, 3, 4, 5, 6)

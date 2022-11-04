@@ -36,4 +36,4 @@ class BaseParser(ABC):
         if self.file is None:
             raise ValueError("No file specified")
 
-        yield from self.parse_file(self.file)
+        yield from self.parse()

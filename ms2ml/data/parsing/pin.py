@@ -12,7 +12,6 @@ from .base import BaseParser
 
 
 class PinParser(BaseParser):
-
     NUMERIC_REGEX = re.compile(r"^-?(([0-9]*)|(([0-9]*)\.([0-9]*)))$")
 
     # sample SpecId -> sample_tiny_hela_10039_2_5
@@ -169,11 +168,3 @@ class PinParser(BaseParser):
             else:
                 return int(in_str)
         return in_str
-
-
-if __name__ == "__main__":
-    from pprint import pprint
-
-    foo = PinParser("tests/data/pin/sample_tiny_hela.pin")
-    foo2 = next(foo.parse())
-    pprint(foo2)

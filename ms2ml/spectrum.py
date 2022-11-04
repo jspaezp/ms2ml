@@ -466,7 +466,6 @@ def _bin_spectrum(
     )
 
     if get_breaks:
-
         return hist
 
     return hist[0]
