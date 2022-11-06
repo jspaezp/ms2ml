@@ -6,8 +6,17 @@ data into the common series of objects.
 """
 
 from .base import BaseAdapter
+from .bibliospec import BiblioSpecAdapter
+from .encyclopedia import EncyclopeDIAAdapter
 from .msp import MSPAdapter
 from .mzml import MZMLAdapter
 from .spectronaut import SpectronautAdapter
 
-__all__ = ["BaseAdapter", "MSPAdapter", "SpectronautAdapter", "MZMLAdapter"]
+__all__ = [
+    "BaseAdapter",
+    "MSPAdapter",
+    "SpectronautAdapter",
+    "MZMLAdapter",
+    "BiblioSpecAdapter",
+    "EncyclopeDIAAdapter",
+]

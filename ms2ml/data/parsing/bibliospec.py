@@ -53,16 +53,16 @@ def _compress_peaks(mzs: np.ndarray, intensities: np.ndarray) -> Tuple[bytes, by
     The compression is using concatenation of the intensity or mz arrray
     from a struct and then using zlib to compress the resulting byte array.
     """
-    mzs = struct.pack("d" * len(mzs), *mzs)
-    intensities = struct.pack("f" * len(intensities), *intensities)
+    packed_mzs: bytes = struct.pack("d" * len(mzs), *mzs)
+    packed_intensities: bytes = struct.pack("f" * len(intensities), *intensities)
 
-    compressed_mzs = zlib.compress(mzs, 9)
-    compressed_int = zlib.compress(intensities, 9)
+    compressed_mzs = zlib.compress(packed_mzs, 9)
+    compressed_int = zlib.compress(packed_intensities, 9)
 
     return compressed_mzs, compressed_int
 
 
-class BibliosPecParser(BaseParser):
+class BiblioSpecParser(BaseParser):
     """Parser for BibliosPec files.
 
     The bibliospec .blib format has these fields and tables:
@@ -124,7 +124,6 @@ class BibliosPecParser(BaseParser):
         Path to the BibliosPec database
     """
 
-    ALL_SPECTRA_CMD = ""
     TABLES = (
         "IonMobilityTypes",
         "LibInfo",
@@ -163,21 +162,7 @@ class BibliosPecParser(BaseParser):
 
     def __init__(self, db_path):
         self.db_path = db_path
-
-    def parse_file(self, file):
-        """Parse a file.
-
-        Parameters
-        ----------
-        file : PathLike
-            Path to the file to parse
-
-        Returns
-        -------
-        Iterator
-            Iterator over the parsed spectra
-        """
-        raise NotImplementedError
+        self.file = db_path
 
     def parse_text(self, text):
         """Parse a chunk of text.
@@ -196,7 +181,7 @@ class BibliosPecParser(BaseParser):
         """
         raise NotImplementedError
 
-    def parse(self) -> Iterator[dict]:
+    def parse(self):
         """Parse the database.
 
         Returns
@@ -204,13 +189,29 @@ class BibliosPecParser(BaseParser):
         Iterator
             Iterator over the parsed spectra
         """
+        yield from self.parse_file(self.db_path)
 
-        query = f"SELECT {', '.join(self.EXTRACT_FIELDS)} FROM RefSpectra"
+    @classmethod
+    def parse_file(cls, file) -> Iterator[dict]:
+        """Parse a file.
+
+        Parameters
+        ----------
+        file : PathLike
+            Path to the file to parse
+
+        Returns
+        -------
+        Iterator
+            Iterator over the parsed spectra
+        """
+
+        query = f"SELECT {', '.join(BiblioSpecParser.EXTRACT_FIELDS)} FROM RefSpectra"
         query += " JOIN RefSpectraPeaks"
         query += " ON RefSpectra.id=RefSpectraPeaks.RefSpectraID"
-        with sqlite3.connect(self.db_path) as conn:
+        with sqlite3.connect(file) as conn:
             for row in conn.execute(query):
-                row = dict(zip(self.EXTRACT_FIELDS, row))
+                row = dict(zip(BiblioSpecParser.EXTRACT_FIELDS, row))
 
                 num_peaks = row["numPeaks"]
                 compressed_mzs = row["peakMZ"]
@@ -221,6 +222,3 @@ class BibliosPecParser(BaseParser):
 
     def __iter__(self):
         return self.parse()
-
-    def __next__(self):
-        return next(self.parse())

@@ -1,4 +1,6 @@
 from .base import BaseParser
+from .bibliospec import BiblioSpecParser
+from .encyclopedia import EncyclopeDIAParser
 from .fasta import FastaDataset
 from .msp import MSPParser
 from .pin import PinParser
@@ -10,4 +12,6 @@ __all__ = [
     "MSPParser",
     "PinParser",
     "SpectronautLibraryParser",
+    "BiblioSpecParser",
+    "EncyclopeDIAParser",
 ]

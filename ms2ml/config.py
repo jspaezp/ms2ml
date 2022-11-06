@@ -153,7 +153,9 @@ class Config:
         ["n_term"] + list(string.ascii_uppercase) + ["c_term", "__missing__"]
     )
 
-    encoding_mod_order: tuple[str, None] = field(default_factory=_default_mod_order)
+    encoding_mod_order: tuple[str | None, ...] = field(
+        default_factory=_default_mod_order
+    )
     encoding_mod_alias: dict[str, str] = field(default_factory=_default_mod_aliases)
 
     encoding_spec_bin_start: float = field(repr=False, default=0.0)
@@ -317,7 +319,7 @@ class Config:
 
         return Config(**out_config)
 
-    def from_comet(path: str, *args, **kwargs):
+    def from_comet(self, path: str, *args, **kwargs):
         """Loads a config from a comet params file."""
         raise NotImplementedError
 
