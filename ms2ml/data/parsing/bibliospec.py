@@ -30,7 +30,7 @@ def _decompress_peaks(
         (array([1., 2., 3., 4., 5.]), array([1., 2., 3., 4., 5.]))
     """
     # [0, 15, 32, 47] could work ....maybe ...
-    if len(compressed_mzs) != (4 * num_peaks):
+    if len(compressed_mzs) != (8 * num_peaks):
         compressed_mzs = zlib.decompress(compressed_mzs, 32)
 
     mzs = struct.unpack("d" * num_peaks, compressed_mzs)
