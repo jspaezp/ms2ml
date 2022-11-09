@@ -308,7 +308,7 @@ class Peptide(ProForma):
         Examples:
             >>> p = Peptide.from_sequence("PEPPINK/2")
             >>> p.ion_dict
-            {'y1^1': AnnotatedIon(mass=array(147.11334, dtype=float32), ...
+            {'y1^1': AnnotatedIon(mass=147.11334, ...
             charge=2, position=6, ion_series='b', intensity=0, neutral_loss=None)}
         """
         if self.charge is None:

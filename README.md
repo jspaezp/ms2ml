@@ -59,8 +59,6 @@ print({k: f"{type(v): of shape: {v.shape}}" for k, v in bundled.items()})
 1. ms2ml representation objects have methods that converts them into tensor representations (Peptide.aa_to_onehot for instance)
 1. As much configuration as possible should be stored in the config.Config class.
     1. It should contain information on the project and the way everything is getting encoded, so hypothetically one could just pass a config to a different data source adapter and get compatible results.
-    1. Is our retention time in seconds or minutes?
-        1. look at the config
     1. What position of the onehot is alanine?
         1. look at the config
     1. WHat order are our ions encoded in?
@@ -150,12 +148,6 @@ flowchart TB
 
 ```
 
-## Controlled Vocabulary
-
-- `n_term` = denotes the n-terminus of a peptide
-- `c_term` = denotes the c-terminus of a peptide
-- `__missing__` = denotes missing/empty elements in a tensor
-
 ## Peptide sequence notation
 
 When possible I will attempt to allow 'Proforma' based sequence annotations.
@@ -168,33 +160,10 @@ Check:
 
 # TODO
 
-- General
-    - Convert cached properties to the lazy decodator
 - [ ] Config
-    - [ ] Convert config from config files of search engines
-        - [ ] comet
-        - [ ] msfragger
-- [ ] Spectrum converter (extended object that allow to go from spectrum to ms encodings)
-        - [ ] sum/max combination
-        - [ ] decimal precision
-- [x] Readers from mass spec data
-    - [ ] Decide which other to implement/have available
-- [ ] Dataset Objects (torch dataset objects)
-    - [ ] In disk caching
-    - [ ] In mem caching
-    - [ ] Peptide Dataset
-    - [ ] Spectrum Dataset
-    - [ ] Annotated Spectrum Dataset
-        - [ ] HDF5/sqlite caching
+    - [ ] Handle variable modifications
 - [ ] *Documentation, Documentation, Documentation*
     - [ ] Helper Annotation classes
-
-
-- [ ] Style
-  - [ ] remove D100 from the exclusions in linting (missing docstring in module)
-  - [ ] remove D104 (missing docstring in package)
-  - [ ] Fix all flake8/pylint complains ...
-
 
 # Similar projects:
 

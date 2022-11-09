@@ -59,8 +59,6 @@ print({k: f"{type(v): of shape: {v.shape}}" for k, v in bundled.items()})
 1. ms2ml representation objects have methods that converts them into tensor representations (Peptide.aa_to_onehot for instance)
 1. As much configuration as possible should be stored in the config.Config class.
     1. It should contain information on the project and the way everything is getting encoded, so hypothetically one could just pass a config to a different data source adapter and get compatible results.
-    1. Is our retention time in seconds or minutes?
-        1. look at the config
     1. What position of the onehot is alanine?
         1. look at the config
     1. WHat order are our ions encoded in?
@@ -91,11 +89,64 @@ print({k: f"{type(v): of shape: {v.shape}}" for k, v in bundled.items()})
 
 People who want to train ML models from peptide/proteomics data instead of figuring out ways to encode their tensors and write parsers.
 
-## Controlled Vocabulary
+```mermaid
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryBorderColor': '#666666', 'primaryColor': '#ffffff', 'edgeLabelBackground':'#ffffff', 'tertiaryColor': '#666666'}}}%%
+flowchart TB
+    raw["Raw Data: .raw"]
+    mzml["Converted Data: .mzML"]
+    pepxml["Searched Data: .pep.xml"]
+    pout["FDR controlled Data: .pep.xml .pout"]
+    speclib["Spectral library: .ms2 .blib .sptxt .msp"]
+    tensor["Encoded Spectra: np.array torch.tensor"]
+    tensorcache["Tensor Cache: .hdf5 .csv .feather"]
+    mlmodel["ML model: torch.nn.Module tf.keras.nn"]
+    randomscript["Self-implemented script .py .R"]
 
-- `n_term` = denotes the n-terminus of a peptide
-- `c_term` = denotes the c-terminus of a peptide
-- `__missing__` = denotes missing/empty elements in a tensor
+    msconvert[MSConvert]
+    searchengine[Search Engine: comet,msfragger...]
+    fdrvalidator[FDR validator: peptideprophet, Percolator, Mokapot]
+    speclibbuilder[Spectral Library Builder]
+
+    ms2ml[MS2ML]
+
+    raw --> msconvert
+    msconvert --> mzml
+    raw --> searchengine
+    searchengine --> pepxml
+    mzml --> searchengine
+    pepxml --> fdrvalidator
+    fdrvalidator --> pout
+    pout --> speclibbuilder
+    speclibbuilder --> speclib
+    pout --> randomscript
+    randomscript --> tensor
+    speclib --> randomscript
+    tensor --> mlmodel
+    tensor --> tensorcache
+    tensorcache --> mlmodel
+    tensorcache --> randomscript
+    randomscript --> mlmodel
+
+    speclib --> ms2ml
+    ms2ml --> mlmodel
+
+    linkStyle 10,11,12,13,14,15,16 stroke:#db7093,stroke-width:5px;
+    linkStyle 17,18 stroke:#008000,stroke-width:5px;
+
+    style msconvert stroke:#00ffff,stroke-width:4px
+    style searchengine stroke:#00ffff,stroke-width:4px
+    style fdrvalidator stroke:#00ffff,stroke-width:4px
+    style speclibbuilder stroke:#00ffff,stroke-width:4px
+
+    style raw fill:#cccccc,stroke-width:2px
+    style mzml fill:#cccccc,stroke-width:2px
+    style pepxml fill:#cccccc,stroke-width:2px
+    style pout fill:#cccccc,stroke-width:2px
+    style speclib fill:#cccccc,stroke-width:2px
+
+    style ms2ml fill:#ee82ee,stroke:#b882ee,stroke-width:4px
+
+```
 
 ## Peptide sequence notation
 
@@ -109,33 +160,10 @@ Check:
 
 # TODO
 
-- General
-    - Convert cached properties to the lazy decodator
 - [ ] Config
-    - [ ] Convert config from config files of search engines
-        - [ ] comet
-        - [ ] msfragger
-- [ ] Spectrum converter (extended object that allow to go from spectrum to ms encodings)
-        - [ ] sum/max combination
-        - [ ] decimal precision
-- [x] Readers from mass spec data
-    - [ ] Decide which other to implement/have available
-- [ ] Dataset Objects (torch dataset objects)
-    - [ ] In disk caching
-    - [ ] In mem caching
-    - [ ] Peptide Dataset
-    - [ ] Spectrum Dataset
-    - [ ] Annotated Spectrum Dataset
-        - [ ] HDF5/sqlite caching
+    - [ ] Handle variable modifications
 - [ ] *Documentation, Documentation, Documentation*
     - [ ] Helper Annotation classes
-
-
-- [ ] Style
-  - [ ] remove D100 from the exclusions in linting (missing docstring in module)
-  - [ ] remove D104 (missing docstring in package)
-  - [ ] Fix all flake8/pylint complains ...
-
 
 # Similar projects:
 

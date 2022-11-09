@@ -14,7 +14,7 @@ import dataclasses
 import math
 import warnings
 from dataclasses import dataclass, field
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, Callable, Literal, overload
 
 import numpy as np
 from numpy.typing import NDArray
@@ -56,8 +56,8 @@ class Spectrum:
         Spectrum(mz=array([1000., 1500., 2000.]), ...)
     """
 
-    mz: np.ndarray
-    intensity: np.ndarray
+    mz: NDArray[np.float64]
+    intensity: NDArray[np.float32]
     ms_level: int
     precursor_mz: float | None
     precursor_charge: int | None = None
@@ -227,7 +227,7 @@ class Spectrum:
         clear_lazy_cache(out)
         return out
 
-    def encode_spec_bins(self) -> np.ndarray[np.float32]:
+    def encode_spec_bins(self) -> NDArray[np.float32]:
         """Encodes the spectrum into bins.
 
         For a version of this function that takes arguments indead of reading the
@@ -255,7 +255,34 @@ class Spectrum:
             binsize=self.config.encoding_spec_bin_binsize,
             relative=self.config.encoding_spec_bin_relative,
             offset=self.config.encoding_spec_bin_offset,
+            get_breaks=False,
         )
+
+    @overload
+    def bin_spectrum(
+        self,
+        start: float,
+        end: float,
+        binsize: float | None = None,
+        n_bins: int | None = None,
+        relative: bool = False,
+        offset: float = 0,
+        get_breaks: Literal[True] = True,
+    ) -> tuple[NDArray[np.float32], NDArray[np.float64]]:
+        ...
+
+    @overload
+    def bin_spectrum(
+        self,
+        start: float,
+        end: float,
+        binsize: float | None = None,
+        n_bins: int | None = None,
+        relative: bool = False,
+        offset: float = 0,
+        get_breaks: Literal[False] = False,
+    ) -> NDArray[np.float32]:
+        ...
 
     def bin_spectrum(
         self,
@@ -266,7 +293,7 @@ class Spectrum:
         relative: bool = False,
         offset: float = 0,
         get_breaks: bool = False,
-    ) -> np.ndarray:
+    ) -> NDArray[np.float32] | tuple[NDArray[np.float32], NDArray[np.float64]]:
         """Bins the spectrum.
 
         Args:
@@ -287,9 +314,16 @@ class Spectrum:
 
         if relative:
             if isinstance(relative, float) or isinstance(relative, int):
-                relative_value = relative
+                relative_value = float(relative)
             else:
-                relative_value = self.precursor_mz
+                if self.precursor_mz:
+                    relative_value = float(self.precursor_mz)
+                else:
+                    raise ValueError(
+                        "Cannot use relative binning without precursor m/z"
+                        " or a relative value. Pass either a value to 'relative'"
+                        " or a precursor m/z to the spectrum."
+                    )
 
             start = start + relative_value
             end = end + relative_value
@@ -313,7 +347,7 @@ class Spectrum:
         return binned
 
     @lazy
-    def base_peak(self) -> float:
+    def base_peak(self) -> np.float32:
         """Returns the base peak intensity of the spectrum."""
         return np.max(self.intensity)
 
@@ -322,7 +356,7 @@ class Spectrum:
         self._base_peak = value
 
     @lazy
-    def tic(self) -> float:
+    def tic(self) -> np.float32:
         """Returns the total ion current of the spectrum."""
         return np.sum(self.intensity)
 
@@ -330,7 +364,9 @@ class Spectrum:
     def tic(self, value) -> None:
         self._lazy_tic = value
 
-    def sic(self, mzs: np.array, resolution: sum) -> np.array:
+    def sic(
+        self, mzs: NDArray[np.float32], resolution: Callable = sum
+    ) -> NDArray[np.float32]:
         """Returns the selected ion current for a given set of m/z values.
 
         Args:
@@ -432,14 +468,14 @@ class Spectrum:
 
 
 def _bin_spectrum(
-    mz: np.ndarray,
-    weights: np.ndarray,
+    mz: NDArray[np.float64],
+    weights: NDArray[np.float32],
     start: float,
     end: float,
-    binsize=None,
-    n_bins=None,
-    get_breaks=False,
-) -> np.ndarray:
+    binsize: float | None = None,
+    n_bins: int | None = None,
+    get_breaks: bool = False,
+) -> NDArray[np.float32] | tuple[NDArray[np.float32], NDArray[np.float64]]:
     """Bins the spectrum.
 
     Args:
@@ -541,7 +577,7 @@ class AnnotatedPeptideSpectrum(Spectrum):
     def mass_error(self):
         raise NotImplementedError
 
-    def _annotate_peaks(self) -> tuple[np.ndarray, np.ndarray]:
+    def _annotate_peaks(self) -> tuple[NDArray[np.int32], NDArray[np.int32]]:
         """Annotates the peaks of the spectrum.
 
         Internal function that returns what indices in the observed mz array match the
@@ -566,11 +602,11 @@ class AnnotatedPeptideSpectrum(Spectrum):
         return annot_indices, mz_indices
 
     @property
-    def _annot_indices(self) -> np.ndarray:
+    def _annot_indices(self) -> NDArray[np.int32]:
         return self._indices[0]
 
     @property
-    def _mz_indices(self) -> np.ndarray:
+    def _mz_indices(self) -> NDArray[np.int32]:
         return self._indices[1]
 
     # TODO implement getting individual ion series, same API as peptide
@@ -602,7 +638,7 @@ class AnnotatedPeptideSpectrum(Spectrum):
         Examples:
             >>> spec = AnnotatedPeptideSpectrum._sample()
             >>> spec.fragments
-            {'y1^1': AnnotatedIon(mass=array(147.11334, dtype=float32),
+            {'y1^1': AnnotatedIon(mass=147.11334,
             charge=1, position=1, ion_series='y', intensity=200.0,
             neutral_loss=None)}
 
@@ -645,7 +681,7 @@ class AnnotatedPeptideSpectrum(Spectrum):
         return self.fragment_intensities.get(index, 0.0)
 
     @lazy
-    def _indices(self) -> tuple[NDArray[np.float32], NDArray[np.float32]]:
+    def _indices(self) -> tuple[NDArray[np.int32], NDArray[np.int32]]:
         return self._annotate_peaks()
 
     def encode_fragments(self) -> NDArray[np.float32]:
