@@ -3,6 +3,7 @@ from __future__ import annotations
 from typing import Iterator
 
 import numpy as np
+from numpy.typing import NDArray
 from pyteomics.proforma import ProForma, parse, to_proforma
 
 from .annotation_classes import AnnotatedIon
@@ -101,7 +102,7 @@ class Peptide(ProForma):
 
         return cls(proforma.sequence, proforma.properties, config, extras=extras)
 
-    def to_proforma(self):
+    def to_proforma(self) -> str:
         """Converts the peptide to a string following the proforma specifications.
 
         Examples:
@@ -111,6 +112,23 @@ class Peptide(ProForma):
         """
 
         return to_proforma(self.sequence, **self.properties)
+
+    def stripped_sequence(self):
+        """Returns the stripped sequence of the peptide.
+
+        Examples:
+            >>> p = Peptide.from_sequence("PEPTIDE")
+            >>> p.stripped_sequence()
+            'PEPTIDE'
+            >>> p = Peptide.from_sequence("PEPTIDE/2")
+            >>> p.stripped_sequence()
+            'PEPTIDE'
+            >>> p = Peptide.from_sequence("PEPM[Oxidation]ASDA")
+            >>> p.stripped_sequence()
+            'PEPMASDA'
+        """
+        out = "".join(x[0] for x in self.sequence)
+        return out
 
     def validate(self) -> bool:
         """Validates the built peptide.
@@ -155,8 +173,7 @@ class Peptide(ProForma):
 
     @property
     def fragment_masses(self) -> list:
-        if self._fragment_masses is None:
-            raise NotImplementedError
+        raise NotImplementedError
 
     def __str__(self) -> str:
         return f"Peptide.from_sequence('{self.ProForma}')"
@@ -175,6 +192,8 @@ class Peptide(ProForma):
 
         It is used as a basis to calculate the mass of ion series.
         """
+
+        # TODO check if this is vectorizable
         out = []
         for i in range(0, len(self) + 1):
             curr_chunk = self[max(0, i - 1) : i]
@@ -220,7 +239,7 @@ class Peptide(ProForma):
         """See the forward property."""
         return self._position_masses[::-1].cumsum()
 
-    def ion_series(self, ion_type: str, charge: int) -> np.float32:
+    def ion_series(self, ion_type: str, charge: int) -> NDArray[np.float32]:
         """Calculates all the masses of an ion type.
 
         Calculates the masses of all fragments of the peptide for a given ion type.
@@ -252,9 +271,9 @@ class Peptide(ProForma):
         Examples:
             >>> p = Peptide.from_sequence("AMC")
             >>> p.annotated_ion_series("b", 1)
-            [AnnotatedIon(mass=array(72.044945, dtype=float32), charge=1,
+            [AnnotatedIon(mass=72.044945, charge=1,
             position=1, ion_series='b', intensity=0, neutral_loss=None),
-            AnnotatedIon(mass=array(203.08542, dtype=float32),
+            AnnotatedIon(mass=203.08542,
             charge=1, position=2, ion_series='b', intensity=0, neutral_loss=None)]
         """
         # TODO: Add neutral loss
@@ -267,7 +286,7 @@ class Peptide(ProForma):
 
         masses = self.ion_series(ion_type, charge)
         tmp = []
-        for i, m in enumerate(np.nditer(masses)):
+        for i, m in enumerate(masses):
             elem = AnnotatedIon(
                 mass=m, charge=charge, position=i + 1, ion_series=ion_type
             )
@@ -403,6 +422,81 @@ class Peptide(ProForma):
             out[i, mod] = 1
 
         return out
+
+    @staticmethod
+    def decode_onehot(
+        config: Config, seq_onehot: np.ndarray, mod_onehot: np.ndarray | None = None
+    ) -> Peptide:
+        """Decodes a one-hot encoded vector into a peptide sequence.
+
+        Examples:
+            >>> config = Config()
+            >>> foo = Peptide.from_sequence("AMC", config=config)
+            >>> onehot = foo.aa_to_onehot()
+            >>> mod_onehot = foo.mod_to_onehot()
+            >>> Peptide.decode_onehot(config, onehot, mod_onehot)
+            Peptide([('A', None), ('M', None),
+             ('C', [UnimodModification('4', None, None)])],
+             {'n_term': None, 'c_term': None, 'unlocalized_modifications': [],
+              'labile_modifications': [],
+              'fixed_modifications':
+                  [ModificationRule(UnimodModification('4', None, None), ['C'])],
+              'intervals': [], 'isotopes': [], 'group_ids': [], 'charge_state': None})
+
+        """
+        seq = np.argmax(seq_onehot, axis=1)
+        mod = np.argmax(mod_onehot, axis=1) if mod_onehot is not None else None
+
+        return Peptide.decode_vector(config, seq, mod)
+
+    @staticmethod
+    def decode_vector(
+        config: Config, seq: np.ndarray, mod: np.ndarray | None
+    ) -> Peptide:
+        """Decodes a one-hot encoded vector into a peptide sequence.
+
+        Examples:
+            >>> config = Config()
+            >>> foo = Peptide.from_sequence("AMC", config)
+            >>> foo.aa_to_vector()
+            array([ 0,  1, 13,  3, 27])
+            >>> foo.mod_to_vector()  # Default config has carbamido
+            array([0, 0, 0, 1, 0])
+            >>> Peptide.decode_vector(
+            ...     foo.config, foo.aa_to_vector(), foo.mod_to_vector()
+            ... )
+            Peptide([('A', None), ('M', None),
+             ('C', [UnimodModification('4', None, None)])],
+             {'n_term': None, 'c_term': None, 'unlocalized_modifications': [],
+              'labile_modifications': [],
+              'fixed_modifications':
+                  [ModificationRule(UnimodModification('4', None, None), ['C'])],
+              'intervals': [], 'isotopes': [], 'group_ids': [], 'charge_state': None})
+        """
+
+        def special_handling(seq, mod):
+            if seq == "n_term":
+                if mod:
+                    return f"{mod}-"
+                else:
+                    return ""
+            if seq == "c_term":
+                if mod:
+                    return f"-{mod}"
+                else:
+                    return ""
+            return seq + mod
+
+        if mod is None:
+            mod_adds = [None] * len(seq)
+        else:
+            mod_adds = [config.encoding_mod_order[x] for x in mod]
+
+        mod_adds = [x if x is not None else "" for x in mod_adds]
+        seq_adds = [config.encoding_aa_order[x] for x in seq]
+
+        seq_out = "".join([special_handling(x, y) for x, y in zip(seq_adds, mod_adds)])
+        return Peptide.from_proforma_seq(config=config, seq=seq_out)
 
     def aa_to_count(self):
         """Converts the peptide sequence to a one-hot encoding.

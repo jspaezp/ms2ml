@@ -7,8 +7,7 @@ from ms2ml.data.parsing.bibliospec import BiblioSpecParser
 
 def test_bibliospec_parser(shared_datadir):
     foo = BiblioSpecParser(shared_datadir / "bibliospec/Firstexp.blib")
-    for i in foo:
-        break
+    i = next(iter(foo))
 
     assert i["id"] == 1
     assert i["numPeaks"] == 14

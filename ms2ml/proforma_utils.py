@@ -66,9 +66,15 @@ class MemoizedUnimodResolver:
             raise ValueError(f"Invalid mod_id: {mod_id}")
 
         if mod_id not in cls._cache:
-            # TODO move this to real logging
             logger.debug(f"Resolving {mod_id}")
-            cls._cache[mod_id_name] = cls.solver().resolve(mod_id, strict=False)
+            try:
+                cls._cache[mod_id_name] = cls.solver().resolve(mod_id, strict=False)
+            except KeyError:
+                logger.warning(
+                    f"Could not resolve {mod_id_name} try"
+                    " assigning an alias to it in the config"
+                )
+                raise
             logger.debug(f"Resolved to {cls._cache[mod_id_name]}")
 
         return cls._cache[mod_id_name]

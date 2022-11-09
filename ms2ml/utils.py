@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Callable
+from typing import Callable, overload
 
 import numpy as np
 from numpy.typing import NDArray
@@ -9,7 +9,17 @@ from .constants import PROTON
 from .types import MassError
 
 
-def mz(mass: float | NDArray, charge: int) -> float | NDArray:
+@overload
+def mz(mass: float, charge: int) -> float:
+    ...
+
+
+@overload
+def mz(mass: NDArray[np.float32], charge: int) -> NDArray[np.float32]:
+    ...
+
+
+def mz(mass: float | NDArray, charge: int) -> float | NDArray[np.float32]:
     return (mass + (charge * PROTON)) / charge
 
 

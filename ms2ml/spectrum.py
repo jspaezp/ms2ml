@@ -14,14 +14,20 @@ import dataclasses
 import math
 import warnings
 from dataclasses import dataclass, field
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 import numpy as np
+from numpy.typing import NDArray
 
 from .annotation_classes import AnnotatedIon, RetentionTime
 from .config import Config, get_default_config
 from .peptide import Peptide
 from .utils import annotate_peaks, clear_lazy_cache, get_tolerance, lazy
+
+if TYPE_CHECKING:
+    from matplotlib import pyplot as plt
+    from spectrum_utils.plot import spectrum as plotspec
+    from spectrum_utils.spectrum import MsmsSpectrum as sus_MsmsSpectrum
 
 try:
     from matplotlib import pyplot as plt
@@ -59,7 +65,7 @@ class Spectrum:
     analyzer: str | None = None
     extras: dict | None = None
     retention_time: RetentionTime | float | None = None
-    config: Config | None = field(repr=False, default=None)
+    config: Config = field(repr=False, default_factory=get_default_config)
 
     def __post_init__(self):
         if self.extras is None:
@@ -221,7 +227,7 @@ class Spectrum:
         clear_lazy_cache(out)
         return out
 
-    def encode_spec_bins(self) -> np.typing.NDArray[np.float]:
+    def encode_spec_bins(self) -> np.ndarray[np.float32]:
         """Encodes the spectrum into bins.
 
         For a version of this function that takes arguments indead of reading the
@@ -414,9 +420,9 @@ class Spectrum:
         msmsspec = sus_MsmsSpectrum(
             identifier="RandomSpec",
             mz=self.mz,
-            precursor_mz=self.precursor_mz,
+            precursor_mz=self.precursor_mz or 0,
             intensity=self.intensity,
-            precursor_charge=self.precursor_charge,
+            precursor_charge=self.precursor_charge or 0,
         )
         return msmsspec
 
@@ -496,7 +502,7 @@ class AnnotatedPeptideSpectrum(Spectrum):
         >>> spectrum["y1^1"]
         200.0
         >>> spectrum.fragments
-        {'y1^1': AnnotatedIon(mass=array(147.11334, dtype=float32),
+        {'y1^1': AnnotatedIon(mass=147.11334,
         charge=1, position=1, ion_series='y', intensity=200.0, neutral_loss=None)}
     """
 
@@ -509,21 +515,27 @@ class AnnotatedPeptideSpectrum(Spectrum):
     precursor_charge: int | None = None
 
     def __post_init__(self, *args, **kwargs):
-        if self.config is None:
+        if self.config is None and self.precursor_peptide is not None:
             warnings.warn(
                 "No config provided, falling back to the one in the peptide",
                 UserWarning,
             )
             self.config = self.precursor_peptide.config
+        elif self.config is None:
+            raise ValueError("No config provided, please provide one or a peptide")
 
-        if self.precursor_charge is None:
+        if self.precursor_charge is None and self.precursor_peptide is not None:
             self.precursor_charge = self.precursor_peptide.charge
+        elif self.precursor_charge is None:
+            raise ValueError(
+                "No precursor charge provided, please provide one or a peptide"
+            )
 
         super().__post_init__(*args, **kwargs)
 
     @property
     def charge(self):
-        return self.precursor_peptide.charge
+        return self.precursor_charge
 
     @property
     def mass_error(self):
@@ -633,10 +645,10 @@ class AnnotatedPeptideSpectrum(Spectrum):
         return self.fragment_intensities.get(index, 0.0)
 
     @lazy
-    def _indices(self) -> tuple[np.ndarray, np.ndarray]:
+    def _indices(self) -> tuple[NDArray[np.float32], NDArray[np.float32]]:
         return self._annotate_peaks()
 
-    def encode_fragments(self) -> np.float32:
+    def encode_fragments(self) -> NDArray[np.float32]:
         """Encodes the fragment ions as a numpy array
 
         The order of the ions will be defined in the config file.
@@ -673,10 +685,11 @@ class AnnotatedPeptideSpectrum(Spectrum):
         return self.config.fragment_labels
 
     def to_sus(self):
+        """Return a spectrum object as a spectrum_utils.spectrum.Spectrum object"""
         msmsspec = super().to_sus()
         msmsspec = msmsspec.annotate_proforma(
             proforma_str=self.precursor_peptide.to_proforma(),
-            fragment_tol_mass=self.config.g_tolerance_units[self.ms_level - 1],
+            fragment_tol_mass=self.config.g_tolerances[self.ms_level - 1],
             fragment_tol_mode=self.config.g_tolerance_units[self.ms_level - 1],
             ion_types=self.config.ion_series,
             neutral_losses=True,
