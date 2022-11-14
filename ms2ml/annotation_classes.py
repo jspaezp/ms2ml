@@ -46,6 +46,9 @@ class AnnotatedIon:
         return convention.format_map(self.asdict())
 
 
+TimeLiteral = Literal["s", "seconds", "min", "minutes", "h", "hours"]
+
+
 @dataclass
 class RetentionTime:
     """Simple dataclass to hold retention time information.
@@ -64,7 +67,7 @@ class RetentionTime:
     """
 
     rt: float
-    units: Literal["s", "seconds", "min", "h"] = "s"
+    units: TimeLiteral = "s"
     run: Optional[str] = None
 
     # TODO implement iRT conversion

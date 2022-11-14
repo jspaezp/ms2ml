@@ -2,14 +2,36 @@ from importlib import resources
 from typing import Dict
 
 from loguru import logger
+from pyteomics import proforma
 from pyteomics.mass import Unimod
 from pyteomics.proforma import UnimodResolver
+
+try:
+    from importlib.metadata import version
+except ImportError:
+    from importlib_metadata import version
+
+__version__ = version("ms2ml")
+from appdirs import AppDirs
+
+my_appdirs = AppDirs(appname="ms2ml", version=__version__)
+
+with resources.path("ms2ml.unimod", "unimod.xml") as f:
+    LOCAL_UNIMOD_PATH = "file://" + str(f)
+
+
+def set_local_unimod():
+    proforma.set_unimod_path(LOCAL_UNIMOD_PATH)
+    proforma.obo_cache.cache_path = my_appdirs.user_cache_dir
+    proforma.obo_cache.enabled = True
+
+
+set_local_unimod()
 
 
 class LocalUnimodResolver(UnimodResolver):
     def load_database(self):
-        with resources.path("ms2ml.unimod", "unimod.xml") as f:
-            unimod = Unimod("file://" + str(f))
+        unimod = Unimod(LOCAL_UNIMOD_PATH)
         return unimod
 
 
@@ -34,7 +56,7 @@ class MemoizedUnimodResolver:
         "Carbamidomethyl": {
             "id": 4,
             "mass": 57.021464,
-            "mono_mass": 47.021464,
+            "mono_mass": 57.021464,
             "provider": "unimod",
         },
         "Oxidation": {
@@ -66,9 +88,15 @@ class MemoizedUnimodResolver:
             raise ValueError(f"Invalid mod_id: {mod_id}")
 
         if mod_id not in cls._cache:
-            # TODO move this to real logging
             logger.debug(f"Resolving {mod_id}")
-            cls._cache[mod_id_name] = cls.solver().resolve(mod_id, strict=False)
+            try:
+                cls._cache[mod_id_name] = cls.solver().resolve(mod_id, strict=False)
+            except KeyError:
+                logger.warning(
+                    f"Could not resolve {mod_id_name} try"
+                    " assigning an alias to it in the config"
+                )
+                raise
             logger.debug(f"Resolved to {cls._cache[mod_id_name]}")
 
         return cls._cache[mod_id_name]

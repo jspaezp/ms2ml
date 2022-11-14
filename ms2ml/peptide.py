@@ -3,12 +3,17 @@ from __future__ import annotations
 from typing import Iterator
 
 import numpy as np
+from numpy.typing import NDArray
 from pyteomics.proforma import ProForma, parse, to_proforma
+
+from ms2ml.proforma_utils import set_local_unimod
 
 from .annotation_classes import AnnotatedIon
 from .config import Config, get_default_config
-from .constants import ION_OFFSET, OH, PROTON, WATER
+from .constants import ION_OFFSET
 from .utils import lazy, mz
+
+set_local_unimod()
 
 
 class Peptide(ProForma):
@@ -101,7 +106,7 @@ class Peptide(ProForma):
 
         return cls(proforma.sequence, proforma.properties, config, extras=extras)
 
-    def to_proforma(self):
+    def to_proforma(self) -> str:
         """Converts the peptide to a string following the proforma specifications.
 
         Examples:
@@ -111,6 +116,24 @@ class Peptide(ProForma):
         """
 
         return to_proforma(self.sequence, **self.properties)
+
+    @property
+    def stripped_sequence(self):
+        """Returns the stripped sequence of the peptide.
+
+        Examples:
+            >>> p = Peptide.from_sequence("PEPTIDE")
+            >>> p.stripped_sequence
+            'PEPTIDE'
+            >>> p = Peptide.from_sequence("PEPTIDE/2")
+            >>> p.stripped_sequence
+            'PEPTIDE'
+            >>> p = Peptide.from_sequence("PEPM[Oxidation]ASDA")
+            >>> p.stripped_sequence
+            'PEPMASDA'
+        """
+        out = "".join(x[0] for x in self.sequence)
+        return out
 
     def validate(self) -> bool:
         """Validates the built peptide.
@@ -133,7 +156,6 @@ class Peptide(ProForma):
         """
         curr_mass = 0.0
 
-        # TODO check if this is vectorizable
         # n and c temrini are accounted for ... assuming they are used
         curr_mass += np.einsum("ij,j->", self.aa_to_onehot(), self.config.aa_masses)
         curr_mass += np.einsum("ij,j->", self.mod_to_onehot(), self.config.mod_masses)
@@ -155,13 +177,22 @@ class Peptide(ProForma):
 
     @property
     def fragment_masses(self) -> list:
-        if self._fragment_masses is None:
-            raise NotImplementedError
+        raise NotImplementedError
 
     def __str__(self) -> str:
         return f"Peptide.from_sequence('{self.ProForma}')"
 
     def __getitem__(self, i):
+        """Slices a peptide
+
+        Examples:
+            >>> pep = Peptide._sample()
+            >>> pep.stripped_sequence
+            'PEPTIDEPINK'
+            >>> foo = pep[:2]
+            >>> foo.stripped_sequence
+            'PE'
+        """
         out = self.ProForma[i]
         return self.from_ProForma(out, config=self.config, extras=self.extras)
 
@@ -169,36 +200,31 @@ class Peptide(ProForma):
         """Returns the length of the peptide sequence."""
         return len(self.sequence)
 
+    @staticmethod
+    def _sample():
+        config = Config()
+        return Peptide.from_sequence("[U:1]-PEPT[U:21]IDEPINK", config=config)
+
     @lazy
     def _position_masses(self) -> np.float32:
         """Calculates the masses of each termini and aminoacid.
 
         It is used as a basis to calculate the mass of ion series.
+
+        Examples:
+            >>> p = Peptide._sample()
+            >>> len(p._position_masses)
+            13
+            >>> p._position_masses
+            array([ 43.01839 ,  97.052765, 129.04259 ,  97.052765, 181.014   ,
+            113.08406 , 115.02694 , 129.04259 ,  97.052765, 113.08406 ,
+            114.04293 , 128.09496 ,  17.002739], dtype=float32)
         """
-        out = []
-        for i in range(0, len(self) + 1):
-            curr_chunk = self[max(0, i - 1) : i]
 
-            # This line is the limiting factor when annotating peptides ...
-            curr_mass = curr_chunk.mass
-            out.append(curr_mass)
+        curr_mass = np.einsum("ij,j->i", self.aa_to_onehot(), self.config.aa_masses)
+        curr_mass += np.einsum("ij,j->i", self.mod_to_onehot(), self.config.mod_masses)
 
-        # A placeholder for the mass of the C-terminus
-        curr_mass = self[0:0].mass
-        out.append(curr_mass)
-
-        out2 = []
-        for i, curr_mass in enumerate(out):
-            if i > len(self):
-                curr_mass -= PROTON
-            elif i == 0:
-                curr_mass -= OH
-            else:
-                curr_mass -= WATER
-
-            out2.append(curr_mass)
-
-        return np.float32(out2)
+        return curr_mass.astype(np.float32)
 
     @lazy
     def _forward(self):
@@ -220,7 +246,7 @@ class Peptide(ProForma):
         """See the forward property."""
         return self._position_masses[::-1].cumsum()
 
-    def ion_series(self, ion_type: str, charge: int) -> np.float32:
+    def ion_series(self, ion_type: str, charge: int) -> NDArray[np.float32]:
         """Calculates all the masses of an ion type.
 
         Calculates the masses of all fragments of the peptide for a given ion type.
@@ -252,9 +278,9 @@ class Peptide(ProForma):
         Examples:
             >>> p = Peptide.from_sequence("AMC")
             >>> p.annotated_ion_series("b", 1)
-            [AnnotatedIon(mass=array(72.044945, dtype=float32), charge=1,
+            [AnnotatedIon(mass=72.044945, charge=1,
             position=1, ion_series='b', intensity=0, neutral_loss=None),
-            AnnotatedIon(mass=array(203.08542, dtype=float32),
+            AnnotatedIon(mass=203.08542,
             charge=1, position=2, ion_series='b', intensity=0, neutral_loss=None)]
         """
         # TODO: Add neutral loss
@@ -267,7 +293,7 @@ class Peptide(ProForma):
 
         masses = self.ion_series(ion_type, charge)
         tmp = []
-        for i, m in enumerate(np.nditer(masses)):
+        for i, m in enumerate(masses):
             elem = AnnotatedIon(
                 mass=m, charge=charge, position=i + 1, ion_series=ion_type
             )
@@ -289,10 +315,12 @@ class Peptide(ProForma):
         Examples:
             >>> p = Peptide.from_sequence("PEPPINK/2")
             >>> p.ion_dict
-            {'y1^1': AnnotatedIon(mass=array(147.11334, dtype=float32), ...
+            {'y1^1': AnnotatedIon(mass=147.11334, ...
             charge=2, position=6, ion_series='b', intensity=0, neutral_loss=None)}
+            >>> p.ion_dict["y5^1"].mass
+            568.34537
         """
-        if self.charge is None:
+        if not hasattr(self, "charge") or self.charge is None:
             raise ValueError("Peptide charge is not set")
 
         possible_charges = [x for x in self.config.ion_charges if x <= self.charge]
@@ -404,6 +432,86 @@ class Peptide(ProForma):
 
         return out
 
+    @staticmethod
+    def decode_onehot(
+        config: Config, seq_onehot: np.ndarray, mod_onehot: np.ndarray | None = None
+    ) -> Peptide:
+        """Decodes a one-hot encoded vector into a peptide sequence.
+
+        Examples:
+            >>> config = Config()
+            >>> foo = Peptide.from_sequence("AMC", config=config)
+            >>> onehot = foo.aa_to_onehot()
+            >>> mod_onehot = foo.mod_to_onehot()
+            >>> Peptide.decode_onehot(config, onehot, mod_onehot)
+            Peptide([('A', None), ('M', None),
+             ('C', [UnimodModification('4', None, None)])],
+             {'n_term': None, 'c_term': None, 'unlocalized_modifications': [],
+              'labile_modifications': [],
+              'fixed_modifications':
+                  [ModificationRule(UnimodModification('4', None, None), ['C'])],
+              'intervals': [], 'isotopes': [], 'group_ids': [], 'charge_state': None})
+
+        """
+        seq = np.argmax(seq_onehot, axis=1)
+        mod = np.argmax(mod_onehot, axis=1) if mod_onehot is not None else None
+
+        return Peptide.decode_vector(config, seq, mod)
+
+    @staticmethod
+    def decode_vector(
+        config: Config,
+        seq: np.ndarray,
+        mod: np.ndarray | None,
+        charge: int | None = None,
+    ) -> Peptide:
+        """Decodes a one-hot encoded vector into a peptide sequence.
+
+        Examples:
+            >>> config = Config()
+            >>> foo = Peptide.from_sequence("AMC", config)
+            >>> foo.aa_to_vector()
+            array([ 0,  1, 13,  3, 27])
+            >>> foo.mod_to_vector()  # Default config has carbamido
+            array([0, 0, 0, 1, 0])
+            >>> Peptide.decode_vector(
+            ...     foo.config, foo.aa_to_vector(), foo.mod_to_vector()
+            ... )
+            Peptide([('A', None), ('M', None),
+             ('C', [UnimodModification('4', None, None)])],
+             {'n_term': None, 'c_term': None, 'unlocalized_modifications': [],
+              'labile_modifications': [],
+              'fixed_modifications':
+                  [ModificationRule(UnimodModification('4', None, None), ['C'])],
+              'intervals': [], 'isotopes': [], 'group_ids': [], 'charge_state': None})
+        """
+
+        def special_handling(seq, mod):
+            if seq == "n_term":
+                if mod:
+                    return f"{mod}-"
+                else:
+                    return ""
+            if seq == "c_term":
+                if mod:
+                    return f"-{mod}"
+                else:
+                    return ""
+            return seq + mod
+
+        if mod is None:
+            mod_adds = [None] * len(seq)
+        else:
+            mod_adds = [config.encoding_mod_order[x] for x in mod]
+
+        mod_adds = [x if x is not None else "" for x in mod_adds]
+        seq_adds = [config.encoding_aa_order[x] for x in seq]
+
+        seq_out = "".join([special_handling(x, y) for x, y in zip(seq_adds, mod_adds)])
+        if charge:
+            seq_out = f"{seq_out}/{charge}"
+        return Peptide.from_proforma_seq(config=config, seq=seq_out)
+
     def aa_to_count(self):
         """Converts the peptide sequence to a one-hot encoding.
 
@@ -474,6 +582,7 @@ class Peptide(ProForma):
 
         for x in mods:
             if hasattr(x, "__iter__"):
+                x = list(set(x))
                 if len(x) > 1:
                     error_msg = "Multiple modifications on the"
                     error_msg += " same aminoacid are not supported"

@@ -14,14 +14,20 @@ import dataclasses
 import math
 import warnings
 from dataclasses import dataclass, field
-from typing import Any
+from typing import TYPE_CHECKING, Any, Callable, Literal, overload
 
 import numpy as np
+from numpy.typing import NDArray
 
 from .annotation_classes import AnnotatedIon, RetentionTime
 from .config import Config, get_default_config
 from .peptide import Peptide
-from .utils import annotate_peaks, clear_lazy_cache, get_tolerance, lazy
+from .utils import annotate_peaks, clear_lazy_cache, get_tolerance, lazy, mz
+
+if TYPE_CHECKING:
+    from matplotlib import pyplot as plt
+    from spectrum_utils.plot import spectrum as plotspec
+    from spectrum_utils.spectrum import MsmsSpectrum as sus_MsmsSpectrum
 
 try:
     from matplotlib import pyplot as plt
@@ -50,8 +56,8 @@ class Spectrum:
         Spectrum(mz=array([1000., 1500., 2000.]), ...)
     """
 
-    mz: np.ndarray
-    intensity: np.ndarray
+    mz: NDArray[np.float64]
+    intensity: NDArray[np.float32]
     ms_level: int
     precursor_mz: float | None
     precursor_charge: int | None = None
@@ -59,7 +65,7 @@ class Spectrum:
     analyzer: str | None = None
     extras: dict | None = None
     retention_time: RetentionTime | float | None = None
-    config: Config | None = field(repr=False, default=None)
+    config: Config = field(repr=False, default_factory=get_default_config)
 
     def __post_init__(self):
         if self.extras is None:
@@ -221,7 +227,7 @@ class Spectrum:
         clear_lazy_cache(out)
         return out
 
-    def encode_spec_bins(self) -> np.typing.NDArray[np.float]:
+    def encode_spec_bins(self) -> NDArray[np.float32]:
         """Encodes the spectrum into bins.
 
         For a version of this function that takes arguments indead of reading the
@@ -249,7 +255,34 @@ class Spectrum:
             binsize=self.config.encoding_spec_bin_binsize,
             relative=self.config.encoding_spec_bin_relative,
             offset=self.config.encoding_spec_bin_offset,
+            get_breaks=False,
         )
+
+    @overload
+    def bin_spectrum(
+        self,
+        start: float,
+        end: float,
+        binsize: float | None = None,
+        n_bins: int | None = None,
+        relative: bool = False,
+        offset: float = 0,
+        get_breaks: Literal[True] = True,
+    ) -> tuple[NDArray[np.float32], NDArray[np.float64]]:
+        ...
+
+    @overload
+    def bin_spectrum(
+        self,
+        start: float,
+        end: float,
+        binsize: float | None = None,
+        n_bins: int | None = None,
+        relative: bool = False,
+        offset: float = 0,
+        get_breaks: Literal[False] = False,
+    ) -> NDArray[np.float32]:
+        ...
 
     def bin_spectrum(
         self,
@@ -260,7 +293,7 @@ class Spectrum:
         relative: bool = False,
         offset: float = 0,
         get_breaks: bool = False,
-    ) -> np.ndarray:
+    ) -> NDArray[np.float32] | tuple[NDArray[np.float32], NDArray[np.float64]]:
         """Bins the spectrum.
 
         Args:
@@ -281,9 +314,16 @@ class Spectrum:
 
         if relative:
             if isinstance(relative, float) or isinstance(relative, int):
-                relative_value = relative
+                relative_value = float(relative)
             else:
-                relative_value = self.precursor_mz
+                if self.precursor_mz:
+                    relative_value = float(self.precursor_mz)
+                else:
+                    raise ValueError(
+                        "Cannot use relative binning without precursor m/z"
+                        " or a relative value. Pass either a value to 'relative'"
+                        " or a precursor m/z to the spectrum."
+                    )
 
             start = start + relative_value
             end = end + relative_value
@@ -307,7 +347,7 @@ class Spectrum:
         return binned
 
     @lazy
-    def base_peak(self) -> float:
+    def base_peak(self) -> np.float32:
         """Returns the base peak intensity of the spectrum."""
         return np.max(self.intensity)
 
@@ -316,7 +356,7 @@ class Spectrum:
         self._base_peak = value
 
     @lazy
-    def tic(self) -> float:
+    def tic(self) -> np.float32:
         """Returns the total ion current of the spectrum."""
         return np.sum(self.intensity)
 
@@ -324,7 +364,9 @@ class Spectrum:
     def tic(self, value) -> None:
         self._lazy_tic = value
 
-    def sic(self, mzs: np.array, resolution: sum) -> np.array:
+    def sic(
+        self, mzs: NDArray[np.float32], resolution: Callable = sum
+    ) -> NDArray[np.float32]:
         """Returns the selected ion current for a given set of m/z values.
 
         Args:
@@ -414,26 +456,31 @@ class Spectrum:
         msmsspec = sus_MsmsSpectrum(
             identifier="RandomSpec",
             mz=self.mz,
-            precursor_mz=self.precursor_mz,
+            precursor_mz=self.precursor_mz or 0,
             intensity=self.intensity,
-            precursor_charge=self.precursor_charge,
+            precursor_charge=self.precursor_charge or 0,
         )
         return msmsspec
 
     def plot(self, ax=None, **kwargs) -> plt.Axes:
+        if plotspec is None:
+            raise ImportError(
+                "Unable to find spectrum_utils, "
+                "please install it to use the plotting functionality of ms2ml."
+            )
         msmsspec = self.to_sus()
         return plotspec(msmsspec, ax=ax, **kwargs)
 
 
 def _bin_spectrum(
-    mz: np.ndarray,
-    weights: np.ndarray,
+    mz: NDArray[np.float64],
+    weights: NDArray[np.float32],
     start: float,
     end: float,
-    binsize=None,
-    n_bins=None,
-    get_breaks=False,
-) -> np.ndarray:
+    binsize: float | None = None,
+    n_bins: int | None = None,
+    get_breaks: bool = False,
+) -> NDArray[np.float32] | tuple[NDArray[np.float32], NDArray[np.float64]]:
     """Bins the spectrum.
 
     Args:
@@ -496,7 +543,7 @@ class AnnotatedPeptideSpectrum(Spectrum):
         >>> spectrum["y1^1"]
         200.0
         >>> spectrum.fragments
-        {'y1^1': AnnotatedIon(mass=array(147.11334, dtype=float32),
+        {'y1^1': AnnotatedIon(mass=147.11334,
         charge=1, position=1, ion_series='y', intensity=200.0, neutral_loss=None)}
     """
 
@@ -509,27 +556,33 @@ class AnnotatedPeptideSpectrum(Spectrum):
     precursor_charge: int | None = None
 
     def __post_init__(self, *args, **kwargs):
-        if self.config is None:
+        if self.config is None and self.precursor_peptide is not None:
             warnings.warn(
                 "No config provided, falling back to the one in the peptide",
                 UserWarning,
             )
             self.config = self.precursor_peptide.config
+        elif self.config is None:
+            raise ValueError("No config provided, please provide one or a peptide")
 
-        if self.precursor_charge is None:
+        if self.precursor_charge is None and self.precursor_peptide is not None:
             self.precursor_charge = self.precursor_peptide.charge
+        elif self.precursor_charge is None:
+            raise ValueError(
+                "No precursor charge provided, please provide one or a peptide"
+            )
 
         super().__post_init__(*args, **kwargs)
 
     @property
     def charge(self):
-        return self.precursor_peptide.charge
+        return self.precursor_charge
 
     @property
     def mass_error(self):
         raise NotImplementedError
 
-    def _annotate_peaks(self) -> tuple[np.ndarray, np.ndarray]:
+    def _annotate_peaks(self) -> tuple[NDArray[np.int32], NDArray[np.int32]]:
         """Annotates the peaks of the spectrum.
 
         Internal function that returns what indices in the observed mz array match the
@@ -554,11 +607,11 @@ class AnnotatedPeptideSpectrum(Spectrum):
         return annot_indices, mz_indices
 
     @property
-    def _annot_indices(self) -> np.ndarray:
+    def _annot_indices(self) -> NDArray[np.int32]:
         return self._indices[0]
 
     @property
-    def _mz_indices(self) -> np.ndarray:
+    def _mz_indices(self) -> NDArray[np.int32]:
         return self._indices[1]
 
     # TODO implement getting individual ion series, same API as peptide
@@ -590,7 +643,7 @@ class AnnotatedPeptideSpectrum(Spectrum):
         Examples:
             >>> spec = AnnotatedPeptideSpectrum._sample()
             >>> spec.fragments
-            {'y1^1': AnnotatedIon(mass=array(147.11334, dtype=float32),
+            {'y1^1': AnnotatedIon(mass=147.11334,
             charge=1, position=1, ion_series='y', intensity=200.0,
             neutral_loss=None)}
 
@@ -633,10 +686,10 @@ class AnnotatedPeptideSpectrum(Spectrum):
         return self.fragment_intensities.get(index, 0.0)
 
     @lazy
-    def _indices(self) -> tuple[np.ndarray, np.ndarray]:
+    def _indices(self) -> tuple[NDArray[np.int32], NDArray[np.int32]]:
         return self._annotate_peaks()
 
-    def encode_fragments(self) -> np.float32:
+    def encode_fragments(self) -> NDArray[np.float32]:
         """Encodes the fragment ions as a numpy array
 
         The order of the ions will be defined in the config file.
@@ -659,6 +712,43 @@ class AnnotatedPeptideSpectrum(Spectrum):
         """
         return np.array([self[k] for k in self.fragment_labels], dtype=np.float32)
 
+    @staticmethod
+    def decode_fragments(peptide: Peptide, fragment_vector: NDArray[np.float32]):
+        """
+        Examples:
+            >>> spec = AnnotatedPeptideSpectrum._sample()
+            >>> pep = spec.precursor_peptide
+            >>> frags = spec.encode_fragments()
+            >>> AnnotatedPeptideSpectrum.decode_fragments(pep, frags)
+            AnnotatedPeptideSpectrum(mz=array([...]),
+            intensity=array([...], dtype=float32),
+            ms_level=2, precursor_mz=397.724526907315,
+            precursor_charge=2, instrument=None,
+            analyzer=None, extras={},
+            retention_time=RetentionTime(rt=nan, units='minutes',
+            run=None),
+            precursor_peptide=Peptide([...], {...}), precursor_isotope=0)
+
+        """
+        tmp = [
+            (peptide.ion_dict[label].mass, v)
+            for label, v in zip(peptide.config.fragment_labels, fragment_vector)
+            if label in peptide.ion_dict
+        ]
+        masses, intensities = zip(*tmp)
+        masses, intensities = np.array(masses, dtype=np.float64), np.array(
+            intensities, dtype=np.float32
+        )
+        spec = Spectrum(
+            mz=masses,
+            intensity=intensities,
+            precursor_mz=mz(mass=peptide.mass, charge=peptide.charge),
+            precursor_charge=peptide.charge,
+            ms_level=2,
+            config=peptide.config,
+        )
+        return spec.annotate(peptide=peptide)
+
     @property
     def fragment_labels(self) -> list[str]:
         """Encodes the fragment ions as a numpy array
@@ -673,10 +763,11 @@ class AnnotatedPeptideSpectrum(Spectrum):
         return self.config.fragment_labels
 
     def to_sus(self):
+        """Return a spectrum object as a spectrum_utils.spectrum.Spectrum object"""
         msmsspec = super().to_sus()
         msmsspec = msmsspec.annotate_proforma(
             proforma_str=self.precursor_peptide.to_proforma(),
-            fragment_tol_mass=self.config.g_tolerance_units[self.ms_level - 1],
+            fragment_tol_mass=self.config.g_tolerances[self.ms_level - 1],
             fragment_tol_mode=self.config.g_tolerance_units[self.ms_level - 1],
             ion_types=self.config.ion_series,
             neutral_losses=True,
