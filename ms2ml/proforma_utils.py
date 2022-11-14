@@ -22,8 +22,16 @@ with resources.path("ms2ml.unimod", "unimod.xml") as f:
 
 def set_local_unimod():
     proforma.set_unimod_path(LOCAL_UNIMOD_PATH)
-    proforma.obo_cache.cache_path = my_appdirs.user_cache_dir
-    proforma.obo_cache.enabled = True
+    if proforma.obo_cache is not None:
+        proforma.obo_cache.cache_path = my_appdirs.user_cache_dir
+        proforma.obo_cache.enabled = True
+    else:
+        logger.warning(
+            "Could not set the cache directory. "
+            "This will impact the performance of "
+            "parsing non-unimod modifications "
+            "(try installing psimod if you are using python version 3.9 or higher)"
+        )
 
 
 set_local_unimod()
