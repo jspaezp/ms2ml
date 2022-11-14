@@ -167,7 +167,6 @@ class Peptide(ProForma):
     @property
     def mass_pyteomics(self) -> float:
         """Returns the mass of the peptide."""
-        # TODO see if this can be optimized
         mass = super().mass
         return mass
 
@@ -201,12 +200,12 @@ class Peptide(ProForma):
         return len(self.sequence)
 
     @staticmethod
-    def _sample():
+    def _sample() -> Peptide:
         config = Config()
         return Peptide.from_sequence("[U:1]-PEPT[U:21]IDEPINK", config=config)
 
     @lazy
-    def _position_masses(self) -> np.float32:
+    def _position_masses(self) -> NDArray[np.float32]:
         """Calculates the masses of each termini and aminoacid.
 
         It is used as a basis to calculate the mass of ion series.
