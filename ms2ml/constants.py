@@ -60,4 +60,6 @@ STD_AA_MASS = {
 """A dictionary with monoisotopic masses of the twenty standard
 amino acid residues, selenocysteine and pyrrolysine.
 Acquired from pyteomics
+
+#From https://proteomicsresource.washington.edu/protocols06/masses.php
 """

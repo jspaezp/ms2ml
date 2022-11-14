@@ -21,6 +21,7 @@ tqdm = "^4.64.1"
 importlib-metadata = { version = "^5.0.0", python = ">=3.8,<3.9" }
 loguru = "^0.6.0"
 tomli-w = "^1.0.0"
+appdirs = "^1.4.4"
 
 [tool.poetry.group.lint.dependencies]
 black = "^22.8.0"

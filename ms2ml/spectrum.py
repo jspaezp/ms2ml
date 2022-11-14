@@ -22,7 +22,7 @@ from numpy.typing import NDArray
 from .annotation_classes import AnnotatedIon, RetentionTime
 from .config import Config, get_default_config
 from .peptide import Peptide
-from .utils import annotate_peaks, clear_lazy_cache, get_tolerance, lazy
+from .utils import annotate_peaks, clear_lazy_cache, get_tolerance, lazy, mz
 
 if TYPE_CHECKING:
     from matplotlib import pyplot as plt
@@ -463,6 +463,11 @@ class Spectrum:
         return msmsspec
 
     def plot(self, ax=None, **kwargs) -> plt.Axes:
+        if plotspec is None:
+            raise ImportError(
+                "Unable to find spectrum_utils, "
+                "please install it to use the plotting functionality of ms2ml."
+            )
         msmsspec = self.to_sus()
         return plotspec(msmsspec, ax=ax, **kwargs)
 
@@ -706,6 +711,43 @@ class AnnotatedPeptideSpectrum(Spectrum):
             dtype=float32)
         """
         return np.array([self[k] for k in self.fragment_labels], dtype=np.float32)
+
+    @staticmethod
+    def decode_fragments(peptide: Peptide, fragment_vector: NDArray[np.float32]):
+        """
+        Examples:
+            >>> spec = AnnotatedPeptideSpectrum._sample()
+            >>> pep = spec.precursor_peptide
+            >>> frags = spec.encode_fragments()
+            >>> AnnotatedPeptideSpectrum.decode_fragments(pep, frags)
+            AnnotatedPeptideSpectrum(mz=array([...]),
+            intensity=array([...], dtype=float32),
+            ms_level=2, precursor_mz=397.724526907315,
+            precursor_charge=2, instrument=None,
+            analyzer=None, extras={},
+            retention_time=RetentionTime(rt=nan, units='minutes',
+            run=None),
+            precursor_peptide=Peptide([...], {...}), precursor_isotope=0)
+
+        """
+        tmp = [
+            (peptide.ion_dict[label].mass, v)
+            for label, v in zip(peptide.config.fragment_labels, fragment_vector)
+            if label in peptide.ion_dict
+        ]
+        masses, intensities = zip(*tmp)
+        masses, intensities = np.array(masses, dtype=np.float64), np.array(
+            intensities, dtype=np.float32
+        )
+        spec = Spectrum(
+            mz=masses,
+            intensity=intensities,
+            precursor_mz=mz(mass=peptide.mass, charge=peptide.charge),
+            precursor_charge=peptide.charge,
+            ms_level=2,
+            config=peptide.config,
+        )
+        return spec.annotate(peptide=peptide)
 
     @property
     def fragment_labels(self) -> list[str]:
