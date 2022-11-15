@@ -1,13 +1,11 @@
-import logging
-from os import PathLike
 from pathlib import Path
 from typing import Iterator
 
+from loguru import logger
 from pyteomics import fasta, parser
 
 from ms2ml.data.parsing import BaseParser
-
-logger = logging.getLogger(__name__)
+from ms2ml.types import PathLike
 
 
 class FastaDataset(BaseParser):
@@ -61,6 +59,7 @@ class FastaDataset(BaseParser):
 
         yielded_peps = {}
         peptides_count = 0
+        repeats = 0
         with open(file) as f:
             for description, sequence in fasta.FASTA(f):
                 new_peptides = parser.cleave(
@@ -73,13 +72,16 @@ class FastaDataset(BaseParser):
                 for x in sorted(list(new_peptides), reverse=True):
                     if self.only_unique:
                         if x in yielded_peps:
+                            repeats += 1
                             continue
                         else:
                             yielded_peps[x] = True
                     peptides_count += 1
                     yield {"sequence": x, "header": description}
 
-        logger.info("Done, %i sequences", peptides_count)
+        logger.info(f"Done, {peptides_count} sequences")
+        if self.only_unique:
+            logger.info(f"Removed {repeats} duplicates")
 
     def parse(self):
         yield from self.parse_file(self.file)

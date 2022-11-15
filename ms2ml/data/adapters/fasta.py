@@ -5,6 +5,7 @@ from typing import Callable, Iterator
 from ms2ml.config import Config
 from ms2ml.data.parsing.fasta import FastaDataset
 from ms2ml.peptide import Peptide
+from ms2ml.types import PathLike
 
 from .base import BaseAdapter
 
@@ -31,7 +32,7 @@ class FastaAdapter(BaseAdapter, FastaDataset):
 
     def __init__(
         self,
-        file: str,
+        file: PathLike,
         config: Config,
         only_unique: bool = True,
         enzyme: str = "trypsin",

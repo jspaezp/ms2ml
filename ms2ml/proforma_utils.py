@@ -1,6 +1,7 @@
 from importlib import resources
 from typing import Dict
 
+from appdirs import AppDirs
 from loguru import logger
 from pyteomics import proforma
 from pyteomics.mass import Unimod
@@ -12,8 +13,6 @@ except ImportError:
     from importlib_metadata import version
 
 __version__ = version("ms2ml")
-from appdirs import AppDirs
-
 my_appdirs = AppDirs(appname="ms2ml", version=__version__)
 
 with resources.path("ms2ml.unimod", "unimod.xml") as f:
