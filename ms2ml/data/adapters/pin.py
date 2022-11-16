@@ -81,7 +81,7 @@ class PinAdapter(PinParser, BaseAdapter):
         raise NotImplementedError
 
     def _to_elem_sage(self, spec_dict) -> AnnotatedPeptideSpectrum:
-        # TODO improve this ahdnling of carbamidomethyl
+        # TODO improve this handling of carbamidomethyl
         seq = spec_dict["peptide"].replace("(57.0215)", "")
         seq = seq.replace("(", "[+").replace(")", "]")
         seq = f"{seq}/{spec_dict['charge']}"
@@ -89,7 +89,7 @@ class PinAdapter(PinParser, BaseAdapter):
 
         if self.file not in self.mzml_adapters:
             # sage pin files have results for a single mzml file
-            mzml_file = Path(self.file.replace(".sage", "")).with_suffix(".mzML")
+            mzml_file = Path(str(self.file).replace(".sage", "")).with_suffix(".mzML")
             if mzml_file.exists():
                 mzml_file = mzml_file.resolve()
                 self.mzml_adapters[self.file] = MZMLAdapter(str(mzml_file), self.config)
@@ -128,18 +128,22 @@ class PinAdapter(PinParser, BaseAdapter):
         return elem
 
     def _find_raw_file(self, raw_file: str) -> str:
-        outs = []
-        for loc in self.raw_file_locations:
-            tmp = list(Path(loc).rglob(f"*{raw_file}*"))
-            outs.extend(tmp)
-            tmp = list(Path(loc).rglob(f"*{Path(raw_file).name}*"))
-            outs.extend(tmp)
+        return _find_raw_file(self.raw_file_locations, raw_file)
 
-        outs = [x.resolve() for x in outs if "mzML" in str(x)]
-        outs = list(set(outs))
-        if len(outs) == 0:
-            raise FileNotFoundError(f"Could not find {raw_file}.mzML")
-        elif len(outs) > 1:
-            raise FileNotFoundError(f"Found multiple files for {raw_file}.mzML, {outs}")
 
-        return outs[0]
+def _find_raw_file(locations, raw_file: str) -> str:
+    outs = []
+    for loc in locations:
+        tmp = list(Path(loc).rglob(f"*{raw_file}*"))
+        outs.extend(tmp)
+        tmp = list(Path(loc).rglob(f"*{Path(raw_file).name}*"))
+        outs.extend(tmp)
+
+    outs = [x.resolve() for x in outs if "mzML" in str(x)]
+    outs = list(set(outs))
+    if len(outs) == 0:
+        raise FileNotFoundError(f"Could not find {raw_file}.mzML")
+    elif len(outs) > 1:
+        raise FileNotFoundError(f"Found multiple files for {raw_file}.mzML, {outs}")
+
+    return outs[0]

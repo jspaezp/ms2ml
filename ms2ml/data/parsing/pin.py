@@ -3,10 +3,11 @@ from __future__ import annotations
 import re
 import warnings
 from io import StringIO
-from os import PathLike
-from typing import Any, Iterator, TextIO
+from typing import Iterator, TextIO
 
 import pandas as pd
+
+from ms2ml.types import PathLike
 
 from .base import BaseParser
 
@@ -27,10 +28,10 @@ class PinParser(BaseParser):
         self.file = file
         self.parse_fun, self.pin_flavour = self._select_parser(file)
 
-    def parse_file(self, file: TextIO | PathLike[Any]) -> Iterator:
+    def parse_file(self, file: TextIO | PathLike) -> Iterator:
         yield from self.parse_fun(file)
 
-    def _select_parser(self, file: TextIO | PathLike[Any]) -> Iterator:
+    def _select_parser(self, file: TextIO | PathLike) -> Iterator:
         comet_colnames = [
             "lnExpect",
             "Xcorr",
@@ -58,7 +59,7 @@ class PinParser(BaseParser):
             warnings.warn("Unknown specification of the pin format, defaulting to sage")
             return self._sage_pin_parser, "sage"
 
-    def _sage_pin_parser(self, file: TextIO | PathLike[Any]) -> Iterator:
+    def _sage_pin_parser(self, file: TextIO | PathLike) -> Iterator:
         """
         These are the cols for a sage pin file:
 
@@ -97,7 +98,7 @@ class PinParser(BaseParser):
         for row in df.itertuples():
             yield row._asdict()
 
-    def _comet_pin_parser(self, file: TextIO | PathLike[Any]) -> Iterator:
+    def _comet_pin_parser(self, file: TextIO | PathLike) -> Iterator:
         """
         These are the columns in a comet pin file:
             SpecId
@@ -135,17 +136,21 @@ class PinParser(BaseParser):
                 line2.append(line[len(header) - 1 :])
                 out = dict(zip(header, line2))
 
-                spec_id = out["SpecId"]
-                match = self.SPECID_REGEX.match(spec_id)
-                raw_file, index, charge, rank = match.groups(spec_id)
+                spec_id: str = out["SpecId"]
+                sid_match = self.SPECID_REGEX.match(spec_id)
+                if sid_match is None:
+                    raise ValueError(f"Could not parse SpecId {spec_id}")
+                raw_file, index, charge, rank = sid_match.groups(spec_id)
                 out["RawFile"] = raw_file
                 out["SpectrumIndex"] = int(index)
                 out["PrecursorCharge"] = int(charge)
                 out["MatchRank"] = int(rank)
 
                 peptide = out["Peptide"]
-                match = self.PEPTIDE_REGEX.match(peptide)
-                prev_aa, peptide, next_aa = match.groups(peptide)
+                pep_match = self.PEPTIDE_REGEX.match(peptide)
+                if pep_match is None:
+                    raise ValueError(f"Could not parse peptide {peptide}")
+                prev_aa, peptide, next_aa = pep_match.groups(peptide)
                 out["PeptideSequence"] = peptide
                 out["PreviousAminoAcid"] = prev_aa
                 out["NextAminoAcid"] = next_aa

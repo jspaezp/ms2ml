@@ -45,6 +45,10 @@ def test_mzml_adapter_works(shared_datadir):
         continue
 
 
+"""
+Disabled for this version while sage matures a little bit.
+Right now it is changeing a lot the output to bundle it with
+peptideshaker.
 def test_mzml_adapter_works_sage(shared_datadir):
     file = shared_datadir / "pin" / "sample_tiny_hela.sage.pin"
     raw_location = shared_datadir / "mzml" / "sample_tiny_hela.mzML"
@@ -65,3 +69,4 @@ def test_mzml_adapter_works_sage(shared_datadir):
     binned = elem.bin_spectrum(start=100, end=2000, binsize=0.5)
     assert binned.shape == (3799,)
     assert elem.encode_fragments().shape == (120,)
+"""

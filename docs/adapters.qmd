@@ -5,7 +5,11 @@ Adapters are objects that implement interfaces between
 raw data, usally stored externally, to the internal representation
 objects.
 
-They also provide a `hook` system to modify the outputs.
+Just as a reminder, these objects are the `Peptide`, the `Spectrum`
+and the `AnnotatedPeptideSpectrum`.
+
+For details on the available adapters, take a look at the adapter section
+inside the `ms2ml API` documents.
 
 ## Basic Usage
 

@@ -63,17 +63,15 @@ class Spectrum:
     precursor_charge: int | None = None
     instrument: str | None = None
     analyzer: str | None = None
-    extras: dict | None = None
-    retention_time: RetentionTime | float | None = None
+    collision_energy: float = field(default=float("nan"))
+    activation: str | None = None
+    extras: dict = field(default_factory=dict)
+    retention_time: RetentionTime | float = field(
+        default_factory=lambda: RetentionTime(rt=float("nan"), units="seconds")
+    )
     config: Config = field(repr=False, default_factory=get_default_config)
 
     def __post_init__(self):
-        if self.extras is None:
-            self.extras = {}
-
-        if self.config is None:
-            self.config = get_default_config()
-
         if self.retention_time is None:
             self.retention_time = RetentionTime(rt=np.nan, units="minutes")
 
@@ -723,9 +721,13 @@ class AnnotatedPeptideSpectrum(Spectrum):
             AnnotatedPeptideSpectrum(mz=array([...]),
             intensity=array([...], dtype=float32),
             ms_level=2, precursor_mz=397.724526907315,
-            precursor_charge=2, instrument=None,
-            analyzer=None, extras={},
-            retention_time=RetentionTime(rt=nan, units='minutes',
+            precursor_charge=2,
+            instrument=None,
+            analyzer=None,
+            collision_energy=nan,
+            activation=None,
+            extras={},
+            retention_time=RetentionTime(rt=nan, units='seconds',
             run=None),
             precursor_peptide=Peptide([...], {...}), precursor_isotope=0)
 

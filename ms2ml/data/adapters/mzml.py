@@ -92,7 +92,7 @@ class MZMLAdapter(BaseAdapter):
             if "MS1 spectrum" in spec:
                 yield self._process_elem(spec)
 
-    def get_chromatogram(self) -> pd.DataFrame:
+    def get_scan_info(self) -> pd.DataFrame:
         main_out = []
         for spec in self.parse():
             out = {}
@@ -102,6 +102,7 @@ class MZMLAdapter(BaseAdapter):
             out["spec_id"] = spec.extras["id"]
             out["ms_level"] = spec.ms_level
             out["iso_window"] = spec.extras.get("IsolationWindow", None)
+            out["collision_energy"] = spec.collision_energy
             main_out.append(out)
 
         return pd.DataFrame(main_out)
@@ -117,6 +118,10 @@ class MZMLAdapter(BaseAdapter):
                 raise NotImplementedError
             precursor = spec_dict["precursorList"].pop("precursor")
             precursor = precursor[0]
+
+            activation = precursor.pop("activation")
+            activation_type = list(activation.values())[0]
+            activation_energy = activation["collision energy"]
 
             prec_scan = precursor["spectrumRef"]
             precursor["ScanNumber"] = prec_scan[prec_scan.index("scan=") + 5 :]
@@ -153,6 +158,8 @@ class MZMLAdapter(BaseAdapter):
         elif "MS1 spectrum" in spec_dict:
             precursor_mz = None
             precursor_charge = None
+            activation_type = None
+            activation_energy = float("nan")
 
         else:
             msg = f"Only MS1 and MSn spectra supported. got: {spec_dict}"
@@ -174,6 +181,8 @@ class MZMLAdapter(BaseAdapter):
             precursor_mz=precursor_mz,
             precursor_charge=precursor_charge,
             analyzer=None,
+            activation=activation_type,
+            collision_energy=activation_energy,
             instrument=instrument,
             retention_time=rt,
             extras=spec_dict,
