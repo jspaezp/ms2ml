@@ -89,7 +89,7 @@ class PinAdapter(PinParser, BaseAdapter):
 
         if self.file not in self.mzml_adapters:
             # sage pin files have results for a single mzml file
-            mzml_file = Path(self.file.replace(".sage", "")).with_suffix(".mzML")
+            mzml_file = Path(str(self.file).replace(".sage", "")).with_suffix(".mzML")
             if mzml_file.exists():
                 mzml_file = mzml_file.resolve()
                 self.mzml_adapters[self.file] = MZMLAdapter(str(mzml_file), self.config)
