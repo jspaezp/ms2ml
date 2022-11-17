@@ -117,6 +117,44 @@ class Peptide(ProForma):
 
         return to_proforma(self.sequence, **self.properties)
 
+    def to_massdiff_seq(self) -> str:
+        """Converts the peptide to a string following the massdiff specifications.
+
+        Examples:
+            >>> p = Peptide.from_sequence("AMC")
+            >>> p.to_massdiff_seq()
+            'AMC[+57.021464]'
+            >>> p = Peptide.from_sequence("[U:1]-AMC")
+            >>> p.to_massdiff_seq()
+            'A[+42.010565]MC[+57.021464]'
+        """
+        diffs = self.config.mod_masses
+        aas = np.array(self.config.encoding_aa_order)
+
+        aavector = aas[self.aa_to_vector()]
+        nterm_mask = aavector == "n_term"
+        cterm_mask = aavector == "c_term"
+
+        modvector = self.mod_to_vector()
+        tmp = diffs[modvector]
+        nterm = tmp[nterm_mask]
+        cterm = tmp[cterm_mask]
+        massdiffs = tmp[(nterm_mask + cterm_mask).astype(bool) == False]  # noqa: E712
+        aas = aavector[(nterm_mask + cterm_mask).astype(bool) == False]  # noqa: E712
+
+        massdiffs[0] += nterm.sum()
+        massdiffs[-1] += cterm.sum()
+        massdiff_srt = [
+            ("[" + ("+" if massdiff > 0 else "-") + f"{abs(massdiff):06f}" + "]")
+            if massdiff
+            else ""
+            for massdiff in massdiffs
+        ]
+
+        out = "".join([f"{aa}{massdiff}" for aa, massdiff in zip(aas, massdiff_srt)])
+
+        return out
+
     @property
     def stripped_sequence(self):
         """Returns the stripped sequence of the peptide.
@@ -565,19 +603,17 @@ class Peptide(ProForma):
         vector = np.array([enc_order[x] for x in aas if x in enc_order], dtype=int)
         return vector
 
-    def mod_to_vector(self):
-        """Converts modifications to vectors
-
-        Converts the modifications peptide sequence to a vector encoding.
+    @lazy
+    def mod_seq(self):
+        """Returns the sequence of modifications mathhing the aminoacid positions
 
         Examples:
-            >>> foo = Peptide.from_sequence("AMC")  # Implicit Carbamido.
-            >>> foo.mod_to_vector()
-            array([0, 0, 0, 1, 0])
+            >>> foo = Peptide.from_sequence("AMC")
+            >>> foo.mod_seq
+            [None, None, None, '[U:4]', None]
         """
         mods = [x[1] for x in self]
         vector = []
-        order_mapping = self.config.encoding_mod_order_mapping
 
         for x in mods:
             if hasattr(x, "__iter__"):
@@ -591,8 +627,23 @@ class Peptide(ProForma):
                     raise ValueError(error_msg)
                 x = x[0]
 
-            vector.append(order_mapping[x])
+            vector.append(x)
+        return vector
 
+    def mod_to_vector(self):
+        """Converts modifications to vectors
+
+        Converts the modifications peptide sequence to a vector encoding.
+
+        Examples:
+            >>> foo = Peptide.from_sequence("AMC")  # Implicit Carbamido.
+            >>> foo.mod_to_vector()
+            array([0, 0, 0, 1, 0])
+        """
+
+        vector = self.mod_seq
+        order_mapping = self.config.encoding_mod_order_mapping
+        vector = [order_mapping[x] for x in vector]
         return np.array(vector)
 
     @classmethod

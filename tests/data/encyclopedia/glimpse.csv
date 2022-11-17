@@ -1,0 +1,6 @@
+PrecursorMz,PrecursorCharge,PeptideModSeq,PeptideSeq,Copies,RTInSeconds,Score,MassEncodedLength,MassArray,IntensityEncodedLength,IntensityArray,CorrelationEncodedLength,CorrelationArray,RTInSecondsStart,RTInSecondsStop,MedianChromatogramEncodedLength,MedianChromatogramArray,SourceFile
+602.322045308665,2,FPDLTVELNR,FPDLTVELNR,1,3930.0,0.0,80,"xœP",40,"xœsÉÚlì§Ààü|æ,—õ.Sƒ]»r³¥¹l{ÀàÊ¤Áà""pæ,",,,,,,,phl004_canonical_sall_osw.TraML
+602.362123808665,2,YC[+57.021464]ALLLPLLK,YCALLLPLLK,1,6156.0,0.0,88,"xœX",44,"xœsµ½9Ëõ²µ±ËvÍY.Ÿ]9\ú™]#¿œuÉî9ëêµr–ë»rc—ü",,,,,,,phl004_canonical_sall_osw.TraML
+602.302217387739,4,C[+57.021464]RAPEVSQHVYQAYETILKN,CRAPEVSQHVYQAYETILKN,1,3648.0,0.0,176,"xœ°",88,"xœs±ÛlìÚîÂàrí[šËŸ®3şÎr­sœåÚwÙØ5ïã,×I@¹/×Ò\ctÎºîv7v“q`pi*`p•ÿ—æ2¨gUÎY×Õ¡³\.»ôÜœå2#s–Kr",,,,,,,phl004_canonical_sall_osw.TraML
+601.279837308665,2,ENDWYLAYK,ENDWYLAYK,1,2892.0,0.0,48,"xœ0",24,"xœsiÛsÖõnPšë§¿³Üd\­µ]“õÒ",,,,,,,phl004_canonical_sall_osw.TraML
+602.296369694714,3,QAEMEGAVQSIQGELSK,QAEMEGAVQSIQGELSK,1,3594.0,0.0,120,"xœx",60,"xœs™¼ÙØUõ³±ËšÎY.ÔÒ\¾6v}tÙØeı[Áå¾±ƒ«?P¥¶±›Œƒk[šË¶ci",,,,,,,phl004_canonical_sall_osw.TraML

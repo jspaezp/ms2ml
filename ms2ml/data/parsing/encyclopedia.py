@@ -4,8 +4,18 @@ import zlib
 from typing import Iterator
 
 import numpy as np
+from loguru import logger
+
+from ms2ml.spectrum import AnnotatedPeptideSpectrum
 
 from .base import BaseParser
+
+_ENTRIES_SCHEMA = [
+    "CREATE TABLE entries ( PrecursorMz double not null, PrecursorCharge int not null, PeptideModSeq string not null, PeptideSeq string not null, Copies int not null, RTInSeconds double not null, Score double not null, MassEncodedLength int not null, MassArray blob not null, IntensityEncodedLength int not null, IntensityArray blob not null, CorrelationEncodedLength int, CorrelationArray blob, RTInSecondsStart double, RTInSecondsStop double, MedianChromatogramEncodedLength int, MedianChromatogramArray blob, SourceFile string not null );",  # noqa
+    "CREATE INDEX 'PeptideModSeq_PrecursorCharge_SourceFile_Entries_index' on 'entries' ('PeptideModSeq' ASC, 'PrecursorCharge' ASC, 'SourceFile' ASC);",  # noqa
+    "CREATE INDEX 'PeptideSeq_Entries_index' on 'entries' ('PeptideSeq' ASC);",
+    "CREATE INDEX 'PrecursorMz_Entries_index' on 'entries' ('PrecursorMz' ASC);",
+]
 
 
 def _compress_array(array: np.ndarray, dtype: str) -> bytes:
@@ -131,3 +141,66 @@ class EncyclopeDIAParser(BaseParser):
 
     def __iter__(self):
         return self.parse()
+
+
+def write_encyclopedia(
+    file,
+    spectra: Iterator[AnnotatedPeptideSpectrum],
+    source_file="ms2ml",
+):
+    """Write spectra to an EncyclopeDIA database.
+
+    Parameters
+    ----------
+    file : PathLike
+        Path
+    spectra: Iterator[AnnotatedPeptideSpectrum]
+        Iterator over the spectra to write
+    source_file : str
+        String depicting what to use as a source file in the .blib database
+    """
+
+    logger.debug("Writing EncyclopeDIA database to {}", file)
+    con = sqlite3.connect(file)
+    for x in _ENTRIES_SCHEMA:
+        con.execute(x)
+        con.commit()
+
+    num_spectra = 0
+    for spec in spectra:
+        inp_dict = _spec_to_entry(spec, source_file=source_file)
+        inp = tuple(inp_dict.values())
+        con.execute(
+            f"INSERT INTO entries ({', '.join(inp_dict.keys())})"
+            f" VALUES({', '.join(['?' for x in inp_dict.keys()])})",
+            inp,
+        )
+        con.commit()
+        num_spectra += 1
+
+    con.close()
+    logger.info("Finished writing EncyclopeDIA database to {}", file)
+    logger.info("Wrote {} spectra", num_spectra)
+
+
+def _spec_to_entry(spec: AnnotatedPeptideSpectrum, source_file="ms2ml") -> dict:
+    out = {
+        "PrecursorMz": spec.precursor_mz,
+        "PrecursorCharge": spec.precursor_charge,
+        "PeptideModSeq": spec.precursor_peptide.to_massdiff_seq(),
+        "PeptideSeq": spec.precursor_peptide.stripped_sequence,
+        "Copies": 1,
+        "RTInSeconds": spec.retention_time.seconds(),
+        "Score": 1,
+        "MassEncodedLength": len(spec.mz) * 8,
+        "MassArray": _compress_array(spec.mz, "d"),
+        "IntensityEncodedLength": len(spec.intensity) * 4,
+        "IntensityArray": _compress_array(spec.intensity, "f"),
+        "SourceFile": source_file,
+    }
+
+    if np.isnan(out["RTInSeconds"]):
+        logger.debug("Spectrum {} has no retention time, using 0", spec)
+        out["RTInSeconds"] = 0
+
+    return out
