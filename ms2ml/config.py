@@ -47,7 +47,6 @@ def _default_mod_aliases():
 
 
 def _default_mod_order():
-    # TODO consider wether to remove the square brackets
     encoding_mod_order = tuple(
         [
             None,
@@ -60,6 +59,20 @@ def _default_mod_order():
         ]
     )
     return encoding_mod_order
+
+
+def _default_var_mods():
+    out = {
+        "[U:35]": [
+            "M",
+        ],
+        "[U:21]": [
+            "S",
+            "T",
+            "Y",
+        ],
+    }
+    return out
 
 
 @dataclass
@@ -147,6 +160,7 @@ class Config:
     # Modifications
     mod_ambiguity_threshold: float = 0.99
     mod_fixed_mods: tuple[str] = ("[U:4]@C",)
+    mod_variable_mods: dict[str, tuple[str]] = field(default_factory=_default_var_mods)
 
     # Encoding Configs
     encoding_aa_order: tuple[str] = tuple(
@@ -287,7 +301,19 @@ class Config:
         """Returns a dictionary representation of the config."""
         return asdict(self)
 
+    """
     # def validate(self):
+    # test_all_modification_aliases_map():
+    for v in constants.MOD_PEPTIDE_ALIASES.values():
+        if v == "":
+            continue
+        constants.MODIFICATION[v]
+
+    # Validate ion naming positions ...
+    # Test all variable mods are in the mod order
+    # Test all mod aliases in mod order
+    # Test all aas in mod aliases in aa_order
+    """
     #     raise NotImplementedError
 
     def to_toml(self, path: str):

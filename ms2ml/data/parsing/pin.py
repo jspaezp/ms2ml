@@ -127,35 +127,29 @@ class PinParser(BaseParser):
             Peptide
             Proteins # is tab separated ...
         """
-        with open(file, encoding="utf-8") as f:
-            header = next(f).strip().split("\t")
-            for line in f:
-                line = line.strip().split("\t")
-                line2 = line[: (len(header) - 1)]
-                line2 = [self._maybe_numeric(x) for x in line2]
-                line2.append(line[len(header) - 1 :])
-                out = dict(zip(header, line2))
+        dfn = comet_pin_to_df(file)
+        for row in dfn.itertuples():
+            out = row._asdict()
+            spec_id: str = out["SpecId"]
+            sid_match = self.SPECID_REGEX.match(spec_id)
+            if sid_match is None:
+                raise ValueError(f"Could not parse SpecId {spec_id}")
+            raw_file, index, charge, rank = sid_match.groups(spec_id)
+            out["RawFile"] = raw_file
+            out["SpectrumIndex"] = int(index)
+            out["PrecursorCharge"] = int(charge)
+            out["MatchRank"] = int(rank)
 
-                spec_id: str = out["SpecId"]
-                sid_match = self.SPECID_REGEX.match(spec_id)
-                if sid_match is None:
-                    raise ValueError(f"Could not parse SpecId {spec_id}")
-                raw_file, index, charge, rank = sid_match.groups(spec_id)
-                out["RawFile"] = raw_file
-                out["SpectrumIndex"] = int(index)
-                out["PrecursorCharge"] = int(charge)
-                out["MatchRank"] = int(rank)
+            peptide = out["Peptide"]
+            pep_match = self.PEPTIDE_REGEX.match(peptide)
+            if pep_match is None:
+                raise ValueError(f"Could not parse peptide {peptide}")
+            prev_aa, peptide, next_aa = pep_match.groups(peptide)
+            out["PeptideSequence"] = peptide
+            out["PreviousAminoAcid"] = prev_aa
+            out["NextAminoAcid"] = next_aa
 
-                peptide = out["Peptide"]
-                pep_match = self.PEPTIDE_REGEX.match(peptide)
-                if pep_match is None:
-                    raise ValueError(f"Could not parse peptide {peptide}")
-                prev_aa, peptide, next_aa = pep_match.groups(peptide)
-                out["PeptideSequence"] = peptide
-                out["PreviousAminoAcid"] = prev_aa
-                out["NextAminoAcid"] = next_aa
-
-                yield out
+            yield out
 
     def parse_text(self, text: str) -> Iterator:
         yield from self.parse_file(StringIO(text))
@@ -166,10 +160,21 @@ class PinParser(BaseParser):
 
         yield from self.parse_file(self.file)
 
-    def _maybe_numeric(self, in_str) -> str | float:
-        if self.NUMERIC_REGEX.match(in_str):
-            if "." in in_str:
-                return float(in_str)
-            else:
-                return int(in_str)
-        return in_str
+
+def comet_pin_to_df(file: TextIO | PathLike) -> pd.DataFrame:
+    """
+    Parses a comet pin file into a pandas dataframe
+    """
+    recs = []
+    with open(file, encoding="utf-8") as f:
+        header = next(f).strip().split("\t")
+        for line in f:
+            line = line.strip().split("\t")
+            line2 = line[: (len(header) - 1)]
+            line2.append(line[len(header) - 1 :])
+            out = dict(zip(header, line2))
+            recs.append(out)
+
+    df = pd.DataFrame.from_records(recs)
+    dfn = df.convert_dtypes()
+    return dfn

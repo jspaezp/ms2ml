@@ -4,13 +4,14 @@ from typing import Iterator
 
 import numpy as np
 from numpy.typing import NDArray
-from pyteomics.proforma import ProForma, parse, to_proforma
+from pyteomics.proforma import ProForma, ProFormaError, parse, to_proforma
 
 from ms2ml.proforma_utils import set_local_unimod
 
 from .annotation_classes import AnnotatedIon
 from .config import Config, get_default_config
 from .constants import ION_OFFSET
+from .isoform_utils import get_mod_isoforms, get_mod_possible
 from .utils import lazy, mz
 
 set_local_unimod()
@@ -41,16 +42,9 @@ class Peptide(ProForma):
     """
 
     def __init__(self, sequence, properties, config, extras) -> None:
-        self._config = config
+        self.config = config
         self.extras = extras
         super().__init__(sequence, properties)
-
-    @property
-    def config(self):
-        if self._config is None:
-            raise
-
-        return self._config
 
     @staticmethod
     def pre_parse_mods(seq, config) -> str:
@@ -82,7 +76,10 @@ class Peptide(ProForma):
         if config is None:
             config = get_default_config()
 
-        sequence, properties = parse(cls.pre_parse_mods(seq, config))
+        try:
+            sequence, properties = parse(cls.pre_parse_mods(seq, config))
+        except ProFormaError:
+            raise ValueError(f"Could not parse sequence: {seq}")
         return Peptide(sequence, properties, config, extras)
 
     @classmethod
@@ -685,7 +682,7 @@ class Peptide(ProForma):
             >>> foo = Peptide.from_sequence("AMC")
             >>> [x for x in foo]
             [('n_term', None), ('A', None), ('M', None),
-            ('C', ['[U:4]']), ('c_term', None)]
+             ('C', ['[U:4]']), ('c_term', None)]
             >>> foo = Peptide.from_sequence("AMS[Phospho]C")
             >>> [x for x in foo]
             [('n_term', None), ('A', None), ('M', None),
@@ -693,8 +690,54 @@ class Peptide(ProForma):
         """
         yield from self.__iter_base
 
+    @staticmethod
+    def from_iter(it, config: Config):
+        """Creates a peptide from an iterator of (aa, mod) tuples.
+
+        Examples:
+            >>> foo = Peptide.from_iter(
+            ...     [
+            ...         ("n_term", None),
+            ...         ("A", None),
+            ...         ("M", None),
+            ...         ("C", ["[U:4]"]),
+            ...         ("c_term", None),
+            ...     ],
+            ...     config=Config(),
+            ... )
+            >>> foo.to_proforma()
+            '<[UNIMOD:4]@C>AMC[UNIMOD:4]'
+            >>> foo = Peptide._sample()
+            >>> foo.to_proforma()
+            '[UNIMOD:1]-PEPT[UNIMOD:21]IDEPINK'
+            >>> elems = [x for x in foo]
+            >>> foo = Peptide.from_iter(elems, config=Config())
+            >>> foo.to_proforma()
+            '[UNIMOD:1]-PEPT[UNIMOD:21]IDEPINK'
+        """
+        # TODO fix this so it is not redundant generating fixed+variable mod
+        # notation on carbamidomethyl
+
+        seqs = []
+        for aa, mod in it:
+            if mod is not None:
+                mod = "".join(mod)
+                if aa == "n_term":
+                    mod = mod + "-"
+                if mod == "c_term":
+                    mod = "-" + mod
+            else:
+                mod = ""
+            if aa in ("n_term", "c_term"):
+                aa = ""
+
+            aa += mod
+            seqs.append(aa)
+
+        return Peptide.from_proforma_seq("".join(seqs), config=config)
+
     @lazy
-    def __iter_base(self):
+    def __iter_base(self) -> list[tuple[str, list[str] | None]]:
         iter_out = []
         fixed_mods = self.properties["fixed_modifications"]
         resolve_mod_list = self.config._resolve_mod_list
@@ -717,3 +760,31 @@ class Peptide(ProForma):
 
         iter_out.append(tuple(["c_term", resolve_mod_list(self.properties["c_term"])]))
         return iter_out
+
+    def get_mod_isoforms(self) -> list[Peptide]:
+        """Returns a list of possible modifications isoforms of a peptide.
+
+        Examples:
+            >>> foo = Peptide.from_sequence("AM[UNIMOD:35]AMK")
+            >>> out = foo.get_mod_isoforms()
+            >>> sorted([x.to_proforma() for x in out])
+            ['AMAM[UNIMOD:35]K', 'AM[UNIMOD:35]AMK']
+        """
+        iters = get_mod_isoforms(self.__iter_base, self.config.mod_variable_mods)
+        out = [self.from_iter(x, self.config) for x in iters]
+        return out
+
+    def get_variable_possible_mods(self):
+        """Returns a list of possible modifications for each aminoacid.
+
+        Examples:
+            >>> foo = Peptide.from_sequence("AMAMK")
+            >>> out = foo.get_variable_possible_mods()
+            >>> sorted([x.to_proforma() for x in out])
+            ['AMAMK', 'AMAM[UNIMOD:35]K', 'AM[UNIMOD:35]AMK',
+             'AM[UNIMOD:35]AM[UNIMOD:35]K']
+
+        """
+        iters = get_mod_possible(self.__iter_base, self.config.mod_variable_mods)
+        out = [self.from_iter(x, self.config) for x in iters]
+        return out

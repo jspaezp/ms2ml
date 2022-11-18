@@ -2,6 +2,8 @@ from __future__ import annotations
 
 from typing import Callable, Iterator
 
+from loguru import logger
+
 from ms2ml.config import Config
 from ms2ml.data.parsing.fasta import FastaDataset
 from ms2ml.peptide import Peptide
@@ -37,6 +39,7 @@ class FastaAdapter(BaseAdapter, FastaDataset):
         only_unique: bool = True,
         enzyme: str = "trypsin",
         missed_cleavages: int = 2,
+        allow_modifications: bool = False,
         in_hook: Callable | None = None,
         out_hook: Callable | None = None,
         collate_fn: Callable = list,
@@ -57,13 +60,30 @@ class FastaAdapter(BaseAdapter, FastaDataset):
             max_length=config.peptide_length_range[1],
             only_unique=only_unique,
         )
+        self.allow_modifications = allow_modifications
 
     def parse(self) -> Iterator[Peptide]:
         charges = tuple(self.config.precursor_charges)
-        for spec in super().parse():
+        num_outs = 0
+        for pep_seq_dict in super().parse():
             for charge in charges:
-                spec["charge"] = charge
-                yield self._process_elem(spec)
+                pep_seq_dict["charge"] = charge
+                elem = (
+                    pep_seq_dict if self.in_hook is None else self.in_hook(pep_seq_dict)
+                )
+                elem = self._to_elem(elem)
+                if self.allow_modifications:
+                    elem_lst = elem.get_variable_possible_mods()
+                else:
+                    elem_lst = [elem]
+
+                for elem in elem_lst:
+                    elem = elem if self.out_hook is None else self.out_hook(elem)
+                    if elem is not None:
+                        num_outs += 1
+                        yield elem
+
+        logger.info(f"Number of peptides: {num_outs}")
 
     def _to_elem(self, elem: dict) -> Peptide:
         pep = Peptide.from_proforma_seq(

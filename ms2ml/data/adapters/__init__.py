@@ -35,7 +35,7 @@ EXTENSIONS = {
 }
 
 
-def read_data(path, config):
+def read_data(path, config, *args, **kwargs):
     """Reads the data from the given path.
 
     Args:
@@ -50,7 +50,7 @@ def read_data(path, config):
     for k, v in EXTENSIONS.items():
         if str(path).endswith(k):
             logger.info(f"Reading data from {path} using {v}")
-            return v(file=path, config=config)
+            return v(file=path, config=config, *args, **kwargs)
 
     raise ValueError(f"Unknown file extension for file: {path}")
 

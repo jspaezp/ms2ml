@@ -24,3 +24,21 @@ def test_fasta_adapter(shared_datadir):
 
     first_pep = out[0]
     assert first_pep.to_proforma() == "YTSWYVALKRTGQYK/2"
+
+
+def test_fasta_adapter_with_mods(shared_datadir):
+    # 6 is chosen so it ignores the first peptide
+    config = Config(peptide_length_range=(6, 50), precursor_charges=(2, 3))
+    adapter = FastaAdapter(
+        shared_datadir / "fasta/P09038.fasta", config=config, allow_modifications=False
+    )
+    out_unmod_len = len(list(adapter.parse()))
+    adapter = FastaAdapter(
+        shared_datadir / "fasta/P09038.fasta", config=config, allow_modifications=True
+    )
+    out = list(adapter.parse())
+    out_mod_len = len(out)
+
+    first_pep = out[0]
+    assert out_mod_len > out_unmod_len
+    assert first_pep.stripped_sequence == "YTSWYVALKRTGQYK"
