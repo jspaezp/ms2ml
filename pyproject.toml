@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "ms2ml"
-version = "0.0.21"
+version = "0.0.22"
 description = "Provides an intermediate layer between mass spec data and ML applications, such as encoding."
 authors = ["J. Sebastian Paez <jspaezp@users.noreply.github.com>"]
 license = "Apache 2.0"
@@ -22,6 +22,7 @@ importlib-metadata = { version = "^5.0.0", python = ">=3.8,<3.9" }
 loguru = "^0.6.0"
 tomli-w = "^1.0.0"
 appdirs = "^1.4.4"
+tomli = "^2.0.1"
 
 [tool.poetry.group.lint.dependencies]
 black = "^22.8.0"

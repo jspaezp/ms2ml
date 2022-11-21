@@ -23,6 +23,9 @@ class PinParser(BaseParser):
     # it is {prev.aa}.{peptide}.{next.aa}
     PEPTIDE_REGEX = re.compile(r"^(.)+?\.(.+)\.(.)+?$")
 
+    # Sample -> n[229.1629]K[229.1629]VEIPGVATTASPSSEVGR/3
+    NTERM_MOD_REGEX = re.compile(r"^(n)(\[.*?\])(.*)$")
+
     def __init__(self, file=None) -> None:
         BaseParser.__init__(self)
         self.file = file
@@ -145,6 +148,10 @@ class PinParser(BaseParser):
             if pep_match is None:
                 raise ValueError(f"Could not parse peptide {peptide}")
             prev_aa, peptide, next_aa = pep_match.groups(peptide)
+            nterm_mod_match = self.NTERM_MOD_REGEX.match(peptide)
+            if nterm_mod_match is not None:
+                _, mod, peptide = nterm_mod_match.groups(peptide)
+                peptide = f"{mod}-{peptide}"
             out["PeptideSequence"] = peptide
             out["PreviousAminoAcid"] = prev_aa
             out["NextAminoAcid"] = next_aa

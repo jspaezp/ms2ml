@@ -4,6 +4,8 @@ from os import PathLike
 from pathlib import Path
 from typing import Any, Callable, Iterator
 
+from loguru import logger
+
 from ms2ml.config import Config
 from ms2ml.data.parsing.pin import PinParser
 from ms2ml.peptide import Peptide
@@ -140,10 +142,14 @@ def _find_raw_file(locations, raw_file: str) -> str:
         outs.extend(tmp)
 
     outs = [x.resolve() for x in outs if "mzML" in str(x)]
+    outs = [x for x in outs if x.is_file()]
     outs = list(set(outs))
     if len(outs) == 0:
         raise FileNotFoundError(f"Could not find {raw_file}.mzML")
     elif len(outs) > 1:
-        raise FileNotFoundError(f"Found multiple files for {raw_file}.mzML, {outs}")
+        logger.warning(
+            f"Found multiple files for {raw_file}.mzML, {outs}, will use the first one"
+        )
+        outs = [outs[0]]
 
     return outs[0]
