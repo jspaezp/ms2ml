@@ -48,10 +48,11 @@ class MZMLAdapter(BaseAdapter):
         self.reader = read_mzml(self.file, use_index=True, huge_tree=True)
 
         # controllerType=0 controllerNumber=1 scan=2634
-        self._index_example = next(self.reader)["id"]
+        self._index_ids = list(self.reader.index.mapping["spectrum"])
+        self._index_example = self._index_ids[0]
+
         if "scan" in self._index_example:
-            template = re.sub(r"(?<=scan\=)\d+", "{}", self._index_example)
-            self._index_template = template
+            self._index_template = ".*scan={SCAN_NUM}(\\s|$)"
 
         self.reader.reset()
 
@@ -99,6 +100,7 @@ class MZMLAdapter(BaseAdapter):
             out["RTinSeconds"] = spec.retention_time.seconds()
             out["base_peak"] = spec.base_peak
             out["tic"] = spec.tic
+            out["num_peaks"] = len(spec.mz)
             out["spec_id"] = spec.extras["id"]
             out["ms_level"] = spec.ms_level
             out["iso_window"] = spec.extras.get("IsolationWindow", None)
@@ -144,9 +146,15 @@ class MZMLAdapter(BaseAdapter):
 
             precursor_mz = selected_ion["selected ion m/z"]
 
-            # ocasionally the peak intensity will be missing, I am not sure why
-            # _ = selected_ion["peak intensity"]
-            precursor_charge = selected_ion["charge state"]
+            # ocasionally the peak intensity will be missing, I am not sure why ...
+            # ATM I thit it happens when no peak was seelcted specifically,
+            # but DIA scans contain the field with intensity of 0
+            # _ = selected_ion["peac intensity"]
+            if "charge state" in selected_ion:
+                precursor_charge = selected_ion["charge state"]
+            else:
+                # DIA scans do not have precursor charge
+                precursor_charge = None
 
             precursor.update(selected_ion)
             precursor_extras = {
@@ -196,14 +204,17 @@ class MZMLAdapter(BaseAdapter):
     def __repr__(self):
         return f"MS2ML MZML Adapter for {self.file}"
 
-    @lru_cache(maxsize=10)
+    @lru_cache(maxsize=20)
     def __getitem__(self, idx):
         reader = self.reader
-
         spec = None
-        if hasattr(self, "_index_template"):
+
+        if hasattr(self, "_index_template") and isinstance(idx, int):
+            reg_match = re.compile(self._index_template.format(SCAN_NUM=idx))
+            matching_idxs = [x for x in self._index_ids if reg_match.match(x)]
             try:
-                spec = reader[self._index_template.format(idx)]
+                if len(matching_idxs) == 1:
+                    spec = reader[matching_idxs[0]]
             except TypeError:
                 pass
 
