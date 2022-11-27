@@ -14,7 +14,7 @@ import dataclasses
 import math
 import warnings
 from dataclasses import dataclass, field
-from typing import TYPE_CHECKING, Any, Callable, Literal, overload
+from typing import TYPE_CHECKING, Any, Callable, Iterable, Literal, overload
 
 import numpy as np
 from numpy.typing import NDArray
@@ -23,7 +23,7 @@ from .annotation_classes import AnnotatedIon, RetentionTime
 from .config import Config, get_default_config
 from .peptide import Peptide
 from .utils.class_utils import clear_lazy_cache, lazy
-from .utils.mz_utils import annotate_peaks, get_tolerance, mz
+from .utils.mz_utils import annotate_peaks, get_tolerance, mz, stack_mz_pairs
 
 if TYPE_CHECKING:
     from matplotlib import pyplot as plt
@@ -469,6 +469,47 @@ class Spectrum:
             )
         msmsspec = self.to_sus()
         return plotspec(msmsspec, ax=ax, **kwargs)
+
+    @classmethod
+    def stack(cls, spectra: Iterable[Spectrum]) -> Spectrum:
+        """Stacks multiple spectra into a single spectrum.
+
+        Args:
+            spectra: An iterable of spectra to stack.
+
+        Returns:
+            A stacked spectrum.
+
+        Examples:
+            >>> spectrum1 = Spectrum._sample()
+            >>> spectrum2 = Spectrum._sample()
+            >>> spectrum3 = Spectrum._sample()
+            >>> mzs, ints = Spectrum.stack([spectrum1, spectrum2, spectrum3])
+            >>> mzs
+            array([  50.     ,  147.11333, 1000.     , 1500.     , 2000.     ])
+            >>> ints
+            array([[ 50.,  50.,  50.],
+                [200., 200., 200.],
+                [  1.,   1.,   1.],
+                [  2.,   2.,   2.],
+                [  3.,   3.,   3.]])
+
+        """
+        spectra = list(spectra)
+        ref_spec = spectra[0]
+        assert all([s.ms_level == spectra[0].ms_level for s in spectra])
+        assert all([s.config == spectra[0].config for s in spectra])
+
+        mz_pairs = [(s.mz, s.intensity) for s in spectra]
+        mz, new_int = stack_mz_pairs(
+            mz_pairs,
+            tolerance=ref_spec.config.g_tolerances[ref_spec.ms_level - 1],
+            units=ref_spec.config.g_tolerance_units[ref_spec.ms_level - 1],
+        )
+        order = np.argsort(mz)
+        mz = mz[order]
+        new_int = new_int[order]
+        return mz, new_int
 
 
 def _bin_spectrum(
