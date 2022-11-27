@@ -1,13 +1,14 @@
 from __future__ import annotations
 
-from functools import wraps
+from collections import namedtuple
 from typing import Callable, overload
 
 import numpy as np
 from numpy.typing import NDArray
 
-from .constants import PROTON
-from .types import MassError
+from ..constants import PROTON
+from ..types import MassError
+from .tensor_utils import pad_to_max_shape
 
 
 @overload
@@ -329,8 +330,38 @@ def annotate_peaks(
     return find_matching(theo_mz, mz, max_delta, diff_fun)
 
 
+mz_int_pair = namedtuple("PairMzInt", ["mz", "int1", "int2"])
+mz_int = namedtuple("MZInt", ["mz", "int"])
+matching_index_pairs = namedtuple(
+    "MatchinIndexPairs",
+    ["ind1_matched", "ind1_unmatched", "ind2_matched", "ind2_unmatched"],
+)
+
+
+def get_matching_index_pairs(mz1, mz2, tolerance, unit):
+    mz1_indices = np.array(range(len(mz1)), dtype=int)
+    mz2_indices = np.array(range(len(mz2)), dtype=int)
+    x, y = annotate_peaks(mz1, mz2, tolerance, unit)
+
+    # Indices in mz1 that are matched to any peak in mz2
+    # And indices in mz1 that do not match any peak in mz2
+    ind1_matched, ind1_unmatched = mz1_indices[x], np.delete(mz1_indices, x, axis=0)
+
+    # same for mz2
+    ind2_matched, ind2_unmatched = mz2_indices[y], np.delete(mz2_indices, y, axis=0)
+    return matching_index_pairs(
+        ind1_matched, ind1_unmatched, ind2_matched, ind2_unmatched
+    )
+
+
 def allign_intensities(
-    mz1, mz2, int1, int2, tolerance: float = 25.0, unit: MassError = "ppm"
+    mz1,
+    mz2,
+    int1,
+    int2,
+    tolerance: float = 25.0,
+    unit: MassError = "ppm",
+    return_mzs=False,
 ):
     """allign_intensities
 
@@ -350,40 +381,77 @@ def allign_intensities(
             They contain the matched intensities between the input mz arrays.
     """
     x, y = annotate_peaks(mz1, mz2, tolerance, unit)
-    int1_matched, int1_unmatched = int1[x], np.delete(int1, x)
-    int2_matched, int2_unmatched = int2[y], np.delete(int2, y)
+    int1_matched, int1_unmatched = int1[x], np.delete(int1, x, axis=0)
+    int2_matched, int2_unmatched = int2[y], np.delete(int2, y, axis=0)
 
-    int1_out = np.concatenate(
-        [int1_matched, int1_unmatched, np.zeros_like(int2_unmatched)]
-    )
-    int2_out = np.concatenate(
-        [int2_matched, np.zeros_like(int1_unmatched), int2_unmatched]
-    )
+    int1_out = [int1_matched, int1_unmatched, np.zeros_like(int2_unmatched)]
+    int1_out = np.concatenate([x for x in int1_out if len(x) > 0], axis=0)
+    int2_out = [int2_matched, np.zeros_like(int1_unmatched), int2_unmatched]
+    int2_out = np.concatenate([x for x in int2_out if len(x) > 0], axis=0)
+    if not return_mzs:
+        return int1_out, int2_out
 
-    return int1_out, int2_out
-
-
-def lazy(func):
-    """Decorator that makes a property lazy-evaluated."""
-
-    attr_name = f"_lazy_{func.__name__}"
-
-    @property
-    @wraps(func)
-    def _lazy_property(self):
-        if not hasattr(self, attr_name):
-            setattr(self, attr_name, func(self))
-        return getattr(self, attr_name)
-
-    return _lazy_property
+    mz1_matched, mz1_unmatched = mz1[x], np.delete(mz1, x, axis=0)
+    _, mz2_unmatched = mz2[y], np.delete(mz2, y, axis=0)
+    mz_out = np.concatenate([mz1_matched, mz1_unmatched, mz2_unmatched], axis=0)
+    out = mz_int_pair(mz=mz_out, int1=int1_out, int2=int2_out)
+    return out
 
 
-def clear_lazy_cache(self):
-    """Clears the lazy cache of the object.
-
-    This method is intended to be used when a modification is made
-    in-place on classes that use the @lazy decorator for properties.
+def stack_mz_pairs(mz_int_list, tolerance=25.0, units="ppm"):
     """
-    for attr in dir(self):
-        if attr.startswith("_lazy_"):
-            delattr(self, attr)
+    Arguments:
+        mz_pair_list {list of MZInt}:
+            list of MZInt objects to be stacked
+
+    Returns:
+        mzs: np.array
+            The m/z values for the stacked spectra
+            The shape is [mzs]
+        ints: np.array
+            The intensities for the stacked spectra
+            The shape is [mzs, spectra]
+
+    """
+    start_index = 0
+    ref = mz_int_list[0]
+    start_index = 1
+
+    # This is here just in case the input is not named tuples
+    ref_tpl = mz_int(mz=ref[0], int=ref[1])
+    out_intensities = []
+
+    for x in mz_int_list[start_index:]:
+        x_tpl = mz_int(mz=x[0], int=x[1])
+        align_out = get_matching_index_pairs(
+            mz1=ref_tpl.mz,
+            mz2=x_tpl.mz,
+            tolerance=tolerance,
+            unit=units,
+        )
+
+        new_mz = np.concatenate(
+            [ref_tpl.mz, x_tpl.mz[align_out.ind2_unmatched]], axis=0
+        )
+
+        new_ref_int = np.concatenate(
+            [ref_tpl.int, np.zeros_like(x_tpl.mz[align_out.ind2_unmatched])], axis=0
+        )
+
+        ref_tpl = mz_int(
+            mz=new_mz,
+            int=new_ref_int,
+        )
+        intx_out = [
+            x_tpl.int[align_out.ind2_matched],
+            np.zeros_like(align_out.ind1_unmatched),
+            x_tpl.int[align_out.ind2_unmatched],
+        ]
+        intx_out = np.concatenate([x for x in intx_out if len(x) > 0], axis=0)
+        out_intensities.append(intx_out)
+
+    out_intensities = [ref_tpl.int] + out_intensities
+    out_intensities = pad_to_max_shape(out_intensities)
+    out_intensities = np.stack(out_intensities, axis=1)
+
+    return mz_int(mz=ref_tpl.mz, int=out_intensities)

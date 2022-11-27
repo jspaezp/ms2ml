@@ -25,7 +25,7 @@ from .annotation_classes import AnnotatedIon
 from .constants import C_TERMINUS, N_TERMINUS, STD_AA_MASS
 from .proforma_utils import MemoizedUnimodResolver
 from .types import MassError
-from .utils import lazy
+from .utils.class_utils import lazy
 
 # TODO cosnsider wether we want a more strict enforcement
 # of the requirement for configurations to be defined

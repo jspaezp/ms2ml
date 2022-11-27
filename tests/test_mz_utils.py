@@ -1,10 +1,12 @@
 import numpy as np
+import pytest
 
-from ms2ml.utils import (
+from ms2ml.utils.mz_utils import (
     allign_intensities,
     annotate_peaks,
     find_matching,
     find_matching_sorted,
+    stack_mz_pairs,
 )
 
 
@@ -85,7 +87,8 @@ Num peaks: 8
 """  # noqa: E501
 
 
-def test_matching_align_intensity_works():
+@pytest.fixture
+def sample_annotated_spectra():
     sample_spectra = [
         """143.0814	24869	"b2/3.94ppm"
         272.123	20420	"b3/3.84ppm"
@@ -119,10 +122,33 @@ def test_matching_align_intensity_works():
     ]
     mzs = [np.array([y[0] for y in x], dtype=float) for x in sample_spectra]
     ints = [np.array([y[1] for y in x], dtype=float) for x in sample_spectra]
-    [[y[2] for y in x] for x in sample_spectra]
+    annots = [[y[2] for y in x] for x in sample_spectra]
+    return {"mzs": mzs, "ints": ints, "annots": annots}
+
+
+def test_matching_align_intensity_works(sample_annotated_spectra):
+    mzs = sample_annotated_spectra["mzs"]
+    ints = sample_annotated_spectra["ints"]
 
     outs = annotate_peaks(mzs[0], mzs[2])
     assert outs[0].shape == outs[1].shape
 
     outs = allign_intensities(mzs[0], mzs[2], ints[0], ints[2])
     assert outs[0].shape == outs[1].shape
+
+    outs = allign_intensities(mzs[0], mzs[1], ints[0], ints[1], return_mzs=True)
+    assert len(outs) == 3
+    assert outs[0].shape == outs[1].shape
+
+
+def test_stack_intensities(sample_annotated_spectra):
+    mzs = sample_annotated_spectra["mzs"]
+    mzs = [np.array(x) for x in mzs]
+    ints = sample_annotated_spectra["ints"]
+    ints = [np.array(x) for x in ints]
+
+    mz_pairs = list(zip(mzs, ints))
+
+    outs = stack_mz_pairs(mz_pairs)
+    assert outs.int.shape[-1] == len(mzs)
+    assert len(outs.mz) == len(outs.int)

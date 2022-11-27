@@ -10,8 +10,8 @@ from pyteomics.mzml import read as read_mzml
 from ms2ml.annotation_classes import RetentionTime
 from ms2ml.config import Config
 from ms2ml.data.adapters import BaseAdapter
-from ms2ml.data.utils import pad_collate
 from ms2ml.spectrum import Spectrum
+from ms2ml.utils.tensor_utils import pad_collate
 
 
 class MZMLAdapter(BaseAdapter):

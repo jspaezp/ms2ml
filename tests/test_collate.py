@@ -2,7 +2,7 @@ import numpy as np
 import pytest
 from numpy import allclose
 
-from ms2ml.data.utils import (
+from ms2ml.utils.tensor_utils import (
     _check_hooks,
     _is_nested_numeric_list,
     _is_uniform_nested_list,

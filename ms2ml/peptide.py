@@ -12,7 +12,8 @@ from .annotation_classes import AnnotatedIon
 from .config import Config, get_default_config
 from .constants import ION_OFFSET
 from .isoform_utils import get_mod_isoforms, get_mod_possible
-from .utils import lazy, mz
+from .utils.class_utils import lazy
+from .utils.mz_utils import mz
 
 set_local_unimod()
 

@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 from typing import Any, Callable, Optional
 
 from ms2ml.config import Config
-from ms2ml.data.utils import pad_collate
+from ms2ml.utils.tensor_utils import pad_collate
 
 
 class BaseAdapter(ABC):

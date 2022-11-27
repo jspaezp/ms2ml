@@ -2,8 +2,8 @@ import numpy as np
 
 from ms2ml.config import Config
 from ms2ml.data.adapters.msp import MSPAdapter
-from ms2ml.data.utils import pad_collate
 from ms2ml.spectrum import AnnotatedPeptideSpectrum
+from ms2ml.utils.tensor_utils import pad_collate
 
 
 def test_parsing_mgf_with_comments():

@@ -2,9 +2,9 @@ from typing import Callable, Iterator, Optional
 
 from ms2ml.config import Config
 from ms2ml.data.parsing.msp import MSPParser
-from ms2ml.data.utils import pad_collate
 from ms2ml.peptide import Peptide
 from ms2ml.spectrum import AnnotatedPeptideSpectrum
+from ms2ml.utils.tensor_utils import pad_collate
 
 from .base import BaseAdapter
 

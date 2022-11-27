@@ -22,7 +22,8 @@ from numpy.typing import NDArray
 from .annotation_classes import AnnotatedIon, RetentionTime
 from .config import Config, get_default_config
 from .peptide import Peptide
-from .utils import annotate_peaks, clear_lazy_cache, get_tolerance, lazy, mz
+from .utils.class_utils import clear_lazy_cache, lazy
+from .utils.mz_utils import annotate_peaks, get_tolerance, mz
 
 if TYPE_CHECKING:
     from matplotlib import pyplot as plt
