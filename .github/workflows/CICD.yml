@@ -104,7 +104,7 @@ jobs:
     # Run when there is a new push on the release branch
     runs-on: 'ubuntu-latest'
     permissions: write-all
-    # needs: ci
+    needs: ci
     if: endsWith(github.ref, 'heads/release') && (github.event_name == 'push')
     steps:
       - uses: actions/checkout@v3
