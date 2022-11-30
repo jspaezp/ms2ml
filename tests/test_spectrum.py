@@ -1,3 +1,5 @@
+import sys
+
 import numpy as np
 import pytest
 
@@ -54,6 +56,10 @@ def sample_annotated_spectra():
 
 
 def test_spectrum(sample_annotated_spectra):
+    pyversion = sys.version_info
+    if pyversion.minor >= 11:
+        pytest.skip("test requires numba (<=py3.10)")
+
     spec = Spectrum(
         mz=sample_annotated_spectra["mzs"][0],
         intensity=sample_annotated_spectra["ints"][0],
