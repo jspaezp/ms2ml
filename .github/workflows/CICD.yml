@@ -100,8 +100,6 @@ jobs:
         with:
           verbose: true # optional (default = false)
 
-
-
   release:
     # Run when there is a new push on the release branch
     runs-on: 'ubuntu-latest'
@@ -135,6 +133,20 @@ jobs:
       - name: View poetry --version
         run: poetry --version
 
+      # Docker setup
+      - name: Set up QEMU # is this needed??
+        uses: docker/setup-qemu-action@v2
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Login to the GitHub Container Registry
+        uses: docker/login-action@v1
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
       # Package Setup
       - name: Install deps
         run: poetry install -n -v --with docs
@@ -142,6 +154,18 @@ jobs:
       - name: Build package
         run: |
           poetry build
+
+      # Docker Setup
+      - name: Build Docker image
+        id: docker build
+        run: |
+            docker build ghcr.io/jspaezp/ms2ml:v$(poetry version -s)
+
+      # Publish Docker
+      - name: Push the Docker image to the GHCR
+        id: ghcr_push
+        run: |
+            docker push ghcr.io/jspaezp/ms2ml:v$(poetry version -s)
 
       # Publishing Docs
       - name: Deploy Docs
