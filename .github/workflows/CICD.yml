@@ -105,7 +105,8 @@ jobs:
     runs-on: 'ubuntu-latest'
     permissions:
       packages: write
-    needs: ci
+      pages: write
+    # needs: ci
     if: endsWith(github.ref, 'heads/release') && (github.event_name == 'push')
     steps:
       - uses: actions/checkout@v3
