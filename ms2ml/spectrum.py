@@ -408,12 +408,20 @@ class Spectrum:
         return np.array(outs)
 
     @staticmethod
-    def _sample():
+    def _sample(random: bool = False) -> Spectrum:
         """Returns a sample Spectrum object."""
         config = Config()
+        if random:
+            num_peaks = np.random.randint(low=1, high=5)
+            mz = np.random.uniform(low=0, high=1000, size=num_peaks)
+            intensity = np.random.uniform(low=0, high=1000, size=num_peaks)
+        else:
+            mz = np.array([50.0, 147.11333, 1000.0, 1500.0, 2000.0])
+            intensity = np.array([50.0, 200.0, 1.0, 2.0, 3.0])
+
         spectrum = Spectrum(
-            mz=np.array([50.0, 147.11333, 1000.0, 1500.0, 2000.0]),
-            intensity=np.array([50.0, 200.0, 1.0, 2.0, 3.0]),
+            mz=mz,
+            intensity=intensity,
             ms_level=2,
             extras={"EXTRAS": ["extra1", "extra2"]},
             config=config,
@@ -481,18 +489,30 @@ class Spectrum:
             A stacked spectrum.
 
         Examples:
+            >>> np.random.seed(0)
             >>> spectrum1 = Spectrum._sample()
-            >>> spectrum2 = Spectrum._sample()
-            >>> spectrum3 = Spectrum._sample()
-            >>> mzs, ints = Spectrum.stack([spectrum1, spectrum2, spectrum3])
+            >>> spectrum2 = Spectrum._sample(random=True)
+            >>> spectrum3 = Spectrum._sample(random=True)
+            >>> spectrum4 = Spectrum._sample(random=False)
+            >>> spectrum4.mz = spectrum1.mz + 1e-4
+            >>> mzs, ints = Spectrum.stack([spectrum1, spectrum2, spectrum3, spectrum4])
             >>> mzs
-            array([  50.     ,  147.11333, 1000.     , 1500.     , 2000.     ])
+            array([  50.        ,  147.11333   ,  423.65479934,  437.58721126,
+                    544.883183  ,  592.84461823,  645.89411307, 1000.        ,
+                   1500.        , 2000.        ])
             >>> ints
-            array([[ 50.,  50.,  50.],
-                [200., 200., 200.],
-                [  1.,   1.,   1.],
-                [  2.,   2.,   2.],
-                [  3.,   3.,   3.]])
+            array([[ 50.        ,   0.        ,   0.        ,  50.        ],
+                   [200.        ,   0.        ,   0.        , 200.        ],
+                   [  0.        ,   0.        , 963.6627605 ,   0.        ],
+                   [  0.        ,   0.        , 791.72503808,   0.        ],
+                   [  0.        ,   0.        , 891.77300078,   0.        ],
+                   [  0.        , 844.26574858,   0.        ,   0.        ],
+                   [  0.        ,   0.        , 383.44151883,   0.        ],
+                   [  1.        ,   0.        ,   0.        ,   1.        ],
+                   [  2.        ,   0.        ,   0.        ,   2.        ],
+                   [  3.        ,   0.        ,   0.        ,   3.        ]])
+            >>> ints.shape
+            (10, 4)
 
         """
         spectra = list(spectra)
