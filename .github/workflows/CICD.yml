@@ -134,10 +134,6 @@ jobs:
       - name: View poetry --version
         run: poetry --version
 
-      # Docker setup
-      - name: Set up QEMU # is this needed??
-        uses: docker/setup-qemu-action@v2
-
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
 

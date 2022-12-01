@@ -24,7 +24,7 @@ import tomli_w
 from .annotation_classes import AnnotatedIon
 from .constants import C_TERMINUS, N_TERMINUS, STD_AA_MASS
 from .proforma_utils import MemoizedUnimodResolver
-from .types import MassError
+from .type_defs import MassError, ModModes
 from .utils.class_utils import lazy
 
 # TODO cosnsider wether we want a more strict enforcement
@@ -158,6 +158,7 @@ class Config:
     ion_naming_convention: str = "{ion_series}{fragment_positions}^{ion_charges}"
 
     # Modifications
+    mod_mode: ModModes = "unimod"
     mod_ambiguity_threshold: float = 0.99
     mod_fixed_mods: tuple[str] = ("[U:4]@C",)
     mod_variable_mods: dict[str, tuple[str]] = field(default_factory=_default_var_mods)
@@ -257,17 +258,43 @@ class Config:
         return {aa: i for i, aa in enumerate(self.encoding_aa_order)}
 
     def _resolve_mod_list(self, x):
-        """Resolves the names in a list of modifications to unimod Ids."""
         if isinstance(x, list):
             return [self._resolve_mod_list(y) for y in x]
+
+        if x is None:
+            return None
+
+        if self.mod_mode == "unimod":
+            return self._resolve_mod_list_unimod(x)
+        elif self.mod_mode == "delta_mass":
+            return self._resolve_mod_list_delta_mass(x)
+        else:
+            raise NotImplementedError(
+                f"Mod mode {self.mod_mode} not implemented. Trying to resolve {x}"
+            )
+
+    def _resolve_mod_list_delta_mass(self, x):
+        val = x.value
+        if isinstance(val, float):
+            return val
+
+        if ":" in val and "Obs:" not in val:
+            raise ValueError(f"Delta mass mods should not contain a colon. Got {val}")
+        if "Obs:" in val:
+            val = val.replace("Obs:", "")
+
+        if not (val.startswith("+") or val.startswith("-")):
+            val = "+" + val
+
+        return val
+
+    def _resolve_mod_list_unimod(self, x):
+        """Resolves the names in a list of modifications to unimod Ids."""
 
         if not hasattr(self, "__mod_resol_cache"):
             setattr(self, "__mod_resol_cache", {None: None})
 
         cache = getattr(self, "__mod_resol_cache")
-
-        if x is None:
-            return None
 
         if x.value in cache:
             return cache[x.value]

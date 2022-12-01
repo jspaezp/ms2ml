@@ -7,7 +7,7 @@ import numpy as np
 from numpy.typing import NDArray
 
 from ..constants import PROTON
-from ..types import MassError
+from ..type_defs import MassError
 from .tensor_utils import pad_to_max_shape
 
 

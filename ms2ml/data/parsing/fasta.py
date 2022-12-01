@@ -5,7 +5,7 @@ from loguru import logger
 from pyteomics import fasta, parser
 
 from ms2ml.data.parsing import BaseParser
-from ms2ml.types import PathLike
+from ms2ml.type_defs import PathLike
 
 
 class FastaDataset(BaseParser):

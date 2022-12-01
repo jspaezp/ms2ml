@@ -7,7 +7,7 @@ from loguru import logger
 from ms2ml.config import Config
 from ms2ml.data.parsing.fasta import FastaDataset
 from ms2ml.peptide import Peptide
-from ms2ml.types import PathLike
+from ms2ml.type_defs import PathLike
 
 from .base import BaseAdapter
 
