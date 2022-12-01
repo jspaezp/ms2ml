@@ -7,9 +7,9 @@ def test_mokapot_parser(shared_datadir):
     parser = MokapotPSMParser(shared_datadir / "mokapot" / "mokapot.psms.txt")
     elem = next(parser.parse())
     assert isinstance(elem, dict)
-    assert elem["SpecId"] == "sample_tiny_hela_10044_3_1"
-    assert elem["Peptide"] == "R.HRLDLGEDYPSGK.K"
-    assert elem["PeptideSequence"] == "HRLDLGEDYPSGK"
+    assert elem["specid"] == "sample_tiny_hela_10044_3_1"
+    assert elem["peptide"] == "R.HRLDLGEDYPSGK.K"
+    assert elem["peptidesequence"] == "HRLDLGEDYPSGK"
 
 
 def test_mokapot_adapter(shared_datadir):

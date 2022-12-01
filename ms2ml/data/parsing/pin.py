@@ -7,7 +7,7 @@ from typing import Iterator, TextIO
 
 import pandas as pd
 
-from ms2ml.types import PathLike
+from ms2ml.type_defs import PathLike
 
 from .base import BaseParser
 
@@ -19,12 +19,12 @@ class PinParser(BaseParser):
     # It is {raw_file without extension}_{scan_number}_{charge}_{match_rank}
     SPECID_REGEX = re.compile(r"^(.*)_(\d+)_(\d+)_(\d+)?")
 
-    # Sample Peptide -> K.AAASGK.A
+    # Sample Peptide -> K.AAASGK.A, K.AAASGK.-, K.AAASGK.AQ
     # it is {prev.aa}.{peptide}.{next.aa}
-    PEPTIDE_REGEX = re.compile(r"^(.)+?\.(.+)\.(.)+?$")
+    PEPTIDE_REGEX = re.compile(r"^([A-Z\-])+?\.(.+)\.([A-Z\-])+?$")
 
     # Sample -> n[229.1629]K[229.1629]VEIPGVATTASPSSEVGR/3
-    NTERM_MOD_REGEX = re.compile(r"^(n)(\[.*?\])(.*)$")
+    NTERM_MOD_REGEX = re.compile(r"^(n)(\[[+-].*?\])(.*)$")
 
     def __init__(self, file=None) -> None:
         BaseParser.__init__(self)

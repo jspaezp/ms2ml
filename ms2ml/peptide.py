@@ -126,15 +126,23 @@ class Peptide(ProForma):
             >>> p.to_massdiff_seq()
             'A[+42.010565]MC[+57.021464]'
         """
-        diffs = self.config.mod_masses
         aas = np.array(self.config.encoding_aa_order)
 
         aavector = aas[self.aa_to_vector()]
         nterm_mask = aavector == "n_term"
         cterm_mask = aavector == "c_term"
 
-        modvector = self.mod_to_vector()
-        tmp = diffs[modvector]
+        if self.config.mod_mode == "delta_mass":
+            diffs = self.mod_seq
+            tmp = np.array([float(x) if x is not None else 0 for x in diffs])
+
+        elif self.config.mod_mode == "unimod":
+            diffs = self.config.mod_masses
+            modvector = self.mod_to_vector()
+            tmp = diffs[modvector]
+        else:
+            raise NotImplementedError
+
         nterm = tmp[nterm_mask]
         cterm = tmp[cterm_mask]
         massdiffs = tmp[(nterm_mask + cterm_mask).astype(bool) == False]  # noqa: E712

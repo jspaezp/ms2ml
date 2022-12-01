@@ -10,7 +10,7 @@ from ms2ml.data.adapters.pin import _find_raw_file
 from ms2ml.data.parsing.mokapot import MokapotPSMParser
 from ms2ml.peptide import Peptide
 from ms2ml.spectrum import AnnotatedPeptideSpectrum
-from ms2ml.types import PathLike
+from ms2ml.type_defs import PathLike
 
 
 class MokapotPSMAdapter(BaseAdapter, MokapotPSMParser):
@@ -75,16 +75,16 @@ class MokapotPSMAdapter(BaseAdapter, MokapotPSMParser):
         'mokapot score': 3.364551}
 
         """
-        seq = f"{spec_dict['PeptideSequence']}/{spec_dict['PrecursorCharge']}"
+        seq = f"{spec_dict['peptidesequence']}/{spec_dict['precursorcharge']}"
         pep = Peptide.from_proforma_seq(seq, config=self.config)
 
-        if spec_dict["RawFile"] not in self.mzml_adapters:
-            self.mzml_adapters[spec_dict["RawFile"]] = MZMLAdapter(
-                _find_raw_file(self.raw_file_locations, spec_dict["RawFile"]),
+        if spec_dict["rawfile"] not in self.mzml_adapters:
+            self.mzml_adapters[spec_dict["rawfile"]] = MZMLAdapter(
+                _find_raw_file(self.raw_file_locations, spec_dict["rawfile"]),
                 self.config,
             )
 
-        spec = self.mzml_adapters[spec_dict["RawFile"]][spec_dict["SpectrumIndex"]]
+        spec = self.mzml_adapters[spec_dict["rawfile"]][spec_dict["spectrumindex"]]
         spec = spec.annotate(pep)
         spec.extras.update(spec_dict)
 
