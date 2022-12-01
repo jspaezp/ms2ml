@@ -15,6 +15,10 @@ _ENTRIES_SCHEMA = [
     "CREATE INDEX 'PeptideModSeq_PrecursorCharge_SourceFile_Entries_index' on 'entries' ('PeptideModSeq' ASC, 'PrecursorCharge' ASC, 'SourceFile' ASC);",  # noqa
     "CREATE INDEX 'PeptideSeq_Entries_index' on 'entries' ('PeptideSeq' ASC);",
     "CREATE INDEX 'PrecursorMz_Entries_index' on 'entries' ('PrecursorMz' ASC);",
+    "CREATE TABLE metadata ( Key string not null, Value string not null );",
+    "CREATE INDEX 'Key_Metadata_index' on 'metadata' ('Key' ASC);",
+    "INSERT INTO metadata ('Key', 'Value') VALUES ('EncyclopediaVersion', '1.12.34') ;",
+    "INSERT INTO metadata ('Key', 'Value') VALUES ('version', '0.1.14') ;",
 ]
 
 
