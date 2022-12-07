@@ -348,7 +348,7 @@ class Spectrum:
     @lazy
     def base_peak(self) -> np.float32:
         """Returns the base peak intensity of the spectrum."""
-        return np.max(self.intensity)
+        return np.max(self.intensity) if len(self.intensity) else 0
 
     @base_peak.setter
     def base_peak(self, value) -> None:

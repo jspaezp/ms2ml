@@ -10,6 +10,7 @@ from ms2ml.spectrum import AnnotatedPeptideSpectrum
 
 from .base import BaseParser
 
+# .schema peptidetoprotein
 _ENTRIES_SCHEMA = [
     "CREATE TABLE entries ( PrecursorMz double not null, PrecursorCharge int not null, PeptideModSeq string not null, PeptideSeq string not null, Copies int not null, RTInSeconds double not null, Score double not null, MassEncodedLength int not null, MassArray blob not null, IntensityEncodedLength int not null, IntensityArray blob not null, CorrelationEncodedLength int, CorrelationArray blob, RTInSecondsStart double, RTInSecondsStop double, MedianChromatogramEncodedLength int, MedianChromatogramArray blob, SourceFile string not null );",  # noqa
     "CREATE INDEX 'PeptideModSeq_PrecursorCharge_SourceFile_Entries_index' on 'entries' ('PeptideModSeq' ASC, 'PrecursorCharge' ASC, 'SourceFile' ASC);",  # noqa
@@ -19,6 +20,9 @@ _ENTRIES_SCHEMA = [
     "CREATE INDEX 'Key_Metadata_index' on 'metadata' ('Key' ASC);",
     "INSERT INTO metadata ('Key', 'Value') VALUES ('EncyclopediaVersion', '1.12.34') ;",
     "INSERT INTO metadata ('Key', 'Value') VALUES ('version', '0.1.14') ;",
+    "CREATE TABLE peptidetoprotein (PeptideSeq string not null,isDecoy boolean,ProteinAccession string not null);",  # noqa
+    "CREATE INDEX 'ProteinAccession_PeptideToProtein_index' on 'peptidetoprotein' ('ProteinAccession' ASC);",  # noqa
+    "CREATE INDEX 'PeptideSeq_PeptideToProtein_index' on 'peptidetoprotein' ('PeptideSeq' ASC);",  # noqa
 ]
 
 
@@ -172,11 +176,21 @@ def write_encyclopedia(
 
     num_spectra = 0
     for spec in spectra:
+        seq = spec.precursor_peptide.stripped_sequence
+        prots = _spec_to_peptoprotein(spec)
+        for prot in prots:
+            con.execute(
+                "INSERT INTO peptidetoprotein"
+                " (PeptideSeq, isDecoy, ProteinAccession)"
+                " VALUES(?, ?, ?)",
+                (seq, False, prot),
+            )
+            con.commit()
         inp_dict = _spec_to_entry(spec, source_file=source_file)
         inp = tuple(inp_dict.values())
         con.execute(
             f"INSERT INTO entries ({', '.join(inp_dict.keys())})"
-            f" VALUES({', '.join(['?' for x in inp_dict.keys()])})",
+            f" VALUES({', '.join(['?' for _ in inp_dict.keys()])})",
             inp,
         )
         con.commit()
@@ -208,3 +222,11 @@ def _spec_to_entry(spec: AnnotatedPeptideSpectrum, source_file="ms2ml") -> dict:
         out["RTInSeconds"] = 0
 
     return out
+
+
+def _spec_to_peptoprotein(spec):
+    extras_dict = {k.lower(): v for k, v in spec.extras.items()}
+    if "proteins" in extras_dict:
+        return extras_dict["proteins"].split("\t")
+    else:
+        return []

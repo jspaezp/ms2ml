@@ -1,6 +1,9 @@
-import numpy as np
+import sqlite3
 
-from ms2ml.data.adapters import EncyclopeDIAAdapter
+import numpy as np
+import pandas as pd
+
+from ms2ml.data.adapters import EncyclopeDIAAdapter, MokapotPSMAdapter
 from ms2ml.data.parsing.encyclopedia import _extract_array, write_encyclopedia
 from ms2ml.spectrum import AnnotatedPeptideSpectrum, Config
 
@@ -39,3 +42,25 @@ def test_writting_enciclopedia(tmpdir):
         assert np.all(spec.intensity >= 0)
 
     assert i == 1
+
+
+def test_mokapot_enciclopedia_export(shared_datadir, tmp_path):
+    peptides_path = shared_datadir / "mokapot/mokapot.peptides.txt"
+    lookup_path = shared_datadir / "mzml/"
+    output_path = tmp_path / "encyclopedia.dlib"
+
+    data = pd.read_csv(peptides_path, sep="\t")
+    data.columns = [x.lower() for x in data.columns]
+
+    variable_cys = any("C[" in x for x in data["peptide"])
+    fixed_mods = ("[U:4]@C",) if not variable_cys else ()
+    config = Config(mod_mode="delta_mass", mod_fixed_mods=fixed_mods)
+
+    adapter = MokapotPSMAdapter(
+        config=config, file=peptides_path, raw_file_locations=lookup_path
+    )
+    write_encyclopedia(file=output_path, spectra=adapter.parse())
+
+    con = sqlite3.connect(output_path)
+    p2p_out = pd.read_sql_query("SELECT * FROM peptidetoprotein", con)
+    assert len(p2p_out) > 1

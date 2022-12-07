@@ -65,9 +65,9 @@ greenlet==2.0.1 ; python_full_version > "3.8.0" and (platform_machine == "aarch6
 importlib-metadata==5.1.0 ; python_version >= "3.8" and python_version < "3.9" \
     --hash=sha256:d5059f9f1e8e41f80e9c56c2ee58811450c31984dfa625329ffd7c0dad88a73b \
     --hash=sha256:d84d17e21670ec07990e1044a99efe8d615d860fd176fc29ef5c306068fda313
-lark==1.1.4 ; python_version >= "3.8" and python_version < "3.12" \
-    --hash=sha256:a42f9f18bdc9d5571a371ae658548e81e78d1642c2145cc3b663e0bf2e9e7eae \
-    --hash=sha256:eee86062b149600ef62de0d8dfd38cf85ffc737e16911e7d8c18880f8c5b1333
+lark==1.1.5 ; python_version >= "3.8" and python_version < "3.12" \
+    --hash=sha256:4b534eae1f9af5b4ea000bea95776350befe1981658eea3820a01c37e504bb4d \
+    --hash=sha256:8476f9903e93fbde4f6c327f74d79e9b4bd0ed9294c5dfa3164ab8c581b5de2a
 loguru==0.6.0 ; python_version >= "3.8" and python_version < "3.12" \
     --hash=sha256:066bd06758d0a513e9836fd9c6b5a75bfb3fd36841f4b996bc60b547a309d41c \
     --hash=sha256:4e2414d534a2ab57573365b3e6d0234dfb1d84b68b7f3b948e6fb743860a77c3
