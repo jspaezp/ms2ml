@@ -65,6 +65,8 @@ class FastaAdapter(BaseAdapter, FastaDataset):
     def parse(self) -> Iterator[Peptide]:
         charges = tuple(self.config.precursor_charges)
         num_outs = 0
+        out_of_mz_range = 0
+        skipped = 0
         for pep_seq_dict in super().parse():
             for charge in charges:
                 pep_seq_dict["charge"] = charge
@@ -72,6 +74,14 @@ class FastaAdapter(BaseAdapter, FastaDataset):
                     pep_seq_dict if self.in_hook is None else self.in_hook(pep_seq_dict)
                 )
                 elem = self._to_elem(elem)
+
+                # Filter based on mz
+                low_mz = elem.mz < self.config.peptide_mz_range[0]
+                high_mz = elem.mz > self.config.peptide_mz_range[1]
+                if low_mz or high_mz:
+                    out_of_mz_range += 1
+                    continue
+
                 if self.allow_modifications:
                     elem_lst = elem.get_variable_possible_mods()
                 else:
@@ -82,8 +92,14 @@ class FastaAdapter(BaseAdapter, FastaDataset):
                     if elem is not None:
                         num_outs += 1
                         yield elem
+                    else:
+                        skipped += 1
 
-        logger.info(f"Number of peptides: {num_outs}")
+        logger.info(
+            f"Number of peptides: {num_outs}; "
+            f"Number of peptides out of mz range: {out_of_mz_range},"
+            f" Number of skipped peptides for other reasons: {skipped}"
+        )
 
     def _to_elem(self, elem: dict) -> Peptide:
         pep = Peptide.from_proforma_seq(
