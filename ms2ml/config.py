@@ -34,14 +34,14 @@ from .utils.class_utils import lazy
 
 def _default_mod_aliases():
     out = {
-        "Phospho": "[U:21]",
-        "TMT6plex": "[U:737]",
-        "TMT10plex": "[U:737]",
-        "Deamidation": "[U:7]",
-        "Acetyl": "[U:1]",
-        "Oxidation": "[U:35]",
-        "Hydroxilation": "[U:35]",
-        "Trimethyl": "[U:37]",
+        "Phospho": "[UNIMOD:21]",
+        "TMT6plex": "[UNIMOD:737]",
+        "TMT10plex": "[UNIMOD:737]",
+        "Deamidation": "[UNIMOD:7]",
+        "Acetyl": "[UNIMOD:1]",
+        "Oxidation": "[UNIMOD:35]",
+        "Hydroxilation": "[UNIMOD:35]",
+        "Trimethyl": "[UNIMOD:37]",
     }
     return out
 
@@ -50,11 +50,11 @@ def _default_mod_order():
     encoding_mod_order = tuple(
         [
             None,
-            "[U:4]",
-            "[U:21]",
-            "[U:35]",
-            "[U:7]",
-            "[U:1]",
+            "[UNIMOD:4]",
+            "[UNIMOD:21]",
+            "[UNIMOD:35]",
+            "[UNIMOD:7]",
+            "[UNIMOD:1]",
             "__unknown1__",
         ]
     )
@@ -63,10 +63,10 @@ def _default_mod_order():
 
 def _default_var_mods():
     out = {
-        "[U:35]": [
+        "[UNIMOD:35]": [
             "M",
         ],
-        "[U:21]": [
+        "[UNIMOD:21]": [
             "S",
             "T",
             "Y",
@@ -135,6 +135,7 @@ class Config:
 
     # Peptide Configs
     peptide_length_range: tuple[int, int] = (5, 30)
+    peptide_mz_range: tuple[float, float] = (200, 20000)
 
     # Precursor Configs
     precursor_charges: tuple[int, ...] = (1, 2, 3, 4, 5, 6)
@@ -160,7 +161,7 @@ class Config:
     # Modifications
     mod_mode: ModModes = "unimod"
     mod_ambiguity_threshold: float = 0.99
-    mod_fixed_mods: tuple[str] = ("[U:4]@C",)
+    mod_fixed_mods: tuple[str] = ("[UNIMOD:4]@C",)
     mod_variable_mods: dict[str, tuple[str]] = field(default_factory=_default_var_mods)
 
     # Encoding Configs
@@ -237,7 +238,7 @@ class Config:
             if mod is None:
                 mod_mass.append(0.0)
 
-            elif "[U:" in mod:
+            elif "[UNIMOD:" in mod:
                 mod_id = int(mod.split(":")[1].split("]")[0])
                 mod_mass.append(MemoizedUnimodResolver.mod_id_mass(mod_id))
 
@@ -317,7 +318,7 @@ class Config:
                 solved_name = self.encoding_mod_alias[modname]
             else:
                 solved_name = MemoizedUnimodResolver.resolve(modname)["id"]
-                solved_name = f"[U:{str(solved_name)}]"
+                solved_name = f"[UNIMOD:{str(solved_name)}]"
 
             return solved_name
 

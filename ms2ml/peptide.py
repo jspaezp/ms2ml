@@ -122,7 +122,7 @@ class Peptide(ProForma):
             >>> p = Peptide.from_sequence("AMC")
             >>> p.to_massdiff_seq()
             'AMC[+57.021464]'
-            >>> p = Peptide.from_sequence("[U:1]-AMC")
+            >>> p = Peptide.from_sequence("[UNIMOD:1]-AMC")
             >>> p.to_massdiff_seq()
             'A[+42.010565]MC[+57.021464]'
         """
@@ -209,6 +209,11 @@ class Peptide(ProForma):
         return curr_mass
 
     @property
+    def mz(self):
+        """Returns the mz of the peptide."""
+        return mz(self.mass, self.charge)
+
+    @property
     def mass_pyteomics(self) -> float:
         """Returns the mass of the peptide."""
         mass = super().mass
@@ -246,7 +251,7 @@ class Peptide(ProForma):
     @staticmethod
     def _sample() -> Peptide:
         config = Config()
-        return Peptide.from_sequence("[U:1]-PEPT[U:21]IDEPINK", config=config)
+        return Peptide.from_sequence("[UNIMOD:1]-PEPT[UNIMOD:21]IDEPINK", config=config)
 
     @lazy
     def _position_masses(self) -> NDArray[np.float32]:
@@ -444,7 +449,7 @@ class Peptide(ProForma):
         aminoacid, matching the order of the encoding_mod_order argument in the config.
 
         For instance, if the peptide was "AC" and the encoding_mod_order was
-        [None, "[U:4]"], being [U:4] carbamidomethyl, the vector would be:
+        [None, "[UNIMOD:4]"], being [UNIMOD:4] carbamidomethyl, the vector would be:
 
             [
                 [1, 0],
@@ -616,7 +621,7 @@ class Peptide(ProForma):
         Examples:
             >>> foo = Peptide.from_sequence("AMC")
             >>> foo.mod_seq
-            [None, None, None, '[U:4]', None]
+            [None, None, None, '[UNIMOD:4]', None]
         """
         mods = [x[1] for x in self]
         vector = []
@@ -691,11 +696,11 @@ class Peptide(ProForma):
             >>> foo = Peptide.from_sequence("AMC")
             >>> [x for x in foo]
             [('n_term', None), ('A', None), ('M', None),
-             ('C', ['[U:4]']), ('c_term', None)]
+             ('C', ['[UNIMOD:4]']), ('c_term', None)]
             >>> foo = Peptide.from_sequence("AMS[Phospho]C")
             >>> [x for x in foo]
             [('n_term', None), ('A', None), ('M', None),
-            ('S', ['[U:21]']), ('C', ['[U:4]']), ('c_term', None)]
+            ('S', ['[UNIMOD:21]']), ('C', ['[UNIMOD:4]']), ('c_term', None)]
         """
         yield from self.__iter_base
 
@@ -709,7 +714,7 @@ class Peptide(ProForma):
             ...         ("n_term", None),
             ...         ("A", None),
             ...         ("M", None),
-            ...         ("C", ["[U:4]"]),
+            ...         ("C", ["[UNIMOD:4]"]),
             ...         ("c_term", None),
             ...     ],
             ...     config=Config(),
