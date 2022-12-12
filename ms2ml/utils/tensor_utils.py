@@ -55,8 +55,6 @@ def _is_uniform_nested_list(x):
         if isinstance(elem, np.ndarray):
             elem_shape = elem.shape
             for y in x:
-                if isinstance(y, list):
-                    breakpoint()
                 if y.shape != elem_shape:
                     return False
 
