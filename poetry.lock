@@ -2104,17 +2104,14 @@ python-versions = ">=3.7"
 
 [[package]]
 name = "uniplot"
-version = "0.7.0"
+version = "0.8.0"
 description = "Lightweight plotting to the terminal. 4x resolution via Unicode."
 category = "main"
 optional = false
-python-versions = ">=3.5"
+python-versions = ">=3.7"
 
 [package.dependencies]
-numpy = ">=1.15.0"
-
-[package.extras]
-dev = ["black", "mypy", "pytest (>=6.0.1)"]
+numpy = ">=1.20.0"
 
 [[package]]
 name = "uri-template"
@@ -2258,7 +2255,7 @@ testing = ["flake8 (<5)", "func-timeout", "jaraco.functools", "jaraco.itertools"
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.8,<3.12"
-content-hash = "b2d8564bb0deb3448267250d124889dc0f94c85f41ab1bbb7858d3e5a8afa606"
+content-hash = "c0ffc765aa4c242ae481b188866640be2733242da29eda88241d92581c4dd6fb"
 
 [metadata.files]
 anyio = [
@@ -3820,7 +3817,8 @@ typing-extensions = [
     {file = "typing_extensions-4.4.0.tar.gz", hash = "sha256:1511434bb92bf8dd198c12b1cc812e800d4181cfcb867674e0f8279cc93087aa"},
 ]
 uniplot = [
-    {file = "uniplot-0.7.0-py3-none-any.whl", hash = "sha256:b0700717f7d088e51c5ca31c00642a21718c2381bad30828fc77c2de4f8c78a9"},
+    {file = "uniplot-0.8.0-py3-none-any.whl", hash = "sha256:e836efd84fa1aba1e3d262fe7c8bfbcd096faae9e02c6eb96aa176368eed1404"},
+    {file = "uniplot-0.8.0.tar.gz", hash = "sha256:bc533bc00137c380cbd8d17b06a9ffdf5d648eb7c8143fe4ca1a35516fb3d6cb"},
 ]
 uri-template = [
     {file = "uri_template-1.2.0-py3-none-any.whl", hash = "sha256:f1699c77b73b925cf4937eae31ab282a86dc885c333f2e942513f08f691fc7db"},
