@@ -95,6 +95,9 @@ jobs:
       - name: mkdocs
         run: poetry run python -m mkdocs build --strict
 
+      - name: mike
+        run: poetry run mike deploy -p main experimental
+
       # Upload coverage
       - uses: codecov/codecov-action@v3
         with:
@@ -111,7 +114,7 @@ jobs:
       - run: |
           git config user.name github-actions
           git config user.email github-actions@github.com
-  
+
       - name: Release
         uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/')
@@ -173,7 +176,7 @@ jobs:
         env:
             GOOGLE_ANALYTICS_KEY: ${{ secrets.GOOGLE_ANALYTICS_KEY }}
         run: |
-          poetry run mike deploy -fp $(poetry version -s)
+          poetry run mike deploy -p $(poetry version -s)
 
       # Publish Package
       - name: Publish Setup
