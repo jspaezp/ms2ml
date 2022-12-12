@@ -106,6 +106,7 @@ jobs:
         run: poetry run python -m mkdocs build --strict
 
       - name: mike
+        if: endsWith(github.ref, 'heads/main') && (${{ matrix.python-version }} == '3.11')
         run: poetry run mike deploy -p main experimental
 
       # Upload coverage
