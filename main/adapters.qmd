@@ -1,0 +1,210 @@
+
+# Adapters
+
+Adapters are objects that implement interfaces between
+raw data, usally stored externally, to the internal representation
+objects.
+
+Just as a reminder, these objects are the `Peptide`, the `Spectrum`
+and the `AnnotatedPeptideSpectrum`.
+
+For details on the available adapters, take a look at the adapter section
+inside the `ms2ml API` documents.
+
+## Basic Usage
+
+```{python}
+from tempfile import NamedTemporaryFile
+from ms2ml.data.adapters import MSPAdapter
+from ms2ml.config import Config
+from pprint import pprint
+
+# A very boring msp with 2 spectra
+text = (
+    "Name: ASDASD/2\n"
+    "MW: 1234\n"
+    '123 123 "asd"\n'
+    "\n"
+    "Name: ASDASDAAS/1\n"
+    "MW: 12343\n"
+    '123 123 "as5d"\n'
+    '123 123 "asd"\n'
+    "\n"
+)
+
+f = NamedTemporaryFile(delete=False)
+with open(f.name, "w") as f:
+    f.write(text)
+
+my_file = f.name
+
+my_adapter = MSPAdapter(config=Config(), file = my_file)
+
+pprint(list(my_adapter.parse()))
+```
+
+## Hook usage to modify the output
+
+We will keep using the same file as before, but we will add a hook to
+modify the output.
+
+Since every intermediate entry is an annotated Spectrum object, we can
+get the corresponding peptide from `spec.precurse_peptide` and encode it
+on the fly and return an dictionary of tensors!
+
+We could in theory do this in a loop .... something like this ...
+
+    my_adapter = MSPAdapter(config=Config(), file = my_file)
+    out1 = []
+    out2 = []
+    for i, x in enumerate(my_adapter.parse()):
+        out1.append(x.precurse_peptide.aa_to_count())
+        out2.append(x.precurse_peptide.mod_to_vector())
+
+    out1 = np.array(out1)
+    out2 = np.array(out2)
+
+    print(out1.shape)
+    print(out2.shape)
+
+
+Or we can use the hook system to do it for us!
+
+
+```{python}
+def post_hook(spec):
+    return {
+        "aa": spec.precursor_peptide.aa_to_count(),
+        "mods": spec.precursor_peptide.mod_to_vector(),
+    }
+
+my_adapter.out_hook = post_hook
+
+# We can also add the hook when deifing the adapter
+# my_adapter = MSPAdapter(
+#     file=my_file, config=Config(), out_hook=post_hook
+# )
+
+for i, x in enumerate(my_adapter.parse()):
+    print(i)
+    pprint(x)
+
+```
+
+We can even combine those outputs into batches using the `bundle` method.
+
+```{python}
+bundled = my_adapter.bundle(my_adapter.parse())
+pprint({k:v.shape for k,v in bundled.items()})
+```
+
+```{python}
+pprint(bundled)
+```
+
+
+## Changing the configuration
+
+We can also change the configuration of the adapter to change the
+output.
+
+This makes sense if the way your model is trained requires a different
+variation of the encoding.
+
+```{python}
+my_conf = Config(encoding_aa_order = ('A','S','D'))
+my_adapter = MSPAdapter(
+    file=my_file, config=Config(), out_hook=post_hook
+)
+bundled = my_adapter.bundle(my_adapter.parse())
+print("Default Shapes:")
+pprint({k:v.shape for k,v in bundled.items()})
+
+my_adapter.config = my_conf
+bundled = my_adapter.bundle(my_adapter.parse())
+print("Configured Shapes:")
+pprint({k:v.shape for k,v in bundled.items()})
+```
+
+Note that the 'aa' element only has 3 dimensions, since we only have 3
+defined aminoacids in the configuration!!
+
+```{python}
+# We close the connection to the dummy file because we are good
+# programmers
+f.close()
+```
+
+
+## Batching
+
+Sometimes we dont want either 1 element at a time or all of them at a time.
+For those cases, we batch.
+
+In this case we can get form a file of 1000 spectra, 10 at a time.
+
+```{python}
+# Same setup as before but for a much larger file (1000 spectra)
+f = NamedTemporaryFile(delete=False)
+with open(f.name, "w") as f:
+    # We make a file with 1000 spectra
+    f.write(text*500)
+
+my_file = f.name
+
+def post_hook(spec):
+    return {
+        "aa": spec.precursor_peptide.aa_to_count(),
+        "mods": spec.precursor_peptide.mod_to_vector(),
+     }
+
+```
+
+
+When defining the adapter, we can specify the collate_fn.
+This function is called to combine all the elements in a batch.
+it can be something as simple as as 'list' or something as complicated
+as you want to make it. (np.stack, torch.stack, torch.cat, combinations of
+the former ... the sky is the limit)
+
+```{python}
+my_adapter = MSPAdapter(
+    config=Config(),
+     file = my_file,
+     out_hook=post_hook,
+     collate_fn = lambda x: x)
+
+```
+
+Here we define the `batch_size` to be 10.
+
+```{python}
+for i, x in enumerate(my_adapter.batch(batch_size = 10)):
+    print(i)
+    break
+
+print(x[1])
+print(len(x))
+print(type(x))
+# The shapes of every element in the batch
+```
+
+And every iteration, x is a new group of 10 peptides,
+encoded the way we specified before.
+
+```{python}
+my_adapter = MSPAdapter(
+    config=Config(),
+     file = my_file,
+     out_hook=post_hook)
+
+for i, x in enumerate(my_adapter.batch(batch_size = 4)):
+    print(i)
+    break
+
+
+pprint(x)
+print(len(x))
+print(type(x))
+f.close()
+```

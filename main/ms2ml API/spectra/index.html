@@ -1,0 +1,3134 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+        <meta name="author" content="J. Sebastian Paez">
+      
+      
+        <link rel="canonical" href="https://jspaezp.github.io/ms2ml/main/ms2ml%20API/spectra/">
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.4.2, mkdocs-material-8.5.10">
+    
+    
+      
+        <title>Spectrum objects - ms2ml Docs</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.975780f9.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.2505c338.min.css">
+        
+      
+      
+
+    
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/_mkdocstrings.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+  
+
+
+  
+  
+
+
+  <script id="__analytics">function __md_analytics(){function n(){dataLayer.push(arguments)}window.dataLayer=window.dataLayer||[],n("js",new Date),n("config","G-G0HM484HCK"),document.addEventListener("DOMContentLoaded",function(){document.forms.search&&document.forms.search.query.addEventListener("blur",function(){this.value&&n("event","search",{search_term:this.value})}),document$.subscribe(function(){var a=document.forms.feedback;if(void 0!==a)for(var e of a.querySelectorAll("[type=submit]"))e.addEventListener("click",function(e){e.preventDefault();var t=document.location.pathname,e=this.getAttribute("data-md-value");n("event","feedback",{page:t,data:e}),a.firstElementChild.disabled=!0;e=a.querySelector(".md-feedback__note [data-md-value='"+e+"']");e&&(e.hidden=!1)}),a.hidden=!1}),location$.subscribe(function(e){n("config","G-G0HM484HCK",{page_path:e.pathname})})});var e=document.createElement("script");e.async=!0,e.src="https://www.googletagmanager.com/gtag/js?id=G-G0HM484HCK",document.getElementById("__analytics").insertAdjacentElement("afterEnd",e)}</script>
+
+  
+    <script>var consent;"undefined"==typeof __md_analytics||(consent=__md_get("__consent"))&&consent.analytics&&__md_analytics()</script>
+  
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="deep-purple" data-md-color-accent="indigo">
+  
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&"object"==typeof palette.color)for(var key of Object.keys(palette.color))document.body.setAttribute("data-md-color-"+key,palette.color[key])</script>
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#spectrum-objects" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="ms2ml Docs" class="md-header__button md-logo" aria-label="ms2ml Docs" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            ms2ml Docs
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Spectrum objects
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      <form class="md-header__option" data-md-component="palette">
+        
+          
+          
+          
+          <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="deep-purple" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_1">
+          
+            <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_2" hidden>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5c-.84 0-1.65.15-2.39.42L12 2M3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29L3.34 7m.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14L3.36 17M20.65 7l-1.77 3.79a7.023 7.023 0 0 0-2.38-4.15l4.15.36m-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29L20.64 17M12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44L12 22Z"/></svg>
+            </label>
+          
+        
+          
+          
+          
+          <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="black" data-md-color-accent="deep-purple"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_2">
+          
+            <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_1" hidden>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3 3.19.09m3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95 2.06.05m-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31Z"/></svg>
+            </label>
+          
+        
+      </form>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/jspaezp/ms2ml" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    jspaezp/ms2ml
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-tabs__inner md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+
+
+  <li class="md-tabs__item">
+    <a href="../.." class="md-tabs__link">
+      Home
+    </a>
+  </li>
+
+      
+        
+  
+  
+
+
+  <li class="md-tabs__item">
+    <a href="../../adapters/" class="md-tabs__link">
+      Adapters
+    </a>
+  </li>
+
+      
+        
+  
+  
+
+
+  <li class="md-tabs__item">
+    <a href="../../encoding_options/" class="md-tabs__link">
+      Encodings to tensors
+    </a>
+  </li>
+
+      
+        
+  
+  
+    
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../adapters/" class="md-tabs__link md-tabs__link--active">
+        ms2ml API
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="ms2ml Docs" class="md-nav__button md-logo" aria-label="ms2ml Docs" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    ms2ml Docs
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/jspaezp/ms2ml" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    jspaezp/ms2ml
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        Home
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../adapters/" class="md-nav__link">
+        Adapters
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../encoding_options/" class="md-nav__link">
+        Encodings to tensors
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+    
+  
+  
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4" type="checkbox" id="__nav_4" checked>
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_4">
+          ms2ml API
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="ms2ml API" data-md-level="1">
+        <label class="md-nav__title" for="__nav_4">
+          <span class="md-nav__icon md-icon"></span>
+          ms2ml API
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../adapters/" class="md-nav__link">
+        Adapters to ms data
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../configuration/" class="md-nav__link">
+        Configuration object
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../peptide/" class="md-nav__link">
+        Peptide objects
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          Spectrum objects
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        Spectrum objects
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#ms2ml.spectrum" class="md-nav__link">
+    spectrum
+  </a>
+  
+    <nav class="md-nav" aria-label="spectrum">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ms2ml.spectrum-classes" class="md-nav__link">
+    Classes
+  </a>
+  
+    <nav class="md-nav" aria-label="Classes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ms2ml.spectrum.Spectrum" class="md-nav__link">
+    Spectrum
+  </a>
+  
+    <nav class="md-nav" aria-label="Spectrum">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ms2ml.spectrum.Spectrum-attributes" class="md-nav__link">
+    Attributes
+  </a>
+  
+    <nav class="md-nav" aria-label="Attributes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ms2ml.spectrum.Spectrum.mz" class="md-nav__link">
+    mz
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ms2ml.spectrum.Spectrum.intensity" class="md-nav__link">
+    intensity
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ms2ml.spectrum.Spectrum.ms_level" class="md-nav__link">
+    ms_level
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ms2ml.spectrum.Spectrum.precursor_mz" class="md-nav__link">
+    precursor_mz
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ms2ml.spectrum.Spectrum.precursor_charge" class="md-nav__link">
+    precursor_charge
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ms2ml.spectrum.Spectrum.instrument" class="md-nav__link">
+    instrument
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ms2ml.spectrum.Spectrum.analyzer" class="md-nav__link">
+    analyzer
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ms2ml.spectrum.Spectrum.collision_energy" class="md-nav__link">
+    collision_energy
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ms2ml.spectrum.Spectrum.activation" class="md-nav__link">
+    activation
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ms2ml.spectrum.Spectrum.extras" class="md-nav__link">
+    extras
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ms2ml.spectrum.Spectrum.retention_time" class="md-nav__link">
+    retention_time
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ms2ml.spectrum.Spectrum.config" class="md-nav__link">
+    config
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ms2ml.spectrum.Spectrum-functions" class="md-nav__link">
+    Functions
+  </a>
+  
+    <nav class="md-nav" aria-label="Functions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ms2ml.spectrum.Spectrum.__post_init__" class="md-nav__link">
+    __post_init__()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ms2ml.spectrum.Spectrum.replace" class="md-nav__link">
+    replace()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ms2ml.spectrum.Spectrum.filter_top" class="md-nav__link">
+    filter_top()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ms2ml.spectrum.Spectrum.filter_mz_range" class="md-nav__link">
+    filter_mz_range()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ms2ml.spectrum.Spectrum.remove_precursor" class="md-nav__link">
+    remove_precursor()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ms2ml.spectrum.Spectrum.intensity_cutoff" class="md-nav__link">
+    intensity_cutoff()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ms2ml.spectrum.Spectrum.normalize_intensity" class="md-nav__link">
+    normalize_intensity()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ms2ml.spectrum.Spectrum.encode_spec_bins" class="md-nav__link">
+    encode_spec_bins()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ms2ml.spectrum.Spectrum.bin_spectrum" class="md-nav__link">
+    bin_spectrum()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ms2ml.spectrum.Spectrum.base_peak" class="md-nav__link">
+    base_peak()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ms2ml.spectrum.Spectrum.tic" class="md-nav__link">
+    tic()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ms2ml.spectrum.Spectrum.sic" class="md-nav__link">
+    sic()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ms2ml.spectrum.Spectrum.annotate" class="md-nav__link">
+    annotate()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ms2ml.spectrum.Spectrum.to_sus" class="md-nav__link">
+    to_sus()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ms2ml.spectrum.Spectrum.plot" class="md-nav__link">
+    plot()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ms2ml.spectrum.Spectrum.stack" class="md-nav__link">
+    stack()
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ms2ml.spectrum.AnnotatedPeptideSpectrum" class="md-nav__link">
+    AnnotatedPeptideSpectrum
+  </a>
+  
+    <nav class="md-nav" aria-label="AnnotatedPeptideSpectrum">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ms2ml.spectrum.AnnotatedPeptideSpectrum-attributes" class="md-nav__link">
+    Attributes
+  </a>
+  
+    <nav class="md-nav" aria-label="Attributes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ms2ml.spectrum.AnnotatedPeptideSpectrum.precursor_peptide" class="md-nav__link">
+    precursor_peptide
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ms2ml.spectrum.AnnotatedPeptideSpectrum.precursor_isotope" class="md-nav__link">
+    precursor_isotope
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ms2ml.spectrum.AnnotatedPeptideSpectrum.precursor_charge" class="md-nav__link">
+    precursor_charge
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ms2ml.spectrum.AnnotatedPeptideSpectrum.charge" class="md-nav__link">
+    charge
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ms2ml.spectrum.AnnotatedPeptideSpectrum.mass_error" class="md-nav__link">
+    mass_error
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ms2ml.spectrum.AnnotatedPeptideSpectrum.fragment_labels" class="md-nav__link">
+    fragment_labels
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ms2ml.spectrum.AnnotatedPeptideSpectrum-functions" class="md-nav__link">
+    Functions
+  </a>
+  
+    <nav class="md-nav" aria-label="Functions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ms2ml.spectrum.AnnotatedPeptideSpectrum.__post_init__" class="md-nav__link">
+    __post_init__()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ms2ml.spectrum.AnnotatedPeptideSpectrum.fragment_intensities" class="md-nav__link">
+    fragment_intensities()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ms2ml.spectrum.AnnotatedPeptideSpectrum.fragments" class="md-nav__link">
+    fragments()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ms2ml.spectrum.AnnotatedPeptideSpectrum.__getitem__" class="md-nav__link">
+    __getitem__()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ms2ml.spectrum.AnnotatedPeptideSpectrum.encode_fragments" class="md-nav__link">
+    encode_fragments()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ms2ml.spectrum.AnnotatedPeptideSpectrum.decode_fragments" class="md-nav__link">
+    decode_fragments()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ms2ml.spectrum.AnnotatedPeptideSpectrum.to_sus" class="md-nav__link">
+    to_sus()
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ms2ml.spectrum-functions" class="md-nav__link">
+    Functions
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#ms2ml.spectrum" class="md-nav__link">
+    spectrum
+  </a>
+  
+    <nav class="md-nav" aria-label="spectrum">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ms2ml.spectrum-classes" class="md-nav__link">
+    Classes
+  </a>
+  
+    <nav class="md-nav" aria-label="Classes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ms2ml.spectrum.Spectrum" class="md-nav__link">
+    Spectrum
+  </a>
+  
+    <nav class="md-nav" aria-label="Spectrum">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ms2ml.spectrum.Spectrum-attributes" class="md-nav__link">
+    Attributes
+  </a>
+  
+    <nav class="md-nav" aria-label="Attributes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ms2ml.spectrum.Spectrum.mz" class="md-nav__link">
+    mz
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ms2ml.spectrum.Spectrum.intensity" class="md-nav__link">
+    intensity
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ms2ml.spectrum.Spectrum.ms_level" class="md-nav__link">
+    ms_level
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ms2ml.spectrum.Spectrum.precursor_mz" class="md-nav__link">
+    precursor_mz
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ms2ml.spectrum.Spectrum.precursor_charge" class="md-nav__link">
+    precursor_charge
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ms2ml.spectrum.Spectrum.instrument" class="md-nav__link">
+    instrument
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ms2ml.spectrum.Spectrum.analyzer" class="md-nav__link">
+    analyzer
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ms2ml.spectrum.Spectrum.collision_energy" class="md-nav__link">
+    collision_energy
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ms2ml.spectrum.Spectrum.activation" class="md-nav__link">
+    activation
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ms2ml.spectrum.Spectrum.extras" class="md-nav__link">
+    extras
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ms2ml.spectrum.Spectrum.retention_time" class="md-nav__link">
+    retention_time
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ms2ml.spectrum.Spectrum.config" class="md-nav__link">
+    config
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ms2ml.spectrum.Spectrum-functions" class="md-nav__link">
+    Functions
+  </a>
+  
+    <nav class="md-nav" aria-label="Functions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ms2ml.spectrum.Spectrum.__post_init__" class="md-nav__link">
+    __post_init__()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ms2ml.spectrum.Spectrum.replace" class="md-nav__link">
+    replace()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ms2ml.spectrum.Spectrum.filter_top" class="md-nav__link">
+    filter_top()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ms2ml.spectrum.Spectrum.filter_mz_range" class="md-nav__link">
+    filter_mz_range()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ms2ml.spectrum.Spectrum.remove_precursor" class="md-nav__link">
+    remove_precursor()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ms2ml.spectrum.Spectrum.intensity_cutoff" class="md-nav__link">
+    intensity_cutoff()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ms2ml.spectrum.Spectrum.normalize_intensity" class="md-nav__link">
+    normalize_intensity()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ms2ml.spectrum.Spectrum.encode_spec_bins" class="md-nav__link">
+    encode_spec_bins()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ms2ml.spectrum.Spectrum.bin_spectrum" class="md-nav__link">
+    bin_spectrum()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ms2ml.spectrum.Spectrum.base_peak" class="md-nav__link">
+    base_peak()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ms2ml.spectrum.Spectrum.tic" class="md-nav__link">
+    tic()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ms2ml.spectrum.Spectrum.sic" class="md-nav__link">
+    sic()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ms2ml.spectrum.Spectrum.annotate" class="md-nav__link">
+    annotate()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ms2ml.spectrum.Spectrum.to_sus" class="md-nav__link">
+    to_sus()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ms2ml.spectrum.Spectrum.plot" class="md-nav__link">
+    plot()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ms2ml.spectrum.Spectrum.stack" class="md-nav__link">
+    stack()
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ms2ml.spectrum.AnnotatedPeptideSpectrum" class="md-nav__link">
+    AnnotatedPeptideSpectrum
+  </a>
+  
+    <nav class="md-nav" aria-label="AnnotatedPeptideSpectrum">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ms2ml.spectrum.AnnotatedPeptideSpectrum-attributes" class="md-nav__link">
+    Attributes
+  </a>
+  
+    <nav class="md-nav" aria-label="Attributes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ms2ml.spectrum.AnnotatedPeptideSpectrum.precursor_peptide" class="md-nav__link">
+    precursor_peptide
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ms2ml.spectrum.AnnotatedPeptideSpectrum.precursor_isotope" class="md-nav__link">
+    precursor_isotope
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ms2ml.spectrum.AnnotatedPeptideSpectrum.precursor_charge" class="md-nav__link">
+    precursor_charge
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ms2ml.spectrum.AnnotatedPeptideSpectrum.charge" class="md-nav__link">
+    charge
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ms2ml.spectrum.AnnotatedPeptideSpectrum.mass_error" class="md-nav__link">
+    mass_error
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ms2ml.spectrum.AnnotatedPeptideSpectrum.fragment_labels" class="md-nav__link">
+    fragment_labels
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ms2ml.spectrum.AnnotatedPeptideSpectrum-functions" class="md-nav__link">
+    Functions
+  </a>
+  
+    <nav class="md-nav" aria-label="Functions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ms2ml.spectrum.AnnotatedPeptideSpectrum.__post_init__" class="md-nav__link">
+    __post_init__()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ms2ml.spectrum.AnnotatedPeptideSpectrum.fragment_intensities" class="md-nav__link">
+    fragment_intensities()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ms2ml.spectrum.AnnotatedPeptideSpectrum.fragments" class="md-nav__link">
+    fragments()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ms2ml.spectrum.AnnotatedPeptideSpectrum.__getitem__" class="md-nav__link">
+    __getitem__()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ms2ml.spectrum.AnnotatedPeptideSpectrum.encode_fragments" class="md-nav__link">
+    encode_fragments()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ms2ml.spectrum.AnnotatedPeptideSpectrum.decode_fragments" class="md-nav__link">
+    decode_fragments()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ms2ml.spectrum.AnnotatedPeptideSpectrum.to_sus" class="md-nav__link">
+    to_sus()
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ms2ml.spectrum-functions" class="md-nav__link">
+    Functions
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  <a href="https://github.com/jspaezp/ms2ml/edit/master/docs/ms2ml API/spectra.md" title="Edit this page" class="md-content__button md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25Z"/></svg>
+  </a>
+
+
+<h1 id="spectrum-objects">Spectrum objects</h1>
+
+
+<div class="doc doc-object doc-module">
+
+
+
+<h2 id="ms2ml.spectrum" class="doc doc-heading">
+          <code>ms2ml.spectrum</code>
+
+
+</h2>
+
+  <div class="doc doc-contents first">
+  
+      <p>Implements classes to represent spectra.</p>
+<p>This module implements classes to represent spectra and their
+annotations (when they have any).</p>
+<p>There are broadly two types of spectra:
+1. General Spectra
+2. Annotated Spectra</p>
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+<h3 id="ms2ml.spectrum-classes">Classes</h3>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h4 id="ms2ml.spectrum.Spectrum" class="doc doc-heading">
+        <code>ms2ml.spectrum.Spectrum</code>
+
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-dataclass"><code>dataclass</code></small>
+  </span>
+
+</h4>
+
+
+  <div class="doc doc-contents ">
+
+  
+      <p>Class to store the spectrum information.</p>
+
+<p><strong>Examples:</strong></p>
+    <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="gp">&gt;&gt;&gt; </span><span class="n">spectrum</span> <span class="o">=</span> <span class="n">Spectrum</span><span class="p">(</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="gp">... </span>    <span class="n">mz</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1000.0</span><span class="p">,</span> <span class="mf">1500.0</span><span class="p">,</span> <span class="mf">2000.0</span><span class="p">]),</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="gp">... </span>    <span class="n">intensity</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">]),</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="gp">... </span>    <span class="n">precursor_mz</span><span class="o">=</span><span class="mf">1000.0</span><span class="p">,</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="gp">... </span>    <span class="n">precursor_charge</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="gp">... </span>    <span class="n">ms_level</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="gp">... </span>    <span class="n">extras</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;EXTRAS&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;extra1&quot;</span><span class="p">,</span> <span class="s2">&quot;extra2&quot;</span><span class="p">]},</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="gp">... </span><span class="p">)</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="gp">&gt;&gt;&gt; </span><span class="n">spectrum</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="go">Spectrum(mz=array([1000., 1500., 2000.]), ...)</span>
+</code></pre></div>
+
+
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+<h5 id="ms2ml.spectrum.Spectrum-attributes">Attributes</h5>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h6 id="ms2ml.spectrum.Spectrum.mz" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">mz</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">]</span></code>
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-class-attribute"><code>class-attribute</code></small>
+  </span>
+
+</h6>
+
+
+  <div class="doc doc-contents ">
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h6 id="ms2ml.spectrum.Spectrum.intensity" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">intensity</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">]</span></code>
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-class-attribute"><code>class-attribute</code></small>
+  </span>
+
+</h6>
+
+
+  <div class="doc doc-contents ">
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h6 id="ms2ml.spectrum.Spectrum.ms_level" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">ms_level</span><span class="p">:</span> <span class="nb">int</span></code>
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-class-attribute"><code>class-attribute</code></small>
+  </span>
+
+</h6>
+
+
+  <div class="doc doc-contents ">
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h6 id="ms2ml.spectrum.Spectrum.precursor_mz" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">precursor_mz</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span></code>
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-class-attribute"><code>class-attribute</code></small>
+  </span>
+
+</h6>
+
+
+  <div class="doc doc-contents ">
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h6 id="ms2ml.spectrum.Spectrum.precursor_charge" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">precursor_charge</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span></code>
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-class-attribute"><code>class-attribute</code></small>
+  </span>
+
+</h6>
+
+
+  <div class="doc doc-contents ">
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h6 id="ms2ml.spectrum.Spectrum.instrument" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">instrument</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span></code>
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-class-attribute"><code>class-attribute</code></small>
+  </span>
+
+</h6>
+
+
+  <div class="doc doc-contents ">
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h6 id="ms2ml.spectrum.Spectrum.analyzer" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">analyzer</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span></code>
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-class-attribute"><code>class-attribute</code></small>
+  </span>
+
+</h6>
+
+
+  <div class="doc doc-contents ">
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h6 id="ms2ml.spectrum.Spectrum.collision_energy" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">collision_energy</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="s1">&#39;nan&#39;</span><span class="p">))</span></code>
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-class-attribute"><code>class-attribute</code></small>
+  </span>
+
+</h6>
+
+
+  <div class="doc doc-contents ">
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h6 id="ms2ml.spectrum.Spectrum.activation" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">activation</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span></code>
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-class-attribute"><code>class-attribute</code></small>
+  </span>
+
+</h6>
+
+
+  <div class="doc doc-contents ">
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h6 id="ms2ml.spectrum.Spectrum.extras" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">extras</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">dict</span><span class="p">)</span></code>
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-class-attribute"><code>class-attribute</code></small>
+  </span>
+
+</h6>
+
+
+  <div class="doc doc-contents ">
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h6 id="ms2ml.spectrum.Spectrum.retention_time" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">retention_time</span><span class="p">:</span> <span class="n">RetentionTime</span> <span class="o">|</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="k">lambda</span> <span class="p">:</span> <span class="n">RetentionTime</span><span class="p">(</span><span class="n">rt</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="s1">&#39;nan&#39;</span><span class="p">),</span> <span class="n">units</span><span class="o">=</span><span class="s1">&#39;seconds&#39;</span><span class="p">))</span></code>
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-class-attribute"><code>class-attribute</code></small>
+  </span>
+
+</h6>
+
+
+  <div class="doc doc-contents ">
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h6 id="ms2ml.spectrum.Spectrum.config" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">config</span><span class="p">:</span> <span class="n">Config</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="nb">repr</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">default_factory</span><span class="o">=</span><span class="n">get_default_config</span><span class="p">)</span></code>
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-class-attribute"><code>class-attribute</code></small>
+  </span>
+
+</h6>
+
+
+  <div class="doc doc-contents ">
+  </div>
+
+</div>
+
+<h5 id="ms2ml.spectrum.Spectrum-functions">Functions</h5>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h6 id="ms2ml.spectrum.Spectrum.__post_init__" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">__post_init__</span><span class="p">()</span></code>
+
+</h6>
+
+
+  <div class="doc doc-contents ">
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h6 id="ms2ml.spectrum.Spectrum.replace" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">replace</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Spectrum</span></code>
+
+</h6>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Replaces the attributes of the spectrum with the given values.</p>
+<p>Arguments are passed to the class Spectrum constructor.</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th><b>RETURNS</b></th>
+        <th><b>DESCRIPTION</b></th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td>
+              <span class="doc-returns-annotation">
+                  <code><a class="autorefs autorefs-internal" title="ms2ml.spectrum.Spectrum" href="#ms2ml.spectrum.Spectrum">Spectrum</a></code>
+              </span>
+          </td>
+          <td class="doc-returns-details">
+            <p>Spectrum, A new Spectrum object with the replaced attributes.</p>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h6 id="ms2ml.spectrum.Spectrum.filter_top" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">filter_top</span><span class="p">(</span><span class="n">n</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Spectrum</span></code>
+
+</h6>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Filters the spectrum to the top n peaks.</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th><b>PARAMETER</b></th>
+        <th><b>DESCRIPTION</b></th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>n</code></td>
+          <td class="doc-param-details">
+            <p>The number of peaks to keep.</p>
+            <p>
+                <span class="doc-param-annotation">
+                  <b>TYPE:</b>
+                    <code>int</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  <table>
+    <thead>
+      <tr>
+        <th><b>RETURNS</b></th>
+        <th><b>DESCRIPTION</b></th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td>
+              <span class="doc-returns-annotation">
+                  <code><a class="autorefs autorefs-internal" title="ms2ml.spectrum.Spectrum" href="#ms2ml.spectrum.Spectrum">Spectrum</a></code>
+              </span>
+          </td>
+          <td class="doc-returns-details">
+            <p>The spectrum with the filtered top n peaks.</p>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+<p><strong>Examples:</strong></p>
+    <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="gp">&gt;&gt;&gt; </span><span class="n">spectrum</span> <span class="o">=</span> <span class="n">Spectrum</span><span class="o">.</span><span class="n">_sample</span><span class="p">()</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="gp">&gt;&gt;&gt; </span><span class="n">spectrum</span><span class="o">.</span><span class="n">intensity</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="go">array([ 50., 200.,   1.,   2.,   3.])</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="gp">&gt;&gt;&gt; </span><span class="n">spectrum</span><span class="o">.</span><span class="n">filter_top</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">intensity</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="go">array([ 50., 200.])</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="gp">&gt;&gt;&gt; </span><span class="n">Spectrum</span><span class="o">.</span><span class="n">_sample</span><span class="p">()</span><span class="o">.</span><span class="n">filter_top</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="o">.</span><span class="n">intensity</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="go">array([  3.,  50., 200.])</span>
+</code></pre></div>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h6 id="ms2ml.spectrum.Spectrum.filter_mz_range" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">filter_mz_range</span><span class="p">(</span><span class="n">min_mz</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">max_mz</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Spectrum</span></code>
+
+</h6>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Filters the spectrum to a given m/z range.</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th><b>RETURNS</b></th>
+        <th><b>DESCRIPTION</b></th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td>
+              <span class="doc-returns-annotation">
+                  <code><a class="autorefs autorefs-internal" title="ms2ml.spectrum.Spectrum" href="#ms2ml.spectrum.Spectrum">Spectrum</a></code>
+              </span>
+          </td>
+          <td class="doc-returns-details">
+            <p>The spectrum with the filtered m/z range.</p>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+<p><strong>Examples:</strong></p>
+    <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="gp">&gt;&gt;&gt; </span><span class="n">spectrum</span> <span class="o">=</span> <span class="n">Spectrum</span><span class="o">.</span><span class="n">_sample</span><span class="p">()</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="gp">&gt;&gt;&gt; </span><span class="n">spectrum</span><span class="o">.</span><span class="n">mz</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="go">array([  50.     ,  147.11333, 1000.     , 1500.     , 2000.     ])</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="gp">&gt;&gt;&gt; </span><span class="n">spectrum</span><span class="o">.</span><span class="n">tic</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="go">256.0</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="gp">&gt;&gt;&gt; </span><span class="n">spectrum</span> <span class="o">=</span> <span class="n">spectrum</span><span class="o">.</span><span class="n">filter_mz_range</span><span class="p">(</span><span class="mi">124</span><span class="p">,</span> <span class="mi">1600</span><span class="p">)</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="gp">&gt;&gt;&gt; </span><span class="n">spectrum</span><span class="o">.</span><span class="n">mz</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="go">array([ 147.11333, 1000.     , 1500.     ])</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="gp">&gt;&gt;&gt; </span><span class="n">spectrum</span><span class="o">.</span><span class="n">filter_mz_range</span><span class="p">(</span><span class="mi">124</span><span class="p">,</span> <span class="mi">1600</span><span class="p">)</span><span class="o">.</span><span class="n">tic</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="go">203.0</span>
+</code></pre></div>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h6 id="ms2ml.spectrum.Spectrum.remove_precursor" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">remove_precursor</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Spectrum</span></code>
+
+</h6>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Removes the precursor peak from the spectrum</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th><b>RETURNS</b></th>
+        <th><b>DESCRIPTION</b></th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td>
+              <span class="doc-returns-annotation">
+                  <code><a class="autorefs autorefs-internal" title="ms2ml.spectrum.Spectrum" href="#ms2ml.spectrum.Spectrum">Spectrum</a></code>
+              </span>
+          </td>
+          <td class="doc-returns-details">
+            <p>Spectrum, A new Spectrum object with the precursor peak removed.</p>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h6 id="ms2ml.spectrum.Spectrum.intensity_cutoff" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">intensity_cutoff</span><span class="p">(</span><span class="n">cutoff</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Spectrum</span></code>
+
+</h6>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Filters the spectrum to a given intensity cutoff.</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th><b>PARAMETER</b></th>
+        <th><b>DESCRIPTION</b></th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>cutoff</code></td>
+          <td class="doc-param-details">
+            <p>The intensity cutoff.
+All peaks with less than that intensity will be deleted.</p>
+            <p>
+                <span class="doc-param-annotation">
+                  <b>TYPE:</b>
+                    <code>float</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  <table>
+    <thead>
+      <tr>
+        <th><b>RETURNS</b></th>
+        <th><b>DESCRIPTION</b></th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td>
+              <span class="doc-returns-annotation">
+                  <code><a class="autorefs autorefs-internal" title="ms2ml.spectrum.Spectrum" href="#ms2ml.spectrum.Spectrum">Spectrum</a></code>
+              </span>
+          </td>
+          <td class="doc-returns-details">
+            <p>A new Spectrum object with the filtered intensity cutoff.</p>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+<p><strong>Examples:</strong></p>
+    <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="gp">&gt;&gt;&gt; </span><span class="n">spectrum</span> <span class="o">=</span> <span class="n">Spectrum</span><span class="o">.</span><span class="n">_sample</span><span class="p">()</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="gp">&gt;&gt;&gt; </span><span class="n">spectrum</span><span class="o">.</span><span class="n">intensity</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="go">array([ 50., 200.,   1.,   2.,   3.])</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="gp">&gt;&gt;&gt; </span><span class="n">spectrum</span><span class="o">.</span><span class="n">intensity_cutoff</span><span class="p">(</span><span class="mf">2.1</span><span class="p">)</span><span class="o">.</span><span class="n">intensity</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="go">array([ 50.0, 200.,  3.])</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="gp">&gt;&gt;&gt; </span><span class="n">spectrum</span><span class="o">.</span><span class="n">intensity</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="go">array([ 50., 200.,   1.,   2.,   3.])</span>
+</code></pre></div>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h6 id="ms2ml.spectrum.Spectrum.normalize_intensity" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">normalize_intensity</span><span class="p">(</span><span class="n">method</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;max&#39;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Spectrum</span></code>
+
+</h6>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Normalizes the spectrum intensities.</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th><b>PARAMETER</b></th>
+        <th><b>DESCRIPTION</b></th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>method</code></td>
+          <td class="doc-param-details">
+            <p>The method to use for normalization.
+Can be one of "max", "sum", "rank", "log".</p>
+            <p>
+                <span class="doc-param-annotation">
+                  <b>TYPE:</b>
+                    <code>str</code>
+                </span>
+                <span class="doc-param-default">
+                  <b>DEFAULT:</b> 
+                    <code>&#39;max&#39;</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  <table>
+    <thead>
+      <tr>
+        <th><b>RETURNS</b></th>
+        <th><b>DESCRIPTION</b></th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td>
+              <span class="doc-returns-annotation">
+                  <code><a class="autorefs autorefs-internal" title="ms2ml.spectrum.Spectrum" href="#ms2ml.spectrum.Spectrum">Spectrum</a></code>
+              </span>
+          </td>
+          <td class="doc-returns-details">
+            <p>The normalized spectrum.</p>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+<p><strong>Examples:</strong></p>
+    <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="gp">&gt;&gt;&gt; </span><span class="n">spectrum</span> <span class="o">=</span> <span class="n">Spectrum</span><span class="o">.</span><span class="n">_sample</span><span class="p">()</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="gp">&gt;&gt;&gt; </span><span class="n">spectrum</span><span class="o">.</span><span class="n">intensity</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="go">array([ 50., 200.,   1.,   2.,   3.])</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="gp">&gt;&gt;&gt; </span><span class="n">Spectrum</span><span class="o">.</span><span class="n">_sample</span><span class="p">()</span><span class="o">.</span><span class="n">normalize_intensity</span><span class="p">(</span><span class="s2">&quot;max&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">intensity</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="go">array([0.25 , 1.   , 0.005, 0.01 , 0.015])</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="gp">&gt;&gt;&gt; </span><span class="n">Spectrum</span><span class="o">.</span><span class="n">_sample</span><span class="p">()</span><span class="o">.</span><span class="n">normalize_intensity</span><span class="p">(</span><span class="s2">&quot;sum&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">intensity</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="go">array([0.1953125 , 0.78125   , 0.00390625, 0.0078125 , 0.01171875])</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="gp">&gt;&gt;&gt; </span><span class="n">Spectrum</span><span class="o">.</span><span class="n">_sample</span><span class="p">()</span><span class="o">.</span><span class="n">normalize_intensity</span><span class="p">(</span><span class="s2">&quot;log&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">intensity</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="go">array([3.91202301, 5.29831737, 0.        , 0.69314718, 1.09861229])</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="gp">&gt;&gt;&gt; </span><span class="n">Spectrum</span><span class="o">.</span><span class="n">_sample</span><span class="p">()</span><span class="o">.</span><span class="n">normalize_intensity</span><span class="p">(</span><span class="s2">&quot;sqrt&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">intensity</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="go">array([ 7.07106781, 14.14213562,  1.        ,  1.41421356,  1.73205081])</span>
+</code></pre></div>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h6 id="ms2ml.spectrum.Spectrum.encode_spec_bins" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">encode_spec_bins</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">]</span></code>
+
+</h6>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Encodes the spectrum into bins.</p>
+<p>For a version of this function that takes arguments indead of reading the
+options from the config, see <code>Spectrum.bin_spectrum</code>.</p>
+
+<details class="uses-the-following-options-from-the-config">
+  <summary>Uses the following options from the config</summary>
+  <p>Config.encoding_spec_bin_start,
+Config.encoding_spec_bin_end,
+Config.encoding_spec_bin_n_bins,
+Config.encoding_spec_bin_binsize,
+Config.encoding_spec_bin_relative,
+Config.encoding_spec_bin_offset,</p>
+</details>
+  <table>
+    <thead>
+      <tr>
+        <th><b>RETURNS</b></th>
+        <th><b>DESCRIPTION</b></th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td>
+              <span class="doc-returns-annotation">
+                  <code><span title="numpy.typing.NDArray">NDArray</span>[<span title="numpy">np</span>.<span title="numpy.float32">float32</span>]</code>
+              </span>
+          </td>
+          <td class="doc-returns-details">
+            <p>The encoded spectrum.</p>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+<p><strong>Examples:</strong></p>
+    <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="gp">&gt;&gt;&gt; </span><span class="n">Spectrum</span><span class="o">.</span><span class="n">_sample</span><span class="p">()</span><span class="o">.</span><span class="n">encode_spec_bins</span><span class="p">()</span><span class="o">.</span><span class="n">shape</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="go">(19999,)</span>
+</code></pre></div>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h6 id="ms2ml.spectrum.Spectrum.bin_spectrum" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">bin_spectrum</span><span class="p">(</span><span class="n">start</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">end</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">binsize</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">n_bins</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">relative</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">offset</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">get_breaks</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">]</span> <span class="o">|</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">],</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">]]</span></code>
+
+</h6>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Bins the spectrum.</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th><b>PARAMETER</b></th>
+        <th><b>DESCRIPTION</b></th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>start</code></td>
+          <td class="doc-param-details">
+            <p>The start of the binning range.
+If missing will use the lowest mz value.</p>
+            <p>
+                <span class="doc-param-annotation">
+                  <b>TYPE:</b>
+                    <code>float</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td><code>end</code></td>
+          <td class="doc-param-details">
+            <p>The end of the binning range.
+If missing will use the highest mz value.</p>
+            <p>
+                <span class="doc-param-annotation">
+                  <b>TYPE:</b>
+                    <code>float</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td><code>binsize</code></td>
+          <td class="doc-param-details">
+            <p>The size of the bins. Cannot be used in conjunction with n_bins.</p>
+            <p>
+                <span class="doc-param-annotation">
+                  <b>TYPE:</b>
+                    <code>float | None</code>
+                </span>
+                <span class="doc-param-default">
+                  <b>DEFAULT:</b> 
+                    <code>None</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td><code>n_bins</code></td>
+          <td class="doc-param-details">
+            <p>The number of bins. Cannot be used in conjunction with binsize.</p>
+            <p>
+                <span class="doc-param-annotation">
+                  <b>TYPE:</b>
+                    <code>int | None</code>
+                </span>
+                <span class="doc-param-default">
+                  <b>DEFAULT:</b> 
+                    <code>None</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td><code>relative</code></td>
+          <td class="doc-param-details">
+            <p>Whether to use binning relative to the precursor mass.</p>
+            <p>
+                <span class="doc-param-annotation">
+                  <b>TYPE:</b>
+                    <code>bool</code>
+                </span>
+                <span class="doc-param-default">
+                  <b>DEFAULT:</b> 
+                    <code>False</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td><code>offset</code></td>
+          <td class="doc-param-details">
+            <p>The offset to use for relative binning.</p>
+            <p>
+                <span class="doc-param-annotation">
+                  <b>TYPE:</b>
+                    <code>float</code>
+                </span>
+                <span class="doc-param-default">
+                  <b>DEFAULT:</b> 
+                    <code>0</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  <table>
+    <thead>
+      <tr>
+        <th><b>RETURNS</b></th>
+        <th><b>DESCRIPTION</b></th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td>
+              <span class="doc-returns-annotation">
+                  <code><span title="numpy.typing.NDArray">NDArray</span>[<span title="numpy">np</span>.<span title="numpy.float32">float32</span>] | tuple[<span title="numpy.typing.NDArray">NDArray</span>[<span title="numpy">np</span>.<span title="numpy.float32">float32</span>], <span title="numpy.typing.NDArray">NDArray</span>[<span title="numpy">np</span>.<span title="numpy.float64">float64</span>]]</code>
+              </span>
+          </td>
+          <td class="doc-returns-details">
+            <p>An array of binned intensities.</p>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h6 id="ms2ml.spectrum.Spectrum.base_peak" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">base_peak</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span></code>
+
+</h6>
+
+
+  <div class="doc doc-contents ">
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h6 id="ms2ml.spectrum.Spectrum.tic" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">tic</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span></code>
+
+</h6>
+
+
+  <div class="doc doc-contents ">
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h6 id="ms2ml.spectrum.Spectrum.sic" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">sic</span><span class="p">(</span><span class="n">mzs</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">],</span> <span class="n">resolution</span><span class="p">:</span> <span class="n">Callable</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">]</span></code>
+
+</h6>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Returns the selected ion current for a given set of m/z values.</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th><b>PARAMETER</b></th>
+        <th><b>DESCRIPTION</b></th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>mzs</code></td>
+          <td class="doc-param-details">
+            <p>The m/z values to calculate the SIC for.</p>
+            <p>
+                <span class="doc-param-annotation">
+                  <b>TYPE:</b>
+                    <code><span title="numpy.typing.NDArray">NDArray</span>[<span title="numpy">np</span>.<span title="numpy.float32">float32</span>]</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td><code>resolution</code></td>
+          <td class="doc-param-details">
+            <p>The function used to resolve ambiguities when multiple
+peaks match.  possible options are <code>sum</code> and <code>max</code>.</p>
+            <p>
+                <span class="doc-param-annotation">
+                  <b>TYPE:</b>
+                    <code><span title="typing.Callable">Callable</span></code>
+                </span>
+                <span class="doc-param-default">
+                  <b>DEFAULT:</b> 
+                    <code>sum</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  <table>
+    <thead>
+      <tr>
+        <th><b>RETURNS</b></th>
+        <th><b>DESCRIPTION</b></th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td>
+              <span class="doc-returns-annotation">
+                  <code><span title="numpy.typing.NDArray">NDArray</span>[<span title="numpy">np</span>.<span title="numpy.float32">float32</span>]</code>
+              </span>
+          </td>
+          <td class="doc-returns-details">
+            <p>An array of SIC values. This array will have the same length as the</p>
+          </td>
+        </tr>
+        <tr>
+          <td>
+              <span class="doc-returns-annotation">
+                  <code><span title="numpy.typing.NDArray">NDArray</span>[<span title="numpy">np</span>.<span title="numpy.float32">float32</span>]</code>
+              </span>
+          </td>
+          <td class="doc-returns-details">
+            <p>input mzs array.</p>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+<p><strong>Examples:</strong></p>
+    <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="gp">&gt;&gt;&gt; </span><span class="n">spectrum</span> <span class="o">=</span> <span class="n">Spectrum</span><span class="o">.</span><span class="n">_sample</span><span class="p">()</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="gp">&gt;&gt;&gt; </span><span class="n">spectrum</span><span class="o">.</span><span class="n">mz</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="go">array([  50.     ,  147.11333, 1000.     , 1500.     , 2000.     ])</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="gp">&gt;&gt;&gt; </span><span class="n">spectrum</span><span class="o">.</span><span class="n">intensity</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="go">array([ 50., 200.,   1.,   2.,   3.])</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="gp">&gt;&gt;&gt; </span><span class="n">spectrum</span><span class="o">.</span><span class="n">sic</span><span class="p">(</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="gp">... </span>    <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1000.0</span><span class="p">,</span> <span class="mf">1000.00001</span><span class="p">,</span> <span class="mf">1500.0</span><span class="p">,</span> <span class="mf">2000.0</span><span class="p">,</span> <span class="mf">20_000.0</span><span class="p">]),</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="gp">... </span>    <span class="n">resolution</span><span class="o">=</span><span class="nb">sum</span><span class="p">,</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="gp">... </span><span class="p">)</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="go">array([1., 1., 2., 3., 0.])</span>
+</code></pre></div>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h6 id="ms2ml.spectrum.Spectrum.annotate" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">annotate</span><span class="p">(</span><span class="n">peptide</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Peptide</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AnnotatedPeptideSpectrum</span></code>
+
+</h6>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Annotates the spectrum with the given peptide.</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th><b>PARAMETER</b></th>
+        <th><b>DESCRIPTION</b></th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>peptide</code></td>
+          <td class="doc-param-details">
+            <p>The peptide to annotate the spectrum with.</p>
+            <p>
+                <span class="doc-param-annotation">
+                  <b>TYPE:</b>
+                    <code>str | <a class="autorefs autorefs-internal" title="ms2ml.peptide.Peptide" href="../peptide/#ms2ml.peptide.Peptide">Peptide</a></code>
+                </span>
+            </p>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  <table>
+    <thead>
+      <tr>
+        <th><b>RETURNS</b></th>
+        <th><b>DESCRIPTION</b></th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td>
+              <span class="doc-returns-annotation">
+                  <code><a class="autorefs autorefs-internal" title="ms2ml.spectrum.AnnotatedPeptideSpectrum" href="#ms2ml.spectrum.AnnotatedPeptideSpectrum">AnnotatedPeptideSpectrum</a></code>
+              </span>
+          </td>
+          <td class="doc-returns-details">
+            <p>An AnnotatedPeptideSpectrum object.</p>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+<p><strong>Examples:</strong></p>
+    <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="gp">&gt;&gt;&gt; </span><span class="n">spectrum</span> <span class="o">=</span> <span class="n">Spectrum</span><span class="o">.</span><span class="n">_sample</span><span class="p">()</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="gp">&gt;&gt;&gt; </span><span class="n">peptide</span> <span class="o">=</span> <span class="n">Peptide</span><span class="o">.</span><span class="n">from_sequence</span><span class="p">(</span><span class="s2">&quot;PEPPINK/2&quot;</span><span class="p">,</span> <span class="n">spectrum</span><span class="o">.</span><span class="n">config</span><span class="p">)</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="gp">&gt;&gt;&gt; </span><span class="n">annotated_spectrum</span> <span class="o">=</span> <span class="n">spectrum</span><span class="o">.</span><span class="n">annotate</span><span class="p">(</span><span class="n">peptide</span><span class="p">)</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="gp">&gt;&gt;&gt; </span><span class="n">annotated_spectrum</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="go">AnnotatedPeptideSpectrum(mz=array([  50. ... precursor_isotope=0)</span>
+</code></pre></div>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h6 id="ms2ml.spectrum.Spectrum.to_sus" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">to_sus</span><span class="p">()</span></code>
+
+</h6>
+
+
+  <div class="doc doc-contents ">
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h6 id="ms2ml.spectrum.Spectrum.plot" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">plot</span><span class="p">(</span><span class="n">ax</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">plt</span><span class="o">.</span><span class="n">Axes</span></code>
+
+</h6>
+
+
+  <div class="doc doc-contents ">
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h6 id="ms2ml.spectrum.Spectrum.stack" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">stack</span><span class="p">(</span><span class="n">spectra</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">Spectrum</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Spectrum</span></code>
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-classmethod"><code>classmethod</code></small>
+  </span>
+
+</h6>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Stacks multiple spectra into a single spectrum.</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th><b>PARAMETER</b></th>
+        <th><b>DESCRIPTION</b></th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>spectra</code></td>
+          <td class="doc-param-details">
+            <p>An iterable of spectra to stack.</p>
+            <p>
+                <span class="doc-param-annotation">
+                  <b>TYPE:</b>
+                    <code><span title="typing.Iterable">Iterable</span>[<a class="autorefs autorefs-internal" title="ms2ml.spectrum.Spectrum" href="#ms2ml.spectrum.Spectrum">Spectrum</a>]</code>
+                </span>
+            </p>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  <table>
+    <thead>
+      <tr>
+        <th><b>RETURNS</b></th>
+        <th><b>DESCRIPTION</b></th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td>
+              <span class="doc-returns-annotation">
+                  <code><a class="autorefs autorefs-internal" title="ms2ml.spectrum.Spectrum" href="#ms2ml.spectrum.Spectrum">Spectrum</a></code>
+              </span>
+          </td>
+          <td class="doc-returns-details">
+            <p>A stacked spectrum.</p>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+<p><strong>Examples:</strong></p>
+    <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="gp">&gt;&gt;&gt; </span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="gp">&gt;&gt;&gt; </span><span class="n">spectrum1</span> <span class="o">=</span> <span class="n">Spectrum</span><span class="o">.</span><span class="n">_sample</span><span class="p">()</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="gp">&gt;&gt;&gt; </span><span class="n">spectrum2</span> <span class="o">=</span> <span class="n">Spectrum</span><span class="o">.</span><span class="n">_sample</span><span class="p">(</span><span class="n">random</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="gp">&gt;&gt;&gt; </span><span class="n">spectrum3</span> <span class="o">=</span> <span class="n">Spectrum</span><span class="o">.</span><span class="n">_sample</span><span class="p">(</span><span class="n">random</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="gp">&gt;&gt;&gt; </span><span class="n">spectrum4</span> <span class="o">=</span> <span class="n">Spectrum</span><span class="o">.</span><span class="n">_sample</span><span class="p">(</span><span class="n">random</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="gp">&gt;&gt;&gt; </span><span class="n">spectrum4</span><span class="o">.</span><span class="n">mz</span> <span class="o">=</span> <span class="n">spectrum1</span><span class="o">.</span><span class="n">mz</span> <span class="o">+</span> <span class="mf">1e-4</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="gp">&gt;&gt;&gt; </span><span class="n">mzs</span><span class="p">,</span> <span class="n">ints</span> <span class="o">=</span> <span class="n">Spectrum</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">spectrum1</span><span class="p">,</span> <span class="n">spectrum2</span><span class="p">,</span> <span class="n">spectrum3</span><span class="p">,</span> <span class="n">spectrum4</span><span class="p">])</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="gp">&gt;&gt;&gt; </span><span class="n">mzs</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="go">array([  50.        ,  147.11333   ,  423.65479934,  437.58721126,</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="go">        544.883183  ,  592.84461823,  645.89411307, 1000.        ,</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="go">       1500.        , 2000.        ])</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="gp">&gt;&gt;&gt; </span><span class="n">ints</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="go">array([[ 50.        ,   0.        ,   0.        ,  50.        ],</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="go">       [200.        ,   0.        ,   0.        , 200.        ],</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="go">       [  0.        ,   0.        , 963.6627605 ,   0.        ],</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="go">       [  0.        ,   0.        , 791.72503808,   0.        ],</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="go">       [  0.        ,   0.        , 891.77300078,   0.        ],</span>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="go">       [  0.        , 844.26574858,   0.        ,   0.        ],</span>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="go">       [  0.        ,   0.        , 383.44151883,   0.        ],</span>
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="go">       [  1.        ,   0.        ,   0.        ,   1.        ],</span>
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a><span class="go">       [  2.        ,   0.        ,   0.        ,   2.        ],</span>
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="go">       [  3.        ,   0.        ,   0.        ,   3.        ]])</span>
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a><span class="gp">&gt;&gt;&gt; </span><span class="n">ints</span><span class="o">.</span><span class="n">shape</span>
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a><span class="go">(10, 4)</span>
+</code></pre></div>
+
+  </div>
+
+</div>
+
+
+
+  </div>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h4 id="ms2ml.spectrum.AnnotatedPeptideSpectrum" class="doc doc-heading">
+        <code>ms2ml.spectrum.AnnotatedPeptideSpectrum</code>
+
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-dataclass"><code>dataclass</code></small>
+  </span>
+
+</h4>
+
+
+  <div class="doc doc-contents ">
+      <p class="doc doc-class-bases">
+        Bases: <code><a class="autorefs autorefs-internal" title="ms2ml.spectrum.Spectrum" href="#ms2ml.spectrum.Spectrum">Spectrum</a></code></p>
+
+  
+      <p>Class to store the spectrum information.</p>
+<p>In combination with the peptide information, it can be used to
+annotate the spectrum.</p>
+
+<p><strong>Examples:</strong></p>
+    <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="gp">&gt;&gt;&gt; </span><span class="n">config</span> <span class="o">=</span> <span class="n">Config</span><span class="p">()</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="gp">&gt;&gt;&gt; </span><span class="n">peptide</span> <span class="o">=</span> <span class="n">Peptide</span><span class="o">.</span><span class="n">from_sequence</span><span class="p">(</span><span class="s2">&quot;PEPPINK/2&quot;</span><span class="p">,</span> <span class="n">config</span><span class="p">)</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="gp">&gt;&gt;&gt; </span><span class="n">spectrum</span> <span class="o">=</span> <span class="n">AnnotatedPeptideSpectrum</span><span class="p">(</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="gp">... </span>    <span class="n">mz</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">50.0</span><span class="p">,</span> <span class="mf">147.11333</span><span class="p">,</span> <span class="mf">1000.0</span><span class="p">,</span> <span class="mf">1500.0</span><span class="p">,</span> <span class="mf">2000.0</span><span class="p">]),</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="gp">... </span>    <span class="n">intensity</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">50.0</span><span class="p">,</span> <span class="mf">200.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">]),</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="gp">... </span>    <span class="n">ms_level</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="gp">... </span>    <span class="n">extras</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;EXTRAS&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;extra1&quot;</span><span class="p">,</span> <span class="s2">&quot;extra2&quot;</span><span class="p">]},</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="gp">... </span>    <span class="n">precursor_peptide</span><span class="o">=</span><span class="n">peptide</span><span class="p">,</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="gp">... </span>    <span class="n">precursor_mz</span><span class="o">=</span><span class="mf">147.11333</span><span class="p">,</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="gp">... </span><span class="p">)</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="gp">&gt;&gt;&gt; </span><span class="n">spectrum</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="go">AnnotatedPeptideSpectrum(mz=array([  50. ... precursor_isotope=0)</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="gp">&gt;&gt;&gt; </span><span class="n">spectrum</span><span class="o">.</span><span class="n">fragment_intensities</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="go">{&#39;y1^1&#39;: 200.0}</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="gp">&gt;&gt;&gt; </span><span class="n">spectrum</span><span class="p">[</span><span class="s2">&quot;y1^1&quot;</span><span class="p">]</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="go">200.0</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="gp">&gt;&gt;&gt; </span><span class="n">spectrum</span><span class="o">.</span><span class="n">fragments</span>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="go">{&#39;y1^1&#39;: AnnotatedIon(mass=147.11334,</span>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="go">charge=1, position=1, ion_series=&#39;y&#39;, intensity=200.0, neutral_loss=None)}</span>
+</code></pre></div>
+
+
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+<h5 id="ms2ml.spectrum.AnnotatedPeptideSpectrum-attributes">Attributes</h5>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h6 id="ms2ml.spectrum.AnnotatedPeptideSpectrum.precursor_peptide" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">precursor_peptide</span><span class="p">:</span> <span class="n">Peptide</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span></code>
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-class-attribute"><code>class-attribute</code></small>
+  </span>
+
+</h6>
+
+
+  <div class="doc doc-contents ">
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h6 id="ms2ml.spectrum.AnnotatedPeptideSpectrum.precursor_isotope" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">precursor_isotope</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="mi">0</span></code>
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-class-attribute"><code>class-attribute</code></small>
+  </span>
+
+</h6>
+
+
+  <div class="doc doc-contents ">
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h6 id="ms2ml.spectrum.AnnotatedPeptideSpectrum.precursor_charge" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">precursor_charge</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span></code>
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-class-attribute"><code>class-attribute</code></small>
+  </span>
+
+</h6>
+
+
+  <div class="doc doc-contents ">
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h6 id="ms2ml.spectrum.AnnotatedPeptideSpectrum.charge" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">charge</span></code>
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-property"><code>property</code></small>
+  </span>
+
+</h6>
+
+
+  <div class="doc doc-contents ">
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h6 id="ms2ml.spectrum.AnnotatedPeptideSpectrum.mass_error" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">mass_error</span></code>
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-property"><code>property</code></small>
+  </span>
+
+</h6>
+
+
+  <div class="doc doc-contents ">
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h6 id="ms2ml.spectrum.AnnotatedPeptideSpectrum.fragment_labels" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">fragment_labels</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span></code>
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-property"><code>property</code></small>
+  </span>
+
+</h6>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Encodes the fragment ions as a numpy array</p>
+<p>The order of the ions will be defined in the config file.</p>
+
+<p><strong>Examples:</strong></p>
+    <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="gp">&gt;&gt;&gt; </span><span class="n">spec</span> <span class="o">=</span> <span class="n">AnnotatedPeptideSpectrum</span><span class="o">.</span><span class="n">_sample</span><span class="p">()</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="gp">&gt;&gt;&gt; </span><span class="n">spec</span><span class="o">.</span><span class="n">fragment_labels</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="go">[&#39;y1^1&#39;, ...]</span>
+</code></pre></div>
+  </div>
+
+</div>
+
+<h5 id="ms2ml.spectrum.AnnotatedPeptideSpectrum-functions">Functions</h5>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h6 id="ms2ml.spectrum.AnnotatedPeptideSpectrum.__post_init__" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">__post_init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></code>
+
+</h6>
+
+
+  <div class="doc doc-contents ">
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h6 id="ms2ml.spectrum.AnnotatedPeptideSpectrum.fragment_intensities" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">fragment_intensities</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span></code>
+
+</h6>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Returs a dictionary with the fragment ion names as keys and the
+corresponding intensities as values.</p>
+
+<details class="note">
+  <summary>Note</summary>
+  <p>The current implementation only keeps the last peak that matches
+the theoretical mass. future implementations should either keep all peaks
+or only the highest peak, or add the peaks.</p>
+</details>
+<p><strong>Examples:</strong></p>
+    <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="gp">&gt;&gt;&gt; </span><span class="n">spec</span> <span class="o">=</span> <span class="n">AnnotatedPeptideSpectrum</span><span class="o">.</span><span class="n">_sample</span><span class="p">()</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="gp">&gt;&gt;&gt; </span><span class="n">spec</span><span class="o">.</span><span class="n">fragment_intensities</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="go">{&#39;y1^1&#39;: 200.0}</span>
+</code></pre></div>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h6 id="ms2ml.spectrum.AnnotatedPeptideSpectrum.fragments" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">fragments</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">AnnotatedIon</span><span class="p">]</span></code>
+
+</h6>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Returs a dictionary with the fragment ion names as keys and the
+corresponding AnnotatedIon objects as values.</p>
+
+<p><strong>Examples:</strong></p>
+    <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="gp">&gt;&gt;&gt; </span><span class="n">spec</span> <span class="o">=</span> <span class="n">AnnotatedPeptideSpectrum</span><span class="o">.</span><span class="n">_sample</span><span class="p">()</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="gp">&gt;&gt;&gt; </span><span class="n">spec</span><span class="o">.</span><span class="n">fragments</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="go">{&#39;y1^1&#39;: AnnotatedIon(mass=147.11334,</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="go">charge=1, position=1, ion_series=&#39;y&#39;, intensity=200.0,</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="go">neutral_loss=None)}</span>
+</code></pre></div>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h6 id="ms2ml.spectrum.AnnotatedPeptideSpectrum.__getitem__" class="doc doc-heading">
+<code class="highlight language-python"><span class="fm">__getitem__</span><span class="p">(</span><span class="n">index</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span></code>
+
+</h6>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Returns the intensity of the fragment ion with the given name.</p>
+
+<p><strong>Examples:</strong></p>
+    <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="gp">&gt;&gt;&gt; </span><span class="n">spec</span> <span class="o">=</span> <span class="n">AnnotatedPeptideSpectrum</span><span class="o">.</span><span class="n">_sample</span><span class="p">()</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="gp">&gt;&gt;&gt; </span><span class="n">spec</span><span class="p">[</span><span class="s2">&quot;y1^1&quot;</span><span class="p">]</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="go">200.0</span>
+</code></pre></div>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h6 id="ms2ml.spectrum.AnnotatedPeptideSpectrum.encode_fragments" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">encode_fragments</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">]</span></code>
+
+</h6>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Encodes the fragment ions as a numpy array</p>
+<p>The order of the ions will be defined in the config file.</p>
+
+<p><strong>Examples:</strong></p>
+    <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="gp">&gt;&gt;&gt; </span><span class="n">spec</span> <span class="o">=</span> <span class="n">AnnotatedPeptideSpectrum</span><span class="o">.</span><span class="n">_sample</span><span class="p">()</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="gp">&gt;&gt;&gt; </span><span class="n">spec</span><span class="o">.</span><span class="n">encode_fragments</span><span class="p">()</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="go">array([200.,   0.,   0.,   0.,   0.,   0.,   0.,   0.,   0.,   0.,   0.,</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="go">    0.,   0.,   0.,   0.,   0.,   0.,   0.,   0.,   0.,   0.,   0.,</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="go">    0.,   0.,   0.,   0.,   0.,   0.,   0.,   0.,   0.,   0.,   0.,</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="go">    0.,   0.,   0.,   0.,   0.,   0.,   0.,   0.,   0.,   0.,   0.,</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="go">    0.,   0.,   0.,   0.,   0.,   0.,   0.,   0.,   0.,   0.,   0.,</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="go">    0.,   0.,   0.,   0.,   0.,   0.,   0.,   0.,   0.,   0.,   0.,</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="go">    0.,   0.,   0.,   0.,   0.,   0.,   0.,   0.,   0.,   0.,   0.,</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="go">    0.,   0.,   0.,   0.,   0.,   0.,   0.,   0.,   0.,   0.,   0.,</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="go">    0.,   0.,   0.,   0.,   0.,   0.,   0.,   0.,   0.,   0.,   0.,</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="go">    0.,   0.,   0.,   0.,   0.,   0.,   0.,   0.,   0.,   0.,   0.,</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="go">    0.,   0.,   0.,   0.,   0.,   0.,   0.,   0.,   0.,   0.],</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="go">dtype=float32)</span>
+</code></pre></div>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h6 id="ms2ml.spectrum.AnnotatedPeptideSpectrum.decode_fragments" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">decode_fragments</span><span class="p">(</span><span class="n">peptide</span><span class="p">:</span> <span class="n">Peptide</span><span class="p">,</span> <span class="n">fragment_vector</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">])</span></code>
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-staticmethod"><code>staticmethod</code></small>
+  </span>
+
+</h6>
+
+
+  <div class="doc doc-contents ">
+  
+
+<p><strong>Examples:</strong></p>
+    <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="gp">&gt;&gt;&gt; </span><span class="n">spec</span> <span class="o">=</span> <span class="n">AnnotatedPeptideSpectrum</span><span class="o">.</span><span class="n">_sample</span><span class="p">()</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="gp">&gt;&gt;&gt; </span><span class="n">pep</span> <span class="o">=</span> <span class="n">spec</span><span class="o">.</span><span class="n">precursor_peptide</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="gp">&gt;&gt;&gt; </span><span class="n">frags</span> <span class="o">=</span> <span class="n">spec</span><span class="o">.</span><span class="n">encode_fragments</span><span class="p">()</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="gp">&gt;&gt;&gt; </span><span class="n">AnnotatedPeptideSpectrum</span><span class="o">.</span><span class="n">decode_fragments</span><span class="p">(</span><span class="n">pep</span><span class="p">,</span> <span class="n">frags</span><span class="p">)</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="go">AnnotatedPeptideSpectrum(mz=array([...]),</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="go">intensity=array([...], dtype=float32),</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="go">ms_level=2, precursor_mz=397.724526907315,</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="go">precursor_charge=2,</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="go">instrument=None,</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="go">analyzer=None,</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="go">collision_energy=nan,</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="go">activation=None,</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="go">extras={},</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="go">retention_time=RetentionTime(rt=nan, units=&#39;seconds&#39;,</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="go">run=None),</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="go">precursor_peptide=Peptide([...], {...}), precursor_isotope=0)</span>
+</code></pre></div>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h6 id="ms2ml.spectrum.AnnotatedPeptideSpectrum.to_sus" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">to_sus</span><span class="p">()</span></code>
+
+</h6>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Return a spectrum object as a spectrum_utils.spectrum.Spectrum object</p>
+
+  </div>
+
+</div>
+
+
+
+  </div>
+
+  </div>
+
+</div>
+<h3 id="ms2ml.spectrum-functions">Functions</h3>
+
+
+
+  </div>
+
+  </div>
+
+</div>
+
+
+  
+
+
+
+  <form class="md-feedback" name="feedback" hidden>
+    <fieldset>
+      <legend class="md-feedback__title">
+        Was this page helpful?
+      </legend>
+      <div class="md-feedback__inner">
+        <div class="md-feedback__list">
+          
+            <button class="md-feedback__icon md-icon" type="submit" title="True" data-md-value="1">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M5 9v12H1V9h4m4 12a2 2 0 0 1-2-2V9c0-.55.22-1.05.59-1.41L14.17 1l1.06 1.06c.27.27.44.64.44 1.05l-.03.32L14.69 8H21a2 2 0 0 1 2 2v2c0 .26-.05.5-.14.73l-3.02 7.05C19.54 20.5 18.83 21 18 21H9m0-2h9.03L21 12v-2h-8.79l1.13-5.32L9 9.03V19Z"/></svg>
+            </button>
+          
+            <button class="md-feedback__icon md-icon" type="submit" title="There is room for improvement" data-md-value="0">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 15V3h4v12h-4M15 3a2 2 0 0 1 2 2v10c0 .55-.22 1.05-.59 1.41L9.83 23l-1.06-1.06c-.27-.27-.44-.64-.44-1.06l.03-.31.95-4.57H3a2 2 0 0 1-2-2v-2c0-.26.05-.5.14-.73l3.02-7.05C4.46 3.5 5.17 3 6 3h9m0 2H5.97L3 12v2h8.78l-1.13 5.32L15 14.97V5Z"/></svg>
+            </button>
+          
+        </div>
+        <div class="md-feedback__note">
+          
+            <div data-md-value="1" hidden>
+              
+              
+                
+              
+              
+                Thanks for your!
+              
+            </div>
+          
+            <div data-md-value="0" hidden>
+              
+              
+                
+              
+              
+                Thanks for your feedback! Help us improve this page by using our <a href="https://github.com/jspaezp/ms2ml/issues/new/?title=[Feedback]+Spectrum%20objects+-+/ms2ml%20API/spectra/" target="_blank" rel="noopener">Feedback in github</a>
+              
+            </div>
+          
+        </div>
+      </div>
+    </fieldset>
+  </form>
+
+
+                
+              </article>
+            </div>
+          
+          
+        </div>
+        
+          <a href="#" class="md-top md-icon" data-md-component="top" hidden>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12Z"/></svg>
+            Back to top
+          </a>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+    <nav class="md-footer__inner md-grid" aria-label="Footer" >
+      
+        
+        <a href="../peptide/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Peptide objects" rel="prev">
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+          </div>
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              Peptide objects
+            </div>
+          </div>
+        </a>
+      
+      
+    </nav>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        <div class="md-social">
+  
+    
+    
+      
+      
+    
+    <a href="https://github.com/jspaezp/ms2ml" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.2.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+      <div class="md-consent" data-md-component="consent" id="__consent" hidden>
+        <div class="md-consent__overlay"></div>
+        <aside class="md-consent__inner">
+          <form class="md-consent__form md-grid md-typeset" name="consent">
+            
+
+  
+    
+  
+
+
+  
+    
+  
+
+
+
+  
+
+
+<h4>Cookie consent</h4>
+<p>We use cookies to recognize your repeated visits and preferences, as well as to measure the effectiveness of our documentation and whether users find what they're searching for. With your consent, you're helping us to make our documentation better.</p>
+<input class="md-toggle" type="checkbox" id="__settings" >
+<div class="md-consent__settings">
+  <ul class="task-list">
+    
+      
+      
+        
+        
+      
+      <li class="task-list-item">
+        <label class="task-list-control">
+          <input type="checkbox" name="analytics" checked>
+          <span class="task-list-indicator"></span>
+          Google Analytics
+        <label>
+      </li>
+    
+      
+      
+        
+        
+      
+      <li class="task-list-item">
+        <label class="task-list-control">
+          <input type="checkbox" name="github" checked>
+          <span class="task-list-indicator"></span>
+          GitHub
+        <label>
+      </li>
+    
+  </ul>
+</div>
+<div class="md-consent__controls">
+  
+    
+      <button class="md-button md-button--primary">Accept</button>
+    
+    
+    
+  
+    
+    
+    
+      <label class="md-button" for="__settings">Manage settings</label>
+    
+  
+</div>
+          </form>
+        </aside>
+      </div>
+      <script>var consent=__md_get("__consent");if(consent)for(var input of document.forms.consent.elements)input.name&&(input.checked=consent[input.name]||!1);else"file:"!==location.protocol&&setTimeout(function(){document.querySelector("[data-md-component=consent]").hidden=!1},250);var action,form=document.forms.consent;for(action of["submit","reset"])form.addEventListener(action,function(e){if(e.preventDefault(),"reset"===e.type)for(var n of document.forms.consent.elements)n.name&&(n.checked=!1);__md_set("__consent",Object.fromEntries(Array.from(new FormData(form).keys()).map(function(e){return[e,!0]}))),location.hash="",location.reload()})</script>
+    
+    <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.top"], "search": "../../assets/javascripts/workers/search.16e2a7d4.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version.title": "Select version"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.5a2dcb6a.min.js"></script>
+      
+    
+    
+  </body>
+</html>
