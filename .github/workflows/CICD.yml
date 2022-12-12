@@ -169,7 +169,7 @@ jobs:
         env:
             GOOGLE_ANALYTICS_KEY: ${{ secrets.GOOGLE_ANALYTICS_KEY }}
         run: |
-          poetry run python -m mkdocs gh-deploy --strict --force
+          poetry run python -m mike deploy -fp $(poetry version -s)
 
       # Publish Package
       - name: Publish Setup

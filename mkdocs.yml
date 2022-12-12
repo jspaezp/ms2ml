@@ -72,6 +72,7 @@ watch:
 plugins:
   - search
   - autorefs
+  - mike
   - mkquartodocs:
       keep_output: false
   - mkdocstrings:
