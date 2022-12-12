@@ -619,16 +619,44 @@ section inside the <code>ms2ml API</code> documents.</p>
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">stderr</p>
-<p>2022-12-12 13:52:30.059 | WARNING  | ms2ml.proforma_utils:set_local_unimod:29 - Could not set the cache directory. This will impact the performance of parsing non-unimod modifications (try installing psimod if you are using python version 3.9 or higher)</p>
+<p>2022-12-12 14:18:27.700 | WARNING  | ms2ml.proforma_utils:set_local_unimod:29 - Could not set the cache directory. This will impact the performance of parsing non-unimod modifications (try installing psimod if you are using python version 3.9 or higher)</p>
 </div>
 <div class="admonition warning">
 <p class="admonition-title">stderr</p>
-<p>2022-12-12 13:52:30.594 | WARNING  | ms2ml.proforma_utils:set_local_unimod:29 - Could not set the cache directory. This will impact the performance of parsing non-unimod modifications (try installing psimod if you are using python version 3.9 or higher)</p>
+<p>2022-12-12 14:18:28.174 | WARNING  | ms2ml.proforma_utils:set_local_unimod:29 - Could not set the cache directory. This will impact the performance of parsing non-unimod modifications (try installing psimod if you are using python version 3.9 or higher)</p>
 </div>
 <div class="admonition note">
 <p class="admonition-title">output</p>
-<p>[AnnotatedPeptideSpectrum(mz=array([123.]), intensity=array([123.]), ms_level=2, precursor_mz=0, precursor_charge=2, instrument=None, analyzer=None, collision_energy=nan, activation=None, extras=None, retention_time=RetentionTime(rt=nan, units='seconds', run=None), precursor_peptide=Peptide([('A', None), ('S', None), ('D', None), ('A', None), ('S', None), ('D', None)], {'n_term': None, 'c_term': None, 'unlocalized_modifications': [], 'labile_modifications': [], 'fixed_modifications': [], 'intervals': [], 'isotopes': [], 'group_ids': [], 'charge_state': ChargeState(2, [])}), precursor_isotope=0),
- AnnotatedPeptideSpectrum(mz=array([123., 123.]), intensity=array([123., 123.]), ms_level=2, precursor_mz=0, precursor_charge=1, instrument=None, analyzer=None, collision_energy=nan, activation=None, extras=None, retention_time=RetentionTime(rt=nan, units='seconds', run=None), precursor_peptide=Peptide([('A', None), ('S', None), ('D', None), ('A', None), ('S', None), ('D', None), ('A', None), ('A', None), ('S', None)], {'n_term': None, 'c_term': None, 'unlocalized_modifications': [], 'labile_modifications': [], 'fixed_modifications': [], 'intervals': [], 'isotopes': [], 'group_ids': [], 'charge_state': ChargeState(1, [])}), precursor_isotope=0)]</p>
+<p>[AnnotatedPeptideSpectrum(mz=array([123.]),
+                          intensity=array([123.]),
+                          ms_level=2,
+                          precursor_mz=0,
+                          precursor_charge=2,
+                          instrument=None,
+                          analyzer=None,
+                          collision_energy=nan,
+                          activation=None,
+                          extras=None,
+                          retention_time=RetentionTime(rt=nan,
+                                                       units='seconds',
+                                                       run=None),
+                          precursor_peptide=Peptide([('A', None), ('S', None), ('D', None), ('A', None), ('S', None), ('D', None)], {'n_term': None, 'c_term': None, 'unlocalized_modifications': [], 'labile_modifications': [], 'fixed_modifications': [], 'intervals': [], 'isotopes': [], 'group_ids': [], 'charge_state': ChargeState(2, [])}),
+                          precursor_isotope=0),
+ AnnotatedPeptideSpectrum(mz=array([123., 123.]),
+                          intensity=array([123., 123.]),
+                          ms_level=2,
+                          precursor_mz=0,
+                          precursor_charge=1,
+                          instrument=None,
+                          analyzer=None,
+                          collision_energy=nan,
+                          activation=None,
+                          extras=None,
+                          retention_time=RetentionTime(rt=nan,
+                                                       units='seconds',
+                                                       run=None),
+                          precursor_peptide=Peptide([('A', None), ('S', None), ('D', None), ('A', None), ('S', None), ('D', None), ('A', None), ('A', None), ('S', None)], {'n_term': None, 'c_term': None, 'unlocalized_modifications': [], 'labile_modifications': [], 'fixed_modifications': [], 'intervals': [], 'isotopes': [], 'group_ids': [], 'charge_state': ChargeState(1, [])}),
+                          precursor_isotope=0)]</p>
 </div>
 <h2 id="hook-usage-to-modify-the-output">Hook usage to modify the output</h2>
 <p>We will keep using the same file as before, but we will add a hook to
