@@ -61,6 +61,9 @@ jobs:
     continue-on-error: ${{ matrix.experimental }}
 
     steps:
+      - name: Debug Info
+        run: echo ${{ github.ref }} ${{ github.event_name }} ${{ endsWith(github.ref, 'heads/release') && (github.event_name == 'push') }}
+        # refs/heads/main push false is the output of the main branch when tagged with a release ...
 
       # Initial Setup
       - uses: actions/checkout@v3
@@ -106,7 +109,7 @@ jobs:
         run: poetry run python -m mkdocs build --strict
 
       - name: mike
-        if: endsWith(github.ref, 'heads/main') && (${{ matrix.python-version }} == '3.11')
+        if: ${{ endsWith(github.ref, 'heads/main' &&  matrix.python-version == '3.11' }}
         run: poetry run mike deploy -p main experimental
 
       # Upload coverage
