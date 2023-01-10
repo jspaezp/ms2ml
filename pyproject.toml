@@ -67,7 +67,8 @@ matplotlib = "^3.6.0"
 # catches up with the python version ... which also requires specifying
 # all of these dependencies explicitly.
 spectrum-utils = {version = "^0.4.1", python = ">3.8,<3.11"}
-llvmlite = {version = ">=0.36.2", python = ">3.8,<3.11"}
+numba = {version = ">=0.53.2", python = ">3.8,<3.11"}
+llvmlite = {version = ">=0.39.1", python = ">3.8,<3.11"}
 numpy = {version = "<1.24.0", python = ">3.8,<3.11"}
 
 [build-system]
