@@ -18,7 +18,7 @@ pandas = "^1.4.4"
 pandas-stubs = { version = "^1.5.1.221024", python = ">=3.8,<3.11" }
 uniplot = ">=0.7,<0.9"
 tqdm = "^4.64.1"
-importlib-metadata = { version = "^5.0.0", python = ">=3.8,<3.9" }
+importlib-metadata = { version = ">=5,<7", python = ">=3.8,<3.9" }
 loguru = "^0.6.0"
 tomli-w = "^1.0.0"
 appdirs = "^1.4.4"
