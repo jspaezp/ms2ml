@@ -121,7 +121,7 @@ def is_in_tolerance(
     return (lower <= theoretical) & (theoretical <= upper)
 
 
-def binary_search_gte(arr, val):
+def binary_search_gte(arr, val, left=0):
     """Binary search for a value in an array.
 
     This variation finds the first element that is greater than the
@@ -134,7 +134,6 @@ def binary_search_gte(arr, val):
     Returns:
         int: Index of the value
     """
-    left = 0
     right = len(arr) - 1
     while left <= right:
         mid = (left + right) // 2
@@ -149,11 +148,15 @@ def binary_search_gte(arr, val):
     return left
 
 
+def binary_search_gte(arr, val, left=None):
+    return np.searchsorted(arr, val)
+
+
 def test_binary_gte():
-    arr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+    arr = np.array([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
     assert binary_search_gte(arr, 1) == 0
 
-    arr2 = [3, 6, 9, 12, 15, 18, 21, 24, 27, 30]
+    arr2 = np.array([3, 6, 9, 12, 15, 18, 21, 24, 27, 30])
     assert binary_search_gte(arr2, 1) == 0
     assert binary_search_gte(arr2, 2) == 0
     assert binary_search_gte(arr2, 10) == 3
@@ -187,14 +190,15 @@ def find_matching_sorted(
 
     for ia, a in enumerate(A):
         min_val = a - max_diff
-        min_ib = binary_search_gte(B, min_val)
+        max_val = a + max_diff
+        # min_ib = binary_search_gte(B, min_val, min_ib)
         for ib, b in enumerate(B[min_ib:], start=min_ib):
             if b < min_val:
                 min_ib = ib
                 continue
             elif in_range_fun(a, b):
                 elems.append((ia, ib))
-            else:
+            if b > max_val:
                 break
 
     if len(elems) == 0:
