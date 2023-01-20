@@ -78,7 +78,7 @@ class RetentionTime:
 
     def seconds(self):
         """Converts the retention time to seconds."""
-        if self.units == "s" or self.units == "seconds":
+        if self.units == "s" or self.units.startswith("second"):
             return self.rt
         elif self.units.startswith("min"):
             return self.rt * 60
