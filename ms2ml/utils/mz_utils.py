@@ -121,7 +121,7 @@ def is_in_tolerance(
     return (lower <= theoretical) & (theoretical <= upper)
 
 
-def binary_search_gte(arr, val, left=0):
+def binary_search_gte(arr, val):
     """Binary search for a value in an array.
 
     This variation finds the first element that is greater than the
@@ -134,21 +134,6 @@ def binary_search_gte(arr, val, left=0):
     Returns:
         int: Index of the value
     """
-    right = len(arr) - 1
-    while left <= right:
-        mid = (left + right) // 2
-        # print(f"left: {arr[left]}, right: {arr[right]}, mid: {arr[mid]}, val: {val}")
-        if arr[mid] == val:
-            return mid
-        elif arr[mid] < val:
-            left = mid + 1
-        else:
-            right = mid - 1
-
-    return left
-
-
-def binary_search_gte(arr, val, left=None):
     return np.searchsorted(arr, val)
 
 

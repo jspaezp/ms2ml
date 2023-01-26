@@ -115,7 +115,9 @@ class MZMLAdapter(BaseAdapter):
                 "Only centroid spectra are supported at the moment."
             )
 
-        if ("MSn spectrum" in spec_dict) or ('ms level' in spec_dict and spec_dict['ms level'] > 1):
+        if ("MSn spectrum" in spec_dict) or (
+            "ms level" in spec_dict and spec_dict["ms level"] > 1
+        ):
             if spec_dict["precursorList"]["count"] != 1:
                 raise NotImplementedError
             precursor = spec_dict["precursorList"].pop("precursor")
@@ -123,7 +125,11 @@ class MZMLAdapter(BaseAdapter):
 
             activation = precursor.pop("activation")
             activation_type = list(activation.values())[0]
-            activation_energy = activation["collision energy"] if "collision energy" in activation else float('nan')
+            activation_energy = (
+                activation["collision energy"]
+                if "collision energy" in activation
+                else float("nan")
+            )
 
             if "spectrumRef" in precursor:
                 prec_scan = precursor["spectrumRef"]
@@ -166,7 +172,9 @@ class MZMLAdapter(BaseAdapter):
             }
             spec_dict.update(precursor_extras)
 
-        elif ("MS1 spectrum" in spec_dict) or ('ms level' in spec_dict and spec_dict['ms level'] == 1):
+        elif ("MS1 spectrum" in spec_dict) or (
+            "ms level" in spec_dict and spec_dict["ms level"] == 1
+        ):
             precursor_mz = None
             precursor_charge = None
             activation_type = None

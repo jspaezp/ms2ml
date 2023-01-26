@@ -1,5 +1,5 @@
 Name: AFLYEIIDIGK/2
-MW: 1280.7017 
+MW: 1280.7017
 Comment: Parent=641.3581 Mods=0 Modstring=AFLYEIIDIGK///2 iRT=138.78
 Num peaks: 30
 129.1025	101925	"y1-H2O/-0.69ppm"
@@ -34,7 +34,7 @@ Num peaks: 30
 1210.6606	14604	"y10/9.38ppm"
 
 Name: AFSDEFSYFFK/2
-MW: 1386.6127 
+MW: 1386.6127
 Comment: Parent=694.3136 Mods=0 Modstring=AFSDEFSYFFK///2 iRT=138.2
 Num peaks: 35
 129.1023	175206	"y1-H2O/0.73ppm"
@@ -74,7 +74,7 @@ Num peaks: 35
 1316.5854	77526	"y10/-1.86ppm"
 
 Name: AGDEALGDTYK/1
-MW: 1138.5147 
+MW: 1138.5147
 Comment: Parent=1140.5293 Mods=0 Modstring=AGDEALGDTYK///1 iRT=17.95
 Num peaks: 21
 129.1016	6092	"y1-H2O/6.17ppm"
@@ -100,7 +100,7 @@ Num peaks: 21
 1011.4625	11058	"y9/0.47ppm"
 
 Name: AGDEALGDTYK/2
-MW: 1138.5147 
+MW: 1138.5147
 Comment: Parent=570.2646 Mods=0 Modstring=AGDEALGDTYK///2 iRT=18.52
 Num peaks: 36
 129.0659	352595	"b2/0.52ppm"
@@ -141,7 +141,7 @@ Num peaks: 36
 1068.4839	322291	"y10/0.11ppm"
 
 Name: ALFSSITDSEK/2
-MW: 1196.5927 
+MW: 1196.5927
 Comment: Parent=599.3036 Mods=0 Modstring=ALFSSITDSEK///2 iRT=73.89
 Num peaks: 27
 129.1023	181712	"y1-H2O/0.97ppm"
@@ -173,7 +173,7 @@ Num peaks: 27
 1013.4796	3875889	"y9/-0.61ppm"
 
 Name: ASDLLSGYYIK/2
-MW: 1228.6337 
+MW: 1228.6337
 Comment: Parent=615.3241 Mods=0 Modstring=ASDLLSGYYIK///2 iRT=89.79
 Num peaks: 35
 129.1022	506488	"y1-H2O/2.15ppm"

@@ -192,11 +192,11 @@ class Config:
             ['y1^1', 'y1^2', ... 'b30^2']
         """
         labels: list[str] = []
-        for field in self.ion_encoding_nesting:
+        for ion_field in self.ion_encoding_nesting:
             _labels = labels
             labels = []
-            for elem in getattr(self, field):
-                mapper = _PermissiveMapper(**{field: str(elem)})
+            for elem in getattr(self, ion_field):
+                mapper = _PermissiveMapper(**{ion_field: str(elem)})
                 if len(_labels) == 0:
                     x = self.ion_naming_convention.format_map(mapper)
                     labels.append(x)
