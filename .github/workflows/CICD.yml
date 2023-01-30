@@ -186,11 +186,11 @@ jobs:
             docker push ghcr.io/jspaezp/ms2ml:v$(poetry version -s)
 
       # Publishing Docs
-      - name: Deploy Docs
-        env:
-            GOOGLE_ANALYTICS_KEY: ${{ secrets.GOOGLE_ANALYTICS_KEY }}
-        run: |
-          poetry run mike deploy -p $(poetry version -s)
+      # - name: Deploy Docs
+      #   env:
+      #       GOOGLE_ANALYTICS_KEY: ${{ secrets.GOOGLE_ANALYTICS_KEY }}
+      #   run: |
+      #     poetry run mike deploy -p $(poetry version -s)
 
       # Publish Package
       - name: Publish Setup
