@@ -95,6 +95,9 @@ isolated_build = true
 target-version = [ "py39", ]
 line-length = 88
 
+[tool.ruff]
+ignore = ["F811"]
+
 [tool.isort]
 profile = "black"
 
