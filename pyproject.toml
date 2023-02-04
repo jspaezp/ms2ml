@@ -16,7 +16,7 @@ psims = "^1.2.3"
 lark = "^1.1.2"
 pandas = "^1.4.4"
 pandas-stubs = { version = "^1.5.1.221024", python = ">=3.8,<3.11" }
-uniplot = ">=0.7,<0.9"
+uniplot = ">=0.7,<0.10"
 tqdm = "^4.64.1"
 importlib-metadata = "^6.0.0"
 loguru = "^0.6.0"
