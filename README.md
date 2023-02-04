@@ -9,7 +9,8 @@
 
 # ms2ml
 
-Documentation site: https://jspaezp.github.io/ms2ml/encoding_options/
+Documentation site: https://jspaezp.github.io/ms2ml/main/
+
 GitHub: https://github.com/jspaezp/ms2ml
 
 **This package is in early development, I am actively taking ideas and requests**
