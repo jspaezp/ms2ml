@@ -27,7 +27,7 @@ tomli = "^2.0.1"
 [tool.poetry.group.lint.dependencies]
 black = "^22.8.0"
 isort = "^5.10.1"
-ruff = "^0.0.46"
+ruff = "~0.0.46"
 autoflake = "^1.5.3"
 pylint = "^2.15.2"
 
@@ -40,7 +40,7 @@ pytest-cov = "^4.0.0"
 [tool.poetry.group.dev.dependencies]
 black = "^22.8.0"
 isort = "^5.10.1"
-ruff = "^0.0.46"
+ruff = "~0.0.46"
 autoflake = "^1.5.3"
 pylint = "^2.15.2"
 pytest = "^7.1.2"
