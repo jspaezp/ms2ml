@@ -18,11 +18,6 @@ repos:
   rev: v0.3.8
   hooks:
     - id: blackdoc
-- repo: https://github.com/asottile/pyupgrade
-  rev: v3.3.2
-  hooks:
-  - id: pyupgrade
-    args: [--py38-plus]
 - repo: https://github.com/pycqa/isort
   rev: 5.12.0
   hooks:

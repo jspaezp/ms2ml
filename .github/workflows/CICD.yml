@@ -33,7 +33,7 @@ jobs:
       - name: Python Poetry Action
         uses: abatilo/actions-poetry@v2.1.6
         with:
-          poetry-version: '1.2.0'
+          poetry-version: '1.3.2'
 
       - name: View poetry --version
         run: poetry --version
@@ -55,7 +55,7 @@ jobs:
       fail-fast: false
       matrix:
         python-version: ['3.9', '3.10', '3.11']
-        poetry-version: ['1.2.0',]
+        poetry-version: ['1.3.2',]
         experimental: [false]
 
     continue-on-error: ${{ matrix.experimental }}
@@ -105,12 +105,12 @@ jobs:
         run:
           quarto --version
 
-      - name: mkdocs
-        run: poetry run python -m mkdocs build --strict
+      # - name: mkdocs
+      #   run: poetry run python -m mkdocs build --strict
 
-      - name: mike
-        if: ${{ endsWith(github.ref, 'heads/main') &&  matrix.python-version == '3.11' }}
-        run: poetry run mike deploy -p main experimental
+      # - name: mike
+      #   if: ${{ endsWith(github.ref, 'heads/main') &&  matrix.python-version == '3.11' }}
+      #   run: poetry run mike deploy -p main experimental
 
       # Upload coverage
       - uses: codecov/codecov-action@v3
@@ -151,7 +151,7 @@ jobs:
       - name: Python Poetry Action
         uses: abatilo/actions-poetry@v2.1.6
         with:
-          poetry-version: '1.2.0'
+          poetry-version: '1.3.2'
       - name: View poetry --version
         run: poetry --version
 
@@ -186,11 +186,11 @@ jobs:
             docker push ghcr.io/jspaezp/ms2ml:v$(poetry version -s)
 
       # Publishing Docs
-      - name: Deploy Docs
-        env:
-            GOOGLE_ANALYTICS_KEY: ${{ secrets.GOOGLE_ANALYTICS_KEY }}
-        run: |
-          poetry run mike deploy -p $(poetry version -s)
+      # - name: Deploy Docs
+      #   env:
+      #       GOOGLE_ANALYTICS_KEY: ${{ secrets.GOOGLE_ANALYTICS_KEY }}
+      #   run: |
+      #     poetry run mike deploy -p $(poetry version -s)
 
       # Publish Package
       - name: Publish Setup

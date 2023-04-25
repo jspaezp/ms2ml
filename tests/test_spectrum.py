@@ -3,7 +3,7 @@ import sys
 import numpy as np
 import pytest
 
-from ms2ml.spectrum import Peptide, Spectrum
+from ms2ml.spectrum import Config, Peptide, Spectrum
 
 
 def _sample_annotated_spectra():
@@ -55,17 +55,25 @@ def sample_annotated_spectra():
     return _sample_annotated_spectra()
 
 
-def test_spectrum(sample_annotated_spectra):
+@pytest.mark.parametrize("mass_mode", ["ppm", "da"])
+def test_spectrum(sample_annotated_spectra, mass_mode):
     pyversion = sys.version_info
     if pyversion.minor >= 11:
         pytest.skip("test requires numba (<=py3.10)")
 
+    if mass_mode == "ppm":
+        config = Config(g_tolerance_units=("ppm", "ppm"), g_tolerances=(50, 50))
+    elif mass_mode == "da":
+        config = Config(g_tolerance_units=("da", "da"), g_tolerances=(0.02, 0.02))
+    else:
+        raise ValueError
     spec = Spectrum(
         mz=sample_annotated_spectra["mzs"][0],
         intensity=sample_annotated_spectra["ints"][0],
         precursor_mz=1000,
         precursor_charge=None,
         ms_level=2,
+        config=config,
     )
     pep = Peptide.from_sequence(sample_annotated_spectra["proforma"][0])
     spec = spec.annotate(pep)

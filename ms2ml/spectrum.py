@@ -829,10 +829,14 @@ class AnnotatedPeptideSpectrum(Spectrum):
     def to_sus(self):
         """Return a spectrum object as a spectrum_utils.spectrum.Spectrum object"""
         msmsspec = super().to_sus()
+        fragment_mode_aliases = {"ppm": "ppm", "da": "Da"}
+        fragment_mode = fragment_mode_aliases[
+            self.config.g_tolerance_units[self.ms_level - 1]
+        ]
         msmsspec = msmsspec.annotate_proforma(
             proforma_str=self.precursor_peptide.to_proforma(),
             fragment_tol_mass=self.config.g_tolerances[self.ms_level - 1],
-            fragment_tol_mode=self.config.g_tolerance_units[self.ms_level - 1],
+            fragment_tol_mode=fragment_mode,
             ion_types=self.config.ion_series,
             neutral_losses=True,
         )
