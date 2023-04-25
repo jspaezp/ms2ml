@@ -1,10 +1,13 @@
 [tool.poetry]
 name = "ms2ml"
-version = "0.0.34"
+version = "0.0.35"
 description = "Provides an intermediate layer between mass spec data and ML applications, such as encoding."
 authors = ["J. Sebastian Paez <jspaezp@users.noreply.github.com>"]
 license = "Apache 2.0"
 include = ["ms2ml/unimod/unimod.xml"]
+readme = "README.md"
+homepage = "jspaezp.github.io/ms2ml/main"
+repository = "https://github.com/jspaezp/ms2ml"
 
 [tool.poetry.dependencies]
 python = ">3.8,<3.12"
