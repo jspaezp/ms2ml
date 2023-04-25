@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "ms2ml"
-version = "0.0.33"
+version = "0.0.34"
 description = "Provides an intermediate layer between mass spec data and ML applications, such as encoding."
 authors = ["J. Sebastian Paez <jspaezp@users.noreply.github.com>"]
 license = "Apache 2.0"
@@ -14,7 +14,7 @@ lxml = "^4.9.1" # Needed due to a non-exclicit dependency in pyteomics
 numpy = "^1.23.2"
 psims = "^1.2.3"
 lark = "^1.1.2"
-pandas = "^1.4.4"
+pandas = "^2.0.1"
 pandas-stubs = { version = "^1.5.1.221024", python = ">=3.8,<3.11" }
 uniplot = ">=0.7,<0.9"
 tqdm = "^4.64.1"
