@@ -10,7 +10,7 @@ repos:
   - id: trailing-whitespace
     exclude: "(tests/data/mgf/.*.mgf)"
 - repo: https://github.com/psf/black
-  rev: 22.12.0
+  rev: 23.3.0
   hooks:
     - id: black
       language_version: python3.8
@@ -19,25 +19,25 @@ repos:
   hooks:
     - id: blackdoc
 - repo: https://github.com/asottile/pyupgrade
-  rev: v3.3.1
+  rev: v3.3.2
   hooks:
   - id: pyupgrade
     args: [--py38-plus]
 - repo: https://github.com/pycqa/isort
-  rev: 5.11.4
+  rev: 5.12.0
   hooks:
     - id: isort
       name: isort (python)
 - repo: https://github.com/PyCQA/autoflake
-  rev: v2.0.0
+  rev: v2.1.1
   hooks:
   - id: autoflake
 - repo: https://github.com/charliermarsh/ruff-pre-commit
-  rev: v0.0.235
+  rev: v0.0.263
   hooks:
     - id: ruff
 - repo: https://github.com/python-poetry/poetry
-  rev: 1.3.0
+  rev: 1.4.0
   hooks:
     - id: poetry-check
     - id: poetry-lock
