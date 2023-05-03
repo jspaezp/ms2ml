@@ -68,11 +68,8 @@ optional = true
 # Need to restrict explicitly the python version until llvm (numba)
 # catches up with the python version ... which also requires specifying
 # all of these dependencies explicitly.
-spectrum-utils = {version = "^0.4.1", python = ">3.8,<3.11"}
-# The version of matplotlib is pinned until the release of
-# spectrum utils handles it correctly...
-# matplotlib = "^3.6.0"
-matplotlib = {version=">=3.4.0,<3.5.0", python=">3.8,<3.11"}
+spectrum-utils = {version = "^0.4.2", python = ">3.8,<3.11"}
+matplotlib = "^3.7.0"
 numba = {version = ">=0.53.2", python = ">3.8,<3.11"}
 llvmlite = {version = ">=0.39.1", python = ">3.8,<3.11"}
 numpy = {version = "<1.24.0", python = ">3.8,<3.11"}

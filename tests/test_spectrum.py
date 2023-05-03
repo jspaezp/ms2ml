@@ -82,8 +82,3 @@ def test_spectrum(sample_annotated_spectra, mass_mode):
         assert str(anno)[0] in ("b", "y")
 
     spec.plot()
-    return spec
-
-
-if __name__ == "__main__":
-    spec = test_spectrum(sample_annotated_spectra=_sample_annotated_spectra())
