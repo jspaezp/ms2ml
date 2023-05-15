@@ -52,7 +52,7 @@ class MZMLAdapter(BaseAdapter):
         self._index_example = self._index_ids[0]
 
         if "scan" in self._index_example:
-            self._index_template = ".*scan={SCAN_NUM}(\\s|$)"
+            self._index_template = ".*(scan|index)={SCAN_NUM}(\\s|$)"
 
         self.reader.reset()
 
@@ -133,7 +133,10 @@ class MZMLAdapter(BaseAdapter):
 
             if "spectrumRef" in precursor:
                 prec_scan = precursor["spectrumRef"]
-                precursor["ScanNumber"] = prec_scan[prec_scan.index("scan=") + 5 :]
+                precursor["ScanNumber"] = (
+                    re.match(self._index_template.format(SCAN_NUM="(.+)"), prec_scan)
+                    .groups(1)
+                )
             else:
                 precursor["ScanNumber"] = float("nan")
 
