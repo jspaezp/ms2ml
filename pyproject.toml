@@ -6,7 +6,7 @@ authors = ["J. Sebastian Paez <jspaezp@users.noreply.github.com>"]
 license = "Apache 2.0"
 include = ["ms2ml/unimod/unimod.xml"]
 readme = "README.md"
-homepage = "jspaezp.github.io/ms2ml/main"
+homepage = "https://jspaezp.github.io/ms2ml/main"
 repository = "https://github.com/jspaezp/ms2ml"
 
 [tool.poetry.dependencies]
