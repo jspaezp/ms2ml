@@ -53,6 +53,8 @@ class MZMLAdapter(BaseAdapter):
 
         if "scan" in self._index_example:
             self._index_template = ".*(scan|index)={SCAN_NUM}(\\s|$)"
+        else:
+            raise RuntimeError("Cound not determine scan names for the file.")
 
         self.reader.reset()
 
