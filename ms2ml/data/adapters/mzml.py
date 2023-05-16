@@ -213,8 +213,16 @@ class MZMLAdapter(BaseAdapter):
             extras=spec_dict,
             config=self.config,
         )
-        spec_out.base_peak = spec_dict["base peak intensity"]
-        spec_out.tic = spec_dict["total ion current"]
+        spec_out.base_peak = (
+            spec_dict["base peak intensity"]
+            if "base peak intensity" in spec_dict
+            else intensity.max()
+        )
+        spec_out.tic = (
+            spec_dict["total ion current"]
+            if "total ion current" in spec_dict
+            else intensity.sum()
+        )
 
         return spec_out
 
