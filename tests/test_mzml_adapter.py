@@ -29,6 +29,7 @@ def test_mzml_adapter_works(shared_datadir):
 
 def test_bad_mzml(monkeypatch):
     """Test raise a no scan names error"""
+
     class DummyIndex:
         mapping = {"spectrum": [{"blah": 1}]}
 

@@ -135,10 +135,9 @@ class MZMLAdapter(BaseAdapter):
 
             if "spectrumRef" in precursor:
                 prec_scan = precursor["spectrumRef"]
-                precursor["ScanNumber"] = (
-                    re.match(self._index_template.format(SCAN_NUM="(.+)"), prec_scan)
-                    .groups(1)
-                )
+                precursor["ScanNumber"] = re.match(
+                    self._index_template.format(SCAN_NUM="(.+)"), prec_scan
+                ).groups(1)
             else:
                 precursor["ScanNumber"] = float("nan")
 
