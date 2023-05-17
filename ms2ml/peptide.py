@@ -125,6 +125,12 @@ class Peptide(ProForma):
             >>> p = Peptide.from_sequence("[UNIMOD:1]-AMC")
             >>> p.to_massdiff_seq()
             'A[+42.010565]MC[+57.021464]'
+            >>> Peptide.from_sequence(
+            ...     "AM[+15.00]C",
+            ...     config=Config(
+            ...         mod_mode="delta_mass",
+            ...         mod_fixed_mods=("[+45]@C",))).to_massdiff_seq()
+            'AM[+15.000000]C[+45.000000]'
         """
         aas = np.array(self.config.encoding_aa_order)
 
