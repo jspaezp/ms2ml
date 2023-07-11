@@ -152,7 +152,7 @@ class EncyclopeDIAParser(BaseParser):
 
 
 def write_encyclopedia(
-    file,
+    lib_file,
     spectra: Iterator[AnnotatedPeptideSpectrum],
     source_file="ms2ml",
 ):
@@ -160,7 +160,7 @@ def write_encyclopedia(
 
     Parameters
     ----------
-    file : PathLike
+    lib_file : PathLike
         Path
     spectra: Iterator[AnnotatedPeptideSpectrum]
         Iterator over the spectra to write
@@ -168,36 +168,52 @@ def write_encyclopedia(
         String depicting what to use as a source file in the .blib database
     """
 
-    logger.debug("Writing EncyclopeDIA database to {}", file)
-    con = sqlite3.connect(file)
-    for x in _ENTRIES_SCHEMA:
-        con.execute(x)
-        con.commit()
+    logger.debug("Writing EncyclopeDIA database to {}", lib_file)
+    con = sqlite3.connect(lib_file)
+    for schema in _ENTRIES_SCHEMA:
+        # Create the tables only if they do not exist:
+        try:
+            con.execute(schema)
+            con.commit()
+        except sqlite3.OperationalError:
+            pass
 
     num_spectra = 0
+    spec_to_add = []
+    spec_query = None
     for spec in spectra:
         seq = spec.precursor_peptide.stripped_sequence
-        prots = _spec_to_peptoprotein(spec)
-        for prot in prots:
-            con.execute(
-                "INSERT INTO peptidetoprotein"
-                " (PeptideSeq, isDecoy, ProteinAccession)"
-                " VALUES(?, ?, ?)",
-                (seq, False, prot),
-            )
-            con.commit()
-        inp_dict = _spec_to_entry(spec, source_file=source_file)
-        inp = tuple(inp_dict.values())
-        con.execute(
-            f"INSERT INTO entries ({', '.join(inp_dict.keys())})"
-            f" VALUES({', '.join(['?' for _ in inp_dict.keys()])})",
-            inp,
+        prots = [(seq, False, p) for p in _spec_to_peptoprotein(spec)]
+        con.executemany(
+            "INSERT INTO peptidetoprotein"
+            " (PeptideSeq, isDecoy, ProteinAccession)"
+            " VALUES(?, ?, ?)",
+            prots,
         )
         con.commit()
+
+        inp_dict = _spec_to_entry(spec, source_file=source_file)
+        spec_to_add.append(tuple(inp_dict.values()))
         num_spectra += 1
 
+        if spec_query is None:
+            spec_query = f"""
+            INSERT INTO entries ({', '.join(inp_dict.keys())})
+            VALUES({', '.join(['?' for _ in inp_dict.keys()])})
+            """
+
+        # Add spectra in batches of 100k. This is arbitrary.
+        if num_spectra % 100000:
+            con.executemany(spec_query, spec_to_add)
+            con.commit()
+
+    # Commit any remaining:
+    if spec_to_add:
+        con.executemany(spec_query, spec_to_add)
+        con.commit()
+
     con.close()
-    logger.info("Finished writing EncyclopeDIA database to {}", file)
+    logger.info("Finished writing EncyclopeDIA database to {}", lib_file)
     logger.info("Wrote {} spectra", num_spectra)
 
 
