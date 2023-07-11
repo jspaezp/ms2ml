@@ -203,9 +203,10 @@ def write_encyclopedia(
             """
 
         # Add spectra in batches of 100k. This is arbitrary.
-        if num_spectra % 100000:
+        if not num_spectra % 100000:
             con.executemany(spec_query, spec_to_add)
             con.commit()
+            spec_to_add = []
 
     # Commit any remaining:
     if spec_to_add:
