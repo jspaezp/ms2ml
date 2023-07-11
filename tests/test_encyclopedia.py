@@ -44,6 +44,17 @@ def test_writing_encyclopedia(tmp_path):
 
     assert i == 1
 
+    # Try appending more specs:
+    write_encyclopedia(tmp_path / "test.dlib", specs)
+    adapter = EncyclopeDIAAdapter(tmp_path / "test.dlib", config=Config())
+    for i, spec in enumerate(adapter.parse()):
+        print(spec)
+        assert isinstance(spec, AnnotatedPeptideSpectrum)
+        assert np.all(spec.mz >= 0)
+        assert np.all(spec.intensity >= 0)
+
+    assert i == 3
+
 
 def test_mokapot_encyclopedia_export(shared_datadir, tmp_path):
     peptides_path = shared_datadir / "mokapot/mokapot.peptides.txt"
