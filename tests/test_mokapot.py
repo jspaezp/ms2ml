@@ -22,3 +22,11 @@ def test_mokapot_adapter(shared_datadir):
     )
     elem = next(adapter.parse())
     assert isinstance(elem, AnnotatedPeptideSpectrum)
+
+    adapter = MokapotPSMAdapter(
+        shared_datadir / "mokapot" / "mokapot.psms.txt",
+        config=config,
+        raw_file_locations=[raw_location],
+    )
+    elem = next(adapter.parse())
+    assert isinstance(elem, AnnotatedPeptideSpectrum)

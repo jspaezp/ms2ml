@@ -3,6 +3,8 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Any, Callable, Iterator
 
+from loguru import logger
+
 from ms2ml.config import Config
 from ms2ml.data.adapters.base import BaseAdapter
 from ms2ml.data.adapters.mzml import MZMLAdapter
@@ -75,8 +77,6 @@ class MokapotPSMAdapter(BaseAdapter, MokapotPSMParser):
         'mokapot score': 3.364551}
 
         """
-        seq = f"{spec_dict['peptidesequence']}/{spec_dict['precursorcharge']}"
-        pep = Peptide.from_proforma_seq(seq, config=self.config)
 
         if spec_dict["rawfile"] not in self.mzml_adapters:
             self.mzml_adapters[spec_dict["rawfile"]] = MZMLAdapter(
@@ -85,7 +85,29 @@ class MokapotPSMAdapter(BaseAdapter, MokapotPSMParser):
             )
 
         spec = self.mzml_adapters[spec_dict["rawfile"]][spec_dict["spectrumindex"]]
+
+        if "precursorcharge" in spec_dict:
+            spec_charge = spec_dict["precursorcharge"]
+        elif (spec_charge := spec.precursor_charge) is not None:
+            pass
+        else:
+            spec_charge = "2"
+            logger.error(
+                "No precursor charge found in the mokapot file or the raw data.",
+                "Will default to 2 for now.",
+                "Consider adding a 'charge_state' column to your mokapot file.",
+            )
+
+        seq = f"{spec_dict['peptidesequence']}/{spec_charge}"
+        pep = Peptide.from_proforma_seq(seq, config=self.config)
         spec = spec.annotate(pep)
+        annot_intensity = sum(spec.fragment_intensities.values())
+        tot_intensity = spec.tic
+        annot_frac = annot_intensity / tot_intensity
+        if annot_frac < 0.01:
+            logger.warning(
+                f"Only {annot_frac:.2%} of the intensity is annotated for {spec}."
+            )
         spec.extras.update(spec_dict)
 
         return spec

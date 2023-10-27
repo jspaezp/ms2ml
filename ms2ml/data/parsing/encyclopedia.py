@@ -1,6 +1,7 @@
 import sqlite3
 import struct
 import zlib
+from pathlib import Path
 from typing import Iterator
 
 import numpy as np
@@ -12,17 +13,40 @@ from .base import BaseParser
 
 # .schema peptidetoprotein
 _ENTRIES_SCHEMA = [
-    "CREATE TABLE entries ( PrecursorMz double not null, PrecursorCharge int not null, PeptideModSeq string not null, PeptideSeq string not null, Copies int not null, RTInSeconds double not null, Score double not null, MassEncodedLength int not null, MassArray blob not null, IntensityEncodedLength int not null, IntensityArray blob not null, CorrelationEncodedLength int, CorrelationArray blob, RTInSecondsStart double, RTInSecondsStop double, MedianChromatogramEncodedLength int, MedianChromatogramArray blob, SourceFile string not null );",  # noqa
+    (
+        "CREATE TABLE entries ( "
+        "PrecursorMz double not null, "
+        "PrecursorCharge int not null, "
+        "PeptideModSeq string not null, "
+        "PeptideSeq string not null, "
+        "Copies int not null, "
+        "RTInSeconds double not null, "
+        "IonMobility double, "  # This is added by me ...
+        "Score double not null, "
+        "MassEncodedLength int not null, "
+        "MassArray blob not null, IntensityEncodedLength int not null, "
+        "IntensityArray blob not null, "
+        "CorrelationEncodedLength int, "
+        "CorrelationArray blob, "
+        "RTInSecondsStart double, "
+        "RTInSecondsStop double, "
+        "MedianChromatogramEncodedLength int, "
+        "MedianChromatogramArray blob, "
+        "SourceFile string not null );"
+    ),  # noqa
+    "CREATE TABLE metadata ( Key string not null, Value string not null );",
+    "CREATE TABLE peptidetoprotein (PeptideSeq string not null,isDecoy boolean,ProteinAccession string not null);",  # noqa
+    "INSERT INTO metadata ('Key', 'Value') VALUES ('EncyclopediaVersion', '1.12.34') ;",
+    "INSERT INTO metadata ('Key', 'Value') VALUES ('version', '0.1.14') ;",
+]
+
+_INDEX_SCHEMA = [
+    "CREATE INDEX 'Key_Metadata_index' on 'metadata' ('Key' ASC);",
+    "CREATE INDEX 'ProteinAccession_PeptideToProtein_index' on 'peptidetoprotein' ('ProteinAccession' ASC);",  # noqa
+    "CREATE INDEX 'PeptideSeq_PeptideToProtein_index' on 'peptidetoprotein' ('PeptideSeq' ASC);",  # noqa
     "CREATE INDEX 'PeptideModSeq_PrecursorCharge_SourceFile_Entries_index' on 'entries' ('PeptideModSeq' ASC, 'PrecursorCharge' ASC, 'SourceFile' ASC);",  # noqa
     "CREATE INDEX 'PeptideSeq_Entries_index' on 'entries' ('PeptideSeq' ASC);",
     "CREATE INDEX 'PrecursorMz_Entries_index' on 'entries' ('PrecursorMz' ASC);",
-    "CREATE TABLE metadata ( Key string not null, Value string not null );",
-    "CREATE INDEX 'Key_Metadata_index' on 'metadata' ('Key' ASC);",
-    "INSERT INTO metadata ('Key', 'Value') VALUES ('EncyclopediaVersion', '1.12.34') ;",
-    "INSERT INTO metadata ('Key', 'Value') VALUES ('version', '0.1.14') ;",
-    "CREATE TABLE peptidetoprotein (PeptideSeq string not null,isDecoy boolean,ProteinAccession string not null);",  # noqa
-    "CREATE INDEX 'ProteinAccession_PeptideToProtein_index' on 'peptidetoprotein' ('ProteinAccession' ASC);",  # noqa
-    "CREATE INDEX 'PeptideSeq_PeptideToProtein_index' on 'peptidetoprotein' ('PeptideSeq' ASC);",  # noqa
 ]
 
 
@@ -174,28 +198,35 @@ def write_encyclopedia(
         con.execute(x)
         con.commit()
 
+    con.execute("""PRAGMA synchronous = EXTRA""")
+    con.execute("""PRAGMA journal_mode = WAL""")
+
     num_spectra = 0
+    cur = con.cursor()
     for spec in spectra:
         seq = spec.precursor_peptide.stripped_sequence
         prots = _spec_to_peptoprotein(spec)
         for prot in prots:
-            con.execute(
+            cur.execute(
                 "INSERT INTO peptidetoprotein"
                 " (PeptideSeq, isDecoy, ProteinAccession)"
                 " VALUES(?, ?, ?)",
                 (seq, False, prot),
             )
-            con.commit()
         inp_dict = _spec_to_entry(spec, source_file=source_file)
         inp = tuple(inp_dict.values())
-        con.execute(
+        cur.execute(
             f"INSERT INTO entries ({', '.join(inp_dict.keys())})"
             f" VALUES({', '.join(['?' for _ in inp_dict.keys()])})",
             inp,
         )
-        con.commit()
         num_spectra += 1
 
+    logger.info("Indexing the database.")
+    for x in _INDEX_SCHEMA:
+        con.execute(x)
+
+    con.commit()
     con.close()
     logger.info("Finished writing EncyclopeDIA database to {}", file)
     logger.info("Wrote {} spectra", num_spectra)
@@ -209,6 +240,7 @@ def _spec_to_entry(spec: AnnotatedPeptideSpectrum, source_file="ms2ml") -> dict:
         "PeptideSeq": spec.precursor_peptide.stripped_sequence,
         "Copies": 1,
         "RTInSeconds": spec.retention_time.seconds(),
+        "IonMobility": spec.precursor_ion_mobility,
         "Score": 1,
         "MassEncodedLength": len(spec.mz) * 8,
         "MassArray": _compress_array(spec.mz, "d"),
@@ -220,6 +252,8 @@ def _spec_to_entry(spec: AnnotatedPeptideSpectrum, source_file="ms2ml") -> dict:
     if np.isnan(out["RTInSeconds"]):
         logger.debug("Spectrum {} has no retention time, using 0", spec)
         out["RTInSeconds"] = 0
+    else:
+        out["SourceFile"] = Path(spec.retention_time.run).name
 
     return out
 
