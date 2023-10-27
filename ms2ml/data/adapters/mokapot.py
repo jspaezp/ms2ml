@@ -91,6 +91,7 @@ class MokapotPSMAdapter(BaseAdapter, MokapotPSMParser):
         elif (spec_charge := spec.precursor_charge) is not None:
             pass
         else:
+            spec_charge = "2"
             logger.error(
                 "No precursor charge found in the mokapot file or the raw data.",
                 "Will default to 2 for now.",
