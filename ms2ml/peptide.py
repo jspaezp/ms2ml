@@ -127,9 +127,8 @@ class Peptide(ProForma):
             'A[+42.010565]MC[+57.021464]'
             >>> Peptide.from_sequence(
             ...     "AM[+15.00]C",
-            ...     config=Config(
-            ...         mod_mode="delta_mass",
-            ...         mod_fixed_mods=("[+45]@C",))).to_massdiff_seq()
+            ...     config=Config(mod_mode="delta_mass", mod_fixed_mods=("[+45]@C",)),
+            ... ).to_massdiff_seq()
             'AM[+15.000000]C[+45.000000]'
         """
         aas = np.array(self.config.encoding_aa_order)
@@ -276,7 +275,13 @@ class Peptide(ProForma):
         """
 
         curr_mass = np.einsum("ij,j->i", self.aa_to_onehot(), self.config.aa_masses)
-        curr_mass += np.einsum("ij,j->i", self.mod_to_onehot(), self.config.mod_masses)
+        if self.config.mod_mode == "delta_mass":
+            mod_masses = self.mod_to_vector()
+            curr_mass += mod_masses
+        elif self.config.mod_mode == "unimod":
+            curr_mass += np.einsum(
+                "ij,j->i", self.mod_to_onehot(), self.config.mod_masses
+            )
 
         return curr_mass.astype(np.float32)
 
@@ -476,6 +481,12 @@ class Peptide(ProForma):
             [0, 1, 0, 0, 0, 0, 0],
             [1, 0, 0, 0, 0, 0, 0]], dtype=int32)
         """
+        if self.config.mod_mode == "delta_mass":
+            raise RuntimeError(
+                "It is not possible to one hot encode delta mass mods"
+                "You might want to set a different configuration value for `mod_mode`"
+                "(from `delta_mass` to `unimod`)"
+            )
         vector = self.mod_to_vector()
 
         out = np.zeros(
@@ -660,8 +671,15 @@ class Peptide(ProForma):
 
         vector = self.mod_seq
         order_mapping = self.config.encoding_mod_order_mapping
-        vector = [order_mapping[x] for x in vector]
-        return np.array(vector)
+        try:
+            vector = [order_mapping[x] for x in vector]
+            vector = np.array(vector)
+        except KeyError:
+            if self.config.mod_mode == "delta_mass":
+                vector = np.array(vector, dtype=float)
+                vector[np.isnan(vector)] = 0
+
+        return vector
 
     @classmethod
     def from_vector(cls, aa_vector: list[int], mod_vector, config: Config):

@@ -18,7 +18,7 @@ def test_encyclopedia_adapter(shared_datadir):
         assert np.all(spec.intensity >= 0)
 
 
-def test_enciclopedia_decoding():
+def test_encyclopedia_decoding():
     mass_enc_len = 48
     mass_enc = b"x\x9c\x010\x00\xcf\xff@vq\xeat\x91\xe7\r@w\xd3iu3!\xaf@~\xe4\xc1\xc8\xacy\x12@\x84\x8a\xe2\x96\xba\xb9q@\x8a[\x85\x05\x90\x04<@\x8d\xf3\xbc3xI\xe0@>\x17Q"  # noqa
     mass_dec = _extract_array(mass_enc, "d")
@@ -32,10 +32,10 @@ def test_enciclopedia_decoding():
     assert len(int_dec) * 4 == int_enc_len
 
 
-def test_writting_enciclopedia(tmpdir):
+def test_writting_encyclopedia(tmp_path):
     specs = [AnnotatedPeptideSpectrum._sample(), AnnotatedPeptideSpectrum._sample()]
-    write_encyclopedia(tmpdir / "test.dlib", specs)
-    adapter = EncyclopeDIAAdapter(tmpdir / "test.dlib", config=Config())
+    write_encyclopedia(tmp_path / "test.dlib", specs)
+    adapter = EncyclopeDIAAdapter(tmp_path / "test.dlib", config=Config())
     for i, spec in enumerate(adapter.parse()):
         assert isinstance(spec, AnnotatedPeptideSpectrum)
         assert np.all(spec.mz >= 0)
@@ -44,7 +44,7 @@ def test_writting_enciclopedia(tmpdir):
     assert i == 1
 
 
-def test_mokapot_enciclopedia_export(shared_datadir, tmp_path):
+def test_mokapot_encyclopedia_export(shared_datadir, tmp_path):
     peptides_path = shared_datadir / "mokapot/mokapot.peptides.txt"
     lookup_path = shared_datadir / "mzml/"
     output_path = tmp_path / "encyclopedia.dlib"
