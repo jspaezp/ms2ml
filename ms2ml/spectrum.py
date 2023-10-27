@@ -606,6 +606,7 @@ class AnnotatedPeptideSpectrum(Spectrum):
         >>> spectrum.fragments
         {'y1^1': AnnotatedIon(mass=147.11334,
         charge=1, position=1, ion_series='y', intensity=200.0, neutral_loss=None)}
+
     """
 
     # TODO find a way to not make this optional ...

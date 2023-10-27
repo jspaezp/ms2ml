@@ -111,6 +111,12 @@ class Peptide(ProForma):
             >>> p = Peptide.from_sequence("AMC")
             >>> p.to_proforma()
             '<[UNIMOD:4]@C>AMC'
+            >>> p = Peptide.from_sequence(
+            ...     "[+123.23]-AMC",
+            ...     config=Config(mod_mode="delta_mass", mod_fixed_mods=()),
+            ... )
+            >>> p.to_proforma()
+            '[+123.23]-AMC'
         """
 
         return to_proforma(self.sequence, **self.properties)
@@ -667,6 +673,11 @@ class Peptide(ProForma):
             >>> foo = Peptide.from_sequence("AMC")  # Implicit Carbamido.
             >>> foo.mod_to_vector()
             array([0, 0, 0, 1, 0])
+            >>> config = Config(
+            ...     mod_mode="delta_mass",
+            ...     mod_fixed_mods=(),
+            ... )
+            >>> foo = Peptide.from_sequence("AM[+123.23]C", config=config)
         """
 
         vector = self.mod_seq
