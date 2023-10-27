@@ -17,6 +17,7 @@ class MokapotPSMParser(BaseParser):
     def __init__(self, file) -> None:
         BaseParser.__init__(self)
         self.file = file
+        self.only_targets = True
         self.max_q = 0.01
 
     def parse(self) -> Iterator:
@@ -27,6 +28,8 @@ class MokapotPSMParser(BaseParser):
         df.columns = map(str.lower, df.columns)
         logger.debug(f"Loaded {len(df)} rows from {file}")
         df = df[df["mokapot q-value"] <= self.max_q]
+        if self.only_targets:
+            df = df[df["label"].astype(bool)]
         logger.warning(f"Filtered to {len(df)} rows with q-value <= {self.max_q}")
 
         if "mzml_file" in df.columns:

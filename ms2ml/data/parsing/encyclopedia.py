@@ -206,13 +206,14 @@ def write_encyclopedia(
     for spec in spectra:
         seq = spec.precursor_peptide.stripped_sequence
         prots = _spec_to_peptoprotein(spec)
-        for prot in prots:
-            cur.execute(
-                "INSERT INTO peptidetoprotein"
-                " (PeptideSeq, isDecoy, ProteinAccession)"
-                " VALUES(?, ?, ?)",
-                (seq, False, prot),
-            )
+        prots = [(seq, False, p) for p in prots]
+        con.executemany(
+            "INSERT INTO peptidetoprotein"
+            " (PeptideSeq, isDecoy, ProteinAccession)"
+            " VALUES(?, ?, ?)",
+            prots,
+        )
+
         inp_dict = _spec_to_entry(spec, source_file=source_file)
         inp = tuple(inp_dict.values())
         cur.execute(
