@@ -11,7 +11,7 @@ annotated_spectrum_adapter_files = [
         AnnotatedPeptideSpectrum,
     ],
     ["mokapot/mokapot.psms.txt", AnnotatedPeptideSpectrum],
-    ["mokapot/mokapot.peptides.txt", AnnotatedPeptideSpectrum],
+    ["mokapot/1_mokapot.peptides.txt", AnnotatedPeptideSpectrum],
     ["bibliospec/Firstexp.blib", AnnotatedPeptideSpectrum],
     ["encyclopedia/pan_human_library_600to603.dlib", AnnotatedPeptideSpectrum],
     ["pin/sample_tiny_hela.pin", AnnotatedPeptideSpectrum],

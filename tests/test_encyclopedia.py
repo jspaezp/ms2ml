@@ -45,7 +45,7 @@ def test_writting_encyclopedia(tmp_path):
 
 
 def test_mokapot_encyclopedia_export(shared_datadir, tmp_path):
-    peptides_path = shared_datadir / "mokapot/mokapot.peptides.txt"
+    peptides_path = shared_datadir / "mokapot/1_mokapot.peptides.txt"
     lookup_path = shared_datadir / "mzml/"
     output_path = tmp_path / "encyclopedia.dlib"
 
