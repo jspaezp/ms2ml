@@ -1,5 +1,5 @@
 
-FROM --platform=linux/amd64 python:slim
+FROM --platform=linux/amd64 python:3.11-slim
 RUN apt update && apt install procps -y
 LABEL MAINTAINER="J. Sebastian Paez"
 COPY dist/*.whl /tmp/
