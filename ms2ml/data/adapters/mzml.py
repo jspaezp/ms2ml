@@ -1,5 +1,5 @@
 import re
-from functools import lru_cache
+from functools import cached_property, lru_cache
 from typing import Callable, Generator, Optional
 
 import pandas as pd
@@ -192,6 +192,7 @@ class MZMLAdapter(BaseAdapter):
 
         rt = min([x["scan start time"] for x in spec_dict["scanList"]["scan"]])
         rt = RetentionTime(rt=float(rt), units=rt.unit_info, run=self.file)
+        ims = spec_dict.get("precursor inverse reduced ion mobility", None)
 
         mz = spec_dict.pop("m/z array")
         intensity = spec_dict.pop("intensity array")
@@ -211,6 +212,7 @@ class MZMLAdapter(BaseAdapter):
             instrument=instrument,
             retention_time=rt,
             extras=spec_dict,
+            precursor_ion_mobility=ims,
             config=self.config,
         )
         spec_out.base_peak = (
@@ -229,19 +231,27 @@ class MZMLAdapter(BaseAdapter):
     def __repr__(self):
         return f"MS2ML MZML Adapter for {self.file}"
 
+    @cached_property
+    def num_to_scan_ids(self):
+        scannum_regex = re.compile(self._index_template.format(SCAN_NUM=r"(\d+)"))
+        keep_dict = {}
+
+        for x in self._index_ids:
+            _key = int(scannum_regex.match(x).group(2))
+            if _key in keep_dict:
+                raise RuntimeError(f"Duplicate scan number {_key} found in {self.file}")
+            keep_dict[_key] = x
+
+        return keep_dict
+
     @lru_cache(maxsize=20)
     def __getitem__(self, idx):
         reader = self.reader
         spec = None
 
         if hasattr(self, "_index_template") and isinstance(idx, int):
-            reg_match = re.compile(self._index_template.format(SCAN_NUM=idx))
-            matching_idxs = [x for x in self._index_ids if reg_match.match(x)]
-            try:
-                if len(matching_idxs) == 1:
-                    spec = reader[matching_idxs[0]]
-            except TypeError:
-                pass
+            index_string = self.num_to_scan_ids[idx]
+            spec = reader[index_string]
 
         if spec is None:
             try:

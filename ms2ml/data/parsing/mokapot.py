@@ -17,6 +17,7 @@ class MokapotPSMParser(BaseParser):
     def __init__(self, file) -> None:
         BaseParser.__init__(self)
         self.file = file
+        self.only_targets = True
         self.max_q = 0.01
 
     def parse(self) -> Iterator:
@@ -27,24 +28,41 @@ class MokapotPSMParser(BaseParser):
         df.columns = map(str.lower, df.columns)
         logger.debug(f"Loaded {len(df)} rows from {file}")
         df = df[df["mokapot q-value"] <= self.max_q]
-        logger.debug(f"Filtered to {len(df)} rows with q-value <= {self.max_q}")
+        if self.only_targets:
+            df = df[df["label"].astype(bool)]
+        logger.warning(f"Filtered to {len(df)} rows with q-value <= {self.max_q}")
 
-        for row_dict in df.to_dict(orient="records"):
-            if "mzml_file" in row_dict and "scannr" in row_dict:
-                row_dict["rawfile"] = Path(row_dict["mzml_file"]).stem
-                row_dict["spectrumindex"] = int(row_dict["scannr"])
-                row_dict["precursorcharge"] = int(row_dict["charge_state"])
-                row_dict["matchrank"] = 1
-            elif "specid" in row_dict:
-                spec_id: str = str(row_dict["specid"])
-                sid_match = self.SPECID_REGEX.match(spec_id)
-                if sid_match is None:
-                    raise ValueError(f"Could not parse specid {spec_id}")
-                raw_file, index, charge, rank = sid_match.groups(spec_id)
-                row_dict["rawfile"] = Path(raw_file).stem
-                row_dict["spectrumindex"] = int(index)
-                row_dict["precursorcharge"] = int(charge)
-                row_dict["matchrank"] = int(rank)
+        if "mzml_file" in df.columns:
+            df["rawfile"] = df["mzml_file"].apply(lambda x: Path(x).stem)
+            df["spectrumindex"] = df["scannr"].astype(int)
+            if "charge_state" in df.columns:
+                df["precursorcharge"] = df["charge_state"].astype(int)
+            elif "charge" in df.columns:
+                df["precursorcharge"] = df["charge"].astype(int)
+            else:
+                logger.warning(
+                    "No charge column found in mokapot file, "
+                    "will try to infer from the raw data"
+                )
+
+            df["matchrank"] = 1
+
+        elif "specid" in df.columns:
+            extracts = df["specid"].str.extract(self.SPECID_REGEX)
+            df["rawfile"] = extracts[0].apply(lambda x: Path(x).stem)
+            df["spectrumindex"] = extracts[1].astype(int)
+            df["precursorcharge"] = extracts[2].astype(int)
+            df["matchrank"] = extracts[3].astype(int)
+
+        df = df.sort_values(by=["rawfile", "spectrumindex", "matchrank"]).reset_index(
+            drop=True
+        )
+
+        logger.info(f"Starting to parse the mokapot file (n={len(df)}).")
+        for i, row_dict in enumerate(df.to_dict(orient="records")):
+            # Log every 1k rows
+            if i % 1000 == 0:
+                logger.debug(f"Processed {i} rows.")
 
             peptide = row_dict["peptide"]
             # TODO move parsing the peptide seq to a separate function

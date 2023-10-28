@@ -70,6 +70,7 @@ class Spectrum:
     retention_time: RetentionTime | float = field(
         default_factory=lambda: RetentionTime(rt=float("nan"), units="seconds")
     )
+    precursor_ion_mobility: float | None = None
     config: Config = field(repr=False, default_factory=get_default_config)
 
     def __post_init__(self):
@@ -605,6 +606,7 @@ class AnnotatedPeptideSpectrum(Spectrum):
         >>> spectrum.fragments
         {'y1^1': AnnotatedIon(mass=147.11334,
         charge=1, position=1, ion_series='y', intensity=200.0, neutral_loss=None)}
+
     """
 
     # TODO find a way to not make this optional ...
@@ -791,6 +793,7 @@ class AnnotatedPeptideSpectrum(Spectrum):
             extras={},
             retention_time=RetentionTime(rt=nan, units='seconds',
             run=None),
+            precursor_ion_mobility=None,
             precursor_peptide=Peptide([...], {...}), precursor_isotope=0)
 
         """
