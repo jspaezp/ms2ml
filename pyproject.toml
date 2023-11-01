@@ -18,7 +18,7 @@ numpy = "^1.24.4"
 psims = "^1.2.3"
 lark = "^1.1.2"
 pandas = "^2.0.1"
-pandas-stubs = { version = "^1.5.3.230227", python = ">=3.8,<3.11" }
+pandas-stubs = { version = ">=1.5.3.230227,<3.0.0.0", python = ">=3.8,<3.11" }
 # uniplot = ">=0.7,<0.9"
 uniplot = "^0.9.2"
 tqdm = "^4.64.1"
