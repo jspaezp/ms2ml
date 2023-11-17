@@ -313,9 +313,9 @@ class Spectrum:
         assert start < end
 
         if relative:
-            if isinstance(relative, float) or isinstance(relative, int):
+            if isinstance(relative, (float, int)):
                 relative_value = float(relative)
-            else:
+            else:  # noqa
                 if self.precursor_mz:
                     relative_value = float(self.precursor_mz)
                 else:

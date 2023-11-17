@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from typing import Any, Callable, Iterator
 
 from ms2ml.config import Config
@@ -12,9 +14,9 @@ class SpectronautAdapter(SpectronautLibraryParser, BaseAdapter):
     def __init__(
         self,
         config: Config,
-        in_hook: Callable = None,
-        out_hook: Callable = None,
-        collate_fn: Callable[..., Any] = None,
+        in_hook: Callable | None = None,
+        out_hook: Callable | None = None,
+        collate_fn: Callable[..., Any] | None = None,
     ):
         BaseAdapter.__init__(
             self,

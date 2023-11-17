@@ -1,5 +1,5 @@
 from importlib import resources
-from typing import Dict
+from typing import ClassVar, Dict
 
 from appdirs import AppDirs
 from loguru import logger
@@ -60,7 +60,7 @@ class MemoizedUnimodResolver:
         79.966331
     """
 
-    _cache: Dict[str, Dict] = {
+    _cache: ClassVar[Dict[str, Dict]] = {
         "Carbamidomethyl": {
             "id": 4,
             "mass": 57.021464,
@@ -74,7 +74,7 @@ class MemoizedUnimodResolver:
             "provider": "unimod",
         },
     }
-    _id_cache: Dict[str, Dict] = {str(v["id"]): v for k, v in _cache.items()}
+    _id_cache: ClassVar[Dict[str, Dict]] = {str(v["id"]): v for k, v in _cache.items()}
 
     _solver = None
 
