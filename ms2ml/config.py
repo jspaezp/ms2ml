@@ -166,7 +166,7 @@ class Config:
 
     # Encoding Configs
     encoding_aa_order: tuple[str] = tuple(
-        ["n_term"] + list(string.ascii_uppercase) + ["c_term", "__missing__"]
+        ["n_term", *list(string.ascii_uppercase), "c_term", "__missing__"]
     )
 
     encoding_mod_order: tuple[str | None, ...] = field(
@@ -308,7 +308,7 @@ class Config:
             # Write a better error message if the mod is not found
             if y.value in self.encoding_mod_alias:
                 modname = y.value
-            else:
+            else:  # noqa
                 if not hasattr(y, "name"):
                     modname = str(y)
                 else:
@@ -318,7 +318,7 @@ class Config:
                 solved_name = self.encoding_mod_alias[modname]
             else:
                 solved_name = MemoizedUnimodResolver.resolve(modname)["id"]
-                solved_name = f"[UNIMOD:{str(solved_name)}]"
+                solved_name = f"[UNIMOD:{solved_name!s}]"
 
             return solved_name
 

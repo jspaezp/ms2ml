@@ -133,18 +133,16 @@ def binary_search_gte(arr, val):
 
     Returns:
         int: Index of the value
+
+    Examples:
+        >>> arr = np.array([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
+        >>> assert binary_search_gte(arr, 1) == 0
+        >>> arr2 = np.array([3, 6, 9, 12, 15, 18, 21, 24, 27, 30])
+        >>> assert binary_search_gte(arr2, 1) == 0
+        >>> assert binary_search_gte(arr2, 2) == 0
+        >>> assert binary_search_gte(arr2, 10) == 3
     """
     return np.searchsorted(arr, val)
-
-
-def test_binary_gte():
-    arr = np.array([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
-    assert binary_search_gte(arr, 1) == 0
-
-    arr2 = np.array([3, 6, 9, 12, 15, 18, 21, 24, 27, 30])
-    assert binary_search_gte(arr2, 1) == 0
-    assert binary_search_gte(arr2, 2) == 0
-    assert binary_search_gte(arr2, 10) == 3
 
 
 def find_matching_sorted(
@@ -439,7 +437,7 @@ def stack_mz_pairs(mz_int_list, tolerance=25.0, units="ppm"):
         intx_out = np.concatenate([x for x in intx_out if len(x) > 0], axis=0)
         out_intensities.append(intx_out)
 
-    out_intensities = [ref_tpl.int] + out_intensities
+    out_intensities = [ref_tpl.int, *out_intensities]
     out_intensities = pad_to_max_shape(out_intensities)
     out_intensities = np.stack(out_intensities, axis=1)
 
