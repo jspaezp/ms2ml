@@ -160,6 +160,7 @@ class MokapotPSMAdapter(BaseAdapter, MokapotPSMParser):
         annot_intensity = sum(spec.fragment_intensities.values())
         tot_intensity = spec.tic
         annot_frac = annot_intensity / tot_intensity
+
         Q_THRESHOLD = 0.01
         if annot_frac < Q_THRESHOLD:
             logger.warning(
