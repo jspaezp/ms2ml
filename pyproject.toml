@@ -53,7 +53,7 @@ tox = "^3.25.1"
 
 [tool.poetry.group.docs.dependencies]
 mkdocs = "^1.3.1"
-pymdown-extensions = "^9.5"
+pymdown-extensions = "^10.0"
 mkdocs-material = "^8.4.2"
 mkdocs-autorefs = "^0.4.1"
 mkdocstrings = {extras = ["python"], version = "^0.23.0"}
@@ -104,7 +104,7 @@ extend-select = ["I", "PL", "RUF", "NPY"]
 # PLR0913 = too many arguments
 # PLW2901 = for loop variable over-written
 # NPY002 = Replace legacy `np.random.uniform` call with `np.random.Generator`
-ignore = ["F811", "PLR0913", "PLW2901", "NPY002"]
+ignignore = ["F811", "PLR0913", "PLW2901", "NPY002"]
 
 [tool.ruff.lint.per-file-ignores]
 "__init__.py" = ["E402"]
