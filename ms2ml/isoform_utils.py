@@ -109,7 +109,7 @@ def _prep_sequence(seq_elems):
             raise TypeError(f"Sequence element {x} is not a string")
         if isinstance(x[1], str) or (x[1] is None):
             out.append((x[0], x[1]))
-        elif isinstance(x[1], list) or isinstance(x[1], tuple):
+        elif isinstance(x[1], (list, tuple)):
             if len(x[1]) == 0:
                 raise ValueError("Empty list of modifications")
             elif len(x[1]) > 1:
@@ -159,7 +159,8 @@ def _mod_comb_getter_factory(comb_getter):
             for s in seqs:
                 x = comb_getter(s, mod, aas)
                 tmp_seqs.extend(list(set(x)))
-                if len(tmp_seqs) > 10000:
+                MAX_COMBS = 10_000
+                if len(tmp_seqs) > MAX_COMBS:
                     warnings.warn(
                         "Large number of mod combinations found, clipping at 1k"
                     )

@@ -33,18 +33,18 @@ _ENTRIES_SCHEMA = [
         "MedianChromatogramEncodedLength int, "
         "MedianChromatogramArray blob, "
         "SourceFile string not null );"
-    ),  # noqa
+    ),
     "CREATE TABLE metadata ( Key string not null, Value string not null );",
-    "CREATE TABLE peptidetoprotein (PeptideSeq string not null,isDecoy boolean,ProteinAccession string not null);",  # noqa
+    "CREATE TABLE peptidetoprotein (PeptideSeq string not null,isDecoy boolean,ProteinAccession string not null);",
     "INSERT INTO metadata ('Key', 'Value') VALUES ('EncyclopediaVersion', '1.12.34') ;",
     "INSERT INTO metadata ('Key', 'Value') VALUES ('version', '0.1.14') ;",
 ]
 
 _INDEX_SCHEMA = [
     "CREATE INDEX 'Key_Metadata_index' on 'metadata' ('Key' ASC);",
-    "CREATE INDEX 'ProteinAccession_PeptideToProtein_index' on 'peptidetoprotein' ('ProteinAccession' ASC);",  # noqa
-    "CREATE INDEX 'PeptideSeq_PeptideToProtein_index' on 'peptidetoprotein' ('PeptideSeq' ASC);",  # noqa
-    "CREATE INDEX 'PeptideModSeq_PrecursorCharge_SourceFile_Entries_index' on 'entries' ('PeptideModSeq' ASC, 'PrecursorCharge' ASC, 'SourceFile' ASC);",  # noqa
+    "CREATE INDEX 'ProteinAccession_PeptideToProtein_index' on 'peptidetoprotein' ('ProteinAccession' ASC);",
+    "CREATE INDEX 'PeptideSeq_PeptideToProtein_index' on 'peptidetoprotein' ('PeptideSeq' ASC);",
+    "CREATE INDEX 'PeptideModSeq_PrecursorCharge_SourceFile_Entries_index' on 'entries' ('PeptideModSeq' ASC, 'PrecursorCharge' ASC, 'SourceFile' ASC);",
     "CREATE INDEX 'PeptideSeq_Entries_index' on 'entries' ('PeptideSeq' ASC);",
     "CREATE INDEX 'PrecursorMz_Entries_index' on 'entries' ('PrecursorMz' ASC);",
 ]
@@ -67,7 +67,7 @@ def _extract_array(byte_array: bytes, type_str="d") -> np.ndarray:
         array([1., 2., 3., 4., 5.])
         >>> _extract_array(b"x\xda\xb3o``p`\x00b \xe1\x00b/``\x00\x00 \xa0\x03 ", "f")
         array([1., 2., 3., 4., 5.], dtype=float32)
-    """  # noqa
+    """
     dtype = np.dtype(type_str)
     decompressed = zlib.decompress(byte_array, 32)
     decompressed_length = len(decompressed) // dtype.itemsize

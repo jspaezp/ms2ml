@@ -63,7 +63,7 @@ class MZMLAdapter(BaseAdapter):
         self.reader.iterfind('referenceableParamGroup[@id="CommonInstrumentParams"]')
         instrument_data: dict
         instrument_data = aux.cvquery(next(self.reader))  # type: ignore[operator]
-        self.instrument = list(instrument_data.values())[0]
+        self.instrument = next(iter(instrument_data.values()))
         logger.debug(f"Done loading mzML file: {file}")
 
     def parse(self) -> Generator[Spectrum, None, None]:
@@ -128,7 +128,7 @@ class MZMLAdapter(BaseAdapter):
             precursor = precursor[0]
 
             activation = precursor.pop("activation")
-            activation_type = list(activation.values())[0]
+            activation_type = next(iter(activation.values()))
             activation_energy = (
                 activation["collision energy"]
                 if "collision energy" in activation

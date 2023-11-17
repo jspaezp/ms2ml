@@ -26,7 +26,7 @@ def _is_nested_numeric_list(x):
         return False
 
 
-def _is_uniform_nested_list(x):
+def _is_uniform_nested_list(x):  # noqa
     if _is_nested_numeric_list(x):
         if isinstance(x, np.ndarray):
             return list(x.shape)
@@ -50,7 +50,7 @@ def _is_uniform_nested_list(x):
                 if y_shape != elem_shape:
                     return False
 
-            return [len(x)] + list(elem_shape)
+            return [len(x), *list(elem_shape)]
 
         if isinstance(elem, np.ndarray):
             elem_shape = elem.shape
@@ -58,7 +58,7 @@ def _is_uniform_nested_list(x):
                 if y.shape != elem_shape:
                     return False
 
-            return [len(x)] + list(elem_shape)
+            return [len(x), *list(elem_shape)]
 
         if isinstance(elem, (float, int)):
             return [len(x), 1]

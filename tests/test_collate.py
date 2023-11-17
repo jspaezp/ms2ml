@@ -13,7 +13,7 @@ from ms2ml.utils.tensor_utils import (
 hook_collate2 = pytest.param(lambda x: hook_collate(x, lambda x: x), id="hook_collate")
 default_collate_pad = pytest.param(
     lambda x: default_collate(x, pad_shapes=True), id="default_collate_pad"
-)  # noqa E731
+)  # E731
 default_collate_no_pad = pytest.param(
     lambda x: default_collate(x, pad_shapes=False), id="default_collate_no_pad"
 )

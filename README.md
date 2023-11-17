@@ -188,6 +188,8 @@ Check:
       models to analyze mass spectra generated from peptides other and molecules.
     - It seems to focus on the model generation, rather than proving flexibility
       in encoding.
+    - Newer version provide more options for encoding in a very opinionated way.
+    - Tightly integrated with spectrum_utils.
 
 - https://github.com/bittremieux/spectrum_utils
     - spectrum_utils is a Python package for efficient mass spectrometry

@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Callable, Iterator
 
@@ -13,6 +14,58 @@ from ms2ml.data.parsing.mokapot import MokapotPSMParser
 from ms2ml.peptide import Peptide
 from ms2ml.spectrum import AnnotatedPeptideSpectrum
 from ms2ml.type_defs import PathLike
+
+
+@dataclass
+class _MZML_AdapterBuffer:
+    """Buffer of mzml adapters.
+
+    It implements a form of buffer where adapters are stored.
+    If the buffer capacity is reached, the adapter accessed "the longest time ago"
+    is removed from the buffer.
+
+    This is used only because keeping the indices of the mzml files in memory
+    can get to be expensive and since the percolator file is sorted by file name
+    we could in theory preserve the latest mzml adapters in memory for performance.
+    """
+
+    config: Config
+    adapters: dict[str, MZMLAdapter] = None
+    adapter_latest_accesses: dict[str, int] = None
+    adapter_access_count: dict[str, int] = None
+    accesses: int = 0
+    max_size: int = 10
+    access_keep: int = 20
+
+    def __post_init__(self):
+        self.adapters = {}
+        self.adapter_access_count = {}
+        self.adapter_latest_accesses = {}
+
+    def __getitem__(self, key: str) -> MZMLAdapter:
+        if key not in self.adapters:
+            logger.info(f"Adding mzml adapter to buffer key={key}")
+            self.adapters[key] = MZMLAdapter(key, self.config)
+            self.adapter_latest_accesses[key] = 0
+            self.adapter_access_count[key] = 0
+        self.accesses += 1
+        self.adapter_access_count[key] += 1
+        self.adapter_latest_accesses[key] = self.accesses
+        if len(self.adapters) > self.max_size:
+            # remove the adapter that was accessed the longest time ago
+            to_remove = [
+                k
+                for k, v in self.adapter_latest_accesses.items()
+                if v < self.accesses - self.access_keep
+            ]
+            for key in to_remove:
+                logger.info(f"Removing mzml adapter from buffer key={key}")
+                del self.adapters[key]
+                del self.adapter_latest_accesses[key]
+        return self.adapters[key]
+
+    def __contains__(self, key: str) -> bool:
+        return key in self.adapters
 
 
 class MokapotPSMAdapter(BaseAdapter, MokapotPSMParser):
@@ -34,7 +87,8 @@ class MokapotPSMAdapter(BaseAdapter, MokapotPSMParser):
         )
         MokapotPSMParser.__init__(self, file)
 
-        self.mzml_adapters = {}
+        self.mzml_adapters = _MZML_AdapterBuffer(config=config)
+        self.rawfile_mappings = {}
 
         if raw_file_locations is None:
             self.raw_file_locations = ["."]
@@ -78,13 +132,15 @@ class MokapotPSMAdapter(BaseAdapter, MokapotPSMParser):
 
         """
 
-        if spec_dict["rawfile"] not in self.mzml_adapters:
-            self.mzml_adapters[spec_dict["rawfile"]] = MZMLAdapter(
-                _find_raw_file(self.raw_file_locations, spec_dict["rawfile"]),
-                self.config,
+        if spec_dict["rawfile"] not in self.rawfile_mappings:
+            # self.mzml_adapters
+            self.rawfile_mappings[spec_dict["rawfile"]] = _find_raw_file(
+                self.raw_file_locations, spec_dict["rawfile"]
             )
 
-        spec = self.mzml_adapters[spec_dict["rawfile"]][spec_dict["spectrumindex"]]
+        spec = self.mzml_adapters[self.rawfile_mappings[spec_dict["rawfile"]]][
+            spec_dict["spectrumindex"]
+        ]
 
         if "precursorcharge" in spec_dict:
             spec_charge = spec_dict["precursorcharge"]
@@ -104,7 +160,9 @@ class MokapotPSMAdapter(BaseAdapter, MokapotPSMParser):
         annot_intensity = sum(spec.fragment_intensities.values())
         tot_intensity = spec.tic
         annot_frac = annot_intensity / tot_intensity
-        if annot_frac < 0.01:
+
+        Q_THRESHOLD = 0.01
+        if annot_frac < Q_THRESHOLD:
             logger.warning(
                 f"Only {annot_frac:.2%} of the intensity is annotated for {spec}."
             )

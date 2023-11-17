@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from typing import Any, ClassVar, Dict, Iterator, List, Optional, TypedDict
 
 import numpy as np
@@ -98,7 +100,7 @@ class _MSPTransformer(Transformer):
             for c in out["Comment"]:
                 if "=" in c:
                     kv = c.split("=")
-                    if len(kv) == 2:
+                    if len(kv) == 2:  # noqa
                         k, v = kv
                         if _is_number_convertible(v):
                             v = float(v)
@@ -157,7 +159,9 @@ class _MSPLark(Lark):
             debug=True,
         )
 
-    def parse2(self, text: str, start: str = None, *args, **kwargs) -> Iterator[Dict]:
+    def parse2(
+        self, text: str, start: str | None = None, *args, **kwargs
+    ) -> Iterator[Dict]:
         out: Iterator[Dict] = super().parse(
             text, start, *args, **kwargs
         )  # type: ignore[assignment]
