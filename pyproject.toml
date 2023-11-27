@@ -12,7 +12,7 @@ repository = "https://github.com/jspaezp/ms2ml"
 [tool.poetry.dependencies]
 python = ">3.8,<3.12"
 pyteomics = "^4.5.5"
-lxml = "^4.9.1" # Needed due to a non-exclicit dependency in pyteomics
+lxml = "^4.9.1"       # Needed due to a non-exclicit dependency in pyteomics
 # torch = { version = "^1.12.1", python = ">=3.8,<3.11" }
 numpy = "^1.24.4"
 psims = "^1.2.3"
@@ -29,7 +29,7 @@ appdirs = "^1.4.4"
 tomli = "^2.0.1"
 
 [tool.poetry.group.lint.dependencies]
-black = "^22.8.0"
+black = "^23.11.0"
 isort = "^5.10.1"
 ruff = "^0.1.0"
 autoflake = "^1.5.3"
@@ -41,7 +41,7 @@ pytest-doctestplus = "^0.12.0"
 pytest-cov = "^4.0.0"
 
 [tool.poetry.group.dev.dependencies]
-black = "^22.8.0"
+black = "^23.11.0"
 isort = "^5.10.1"
 ruff = "^0.1.0"
 autoflake = "^1.5.3"
@@ -56,7 +56,7 @@ mkdocs = "^1.3.1"
 pymdown-extensions = "^10.0"
 mkdocs-material = "^8.4.2"
 mkdocs-autorefs = "^0.4.1"
-mkdocstrings = {extras = ["python"], version = "^0.23.0"}
+mkdocstrings = { extras = ["python"], version = "^0.23.0" }
 mkquartodocs = "^0.5.7"
 mike = "^1.1.2"
 griffe = "^0.36.9"
@@ -68,11 +68,11 @@ optional = true
 # Need to restrict explicitly the python version until llvm (numba)
 # catches up with the python version ... which also requires specifying
 # all of these dependencies explicitly.
-spectrum-utils = {version = "^0.4.2", python = ">3.8,<3.12"}
-matplotlib = "^3.7.0"
-numba = {version = ">=0.58.1", python = ">3.8,<3.12"}
-llvmlite = {version = ">=0.39.1", python = ">3.8,<3.12"}
-numpy = {version = "<1.27.1", python = ">3.8,<3.12"}
+spectrum-utils = { version = "^0.4.2", python = ">3.8,<3.12" }
+matplotlib = "^3.7.4"
+numba = { version = ">=0.58.1", python = ">3.8,<3.12" }
+llvmlite = { version = ">=0.39.1", python = ">3.8,<3.12" }
+numpy = { version = "<1.27.1", python = ">3.8,<3.12" }
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
@@ -95,7 +95,7 @@ isolated_build = true
 """
 
 [tool.black]
-target-version = [ "py39", ]
+target-version = ["py39"]
 line-length = 88
 
 [tool.ruff]
@@ -119,10 +119,7 @@ minversion = "6.0"
 addopts = "-v"
 doctest_plus = "enabled"
 doctest_optionflags = "ELLIPSIS NORMALIZE_WHITESPACE FLOAT_CMP"
-testpaths = [
-    "tests",
-    "ms2ml",
-]
+testpaths = ["tests", "ms2ml"]
 
 [tool.pydocstringformatter]
 style = "numpydoc"
@@ -130,5 +127,5 @@ exclude = [".tox/**"]
 max-line-length = 88
 
 [tool.pylint]
-load-plugins= 'pylint.extensions.docparams'
+load-plugins = 'pylint.extensions.docparams'
 # disable = "C0103"
