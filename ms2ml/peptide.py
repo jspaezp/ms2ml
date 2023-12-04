@@ -118,8 +118,16 @@ class Peptide(ProForma):
             >>> p.to_proforma()
             '[+123.23]-AMC'
         """
-
-        return to_proforma(self.sequence, **self.properties)
+        if len(self.properties["fixed_modifications"]) > 1:
+            keep = []
+            for mod in self.properties["fixed_modifications"]:
+                if not any(mod == x for x in keep):
+                    keep.append(mod)
+            props = self.properties.copy()
+            props["fixed_modifications"] = keep
+        else:
+            props = self.properties
+        return to_proforma(self.sequence, **props)
 
     def to_massdiff_seq(self) -> str:
         """Converts the peptide to a string following the massdiff specifications.
@@ -213,7 +221,15 @@ class Peptide(ProForma):
 
         # n and c temrini are accounted for ... assuming they are used
         curr_mass += np.einsum("ij,j->", self.aa_to_onehot(), self.config.aa_masses)
-        curr_mass += np.einsum("ij,j->", self.mod_to_onehot(), self.config.mod_masses)
+        if self.config.mod_mode == "delta_mass":
+            mod_masses = self.mod_to_vector()
+            curr_mass += mod_masses.sum()
+        elif self.config.mod_mode == "unimod":
+            curr_mass += np.einsum(
+                "ij,j->", self.mod_to_onehot(), self.config.mod_masses
+            )
+        else:
+            raise NotImplementedError(f"Invalid mod_mode: {self.config.mod_mode}")
 
         # labile mods
         # unlocalized

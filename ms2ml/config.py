@@ -75,6 +75,9 @@ def _default_var_mods():
     return out
 
 
+# TODO consider making this apydantic model
+
+
 @dataclass
 class Config:
     """General class to set and store the configuration of the project.
@@ -180,6 +183,52 @@ class Config:
     encoding_spec_bin_n_bins: int | None = field(repr=False, default=None)
     encoding_spec_bin_relative: bool = field(repr=False, default=False)
     encoding_spec_bin_offset: float = field(repr=False, default=0.0)
+
+    def __post_init__(self):
+        self._validate()
+
+    def _validate(self):
+        """Validates the configuration."""
+        self._validate_mods()
+        self._validate_ions()
+
+    def _validate_ions(self):
+        if not isinstance(self.ion_series, str):
+            raise ValueError(
+                f"Ion series should be a string, got {self.ion_series!r}"
+                f"\n For example 'yb'"
+            )
+
+        for ion in self.ion_series:
+            if ion not in "abcxyz":
+                raise ValueError(
+                    f"Ion series should only contain a, b, c, x, y or z. Got {ion!r}"
+                )
+
+        if not isinstance(tuple(self.ion_charges), tuple):
+            raise ValueError(
+                f"Ion charges should be a tuple, got {self.ion_charges!r}"
+                f"\n For example (1, 2)"
+            )
+
+        for charge in self.ion_charges:
+            if not isinstance(charge, int):
+                raise ValueError(
+                    f"Ion charges should only contain integers. Got {charge!r}"
+                )
+
+    def _validate_mods(self):
+        if not isinstance(self.mod_fixed_mods, tuple):
+            raise ValueError(
+                f"Fixed mods should be a tuple, got {self.mod_fixed_mods!r}"
+                f"\n For example ('[UNIMOD:4]@C',)"
+            )
+
+        if not isinstance(self.mod_variable_mods, dict):
+            raise ValueError(
+                f"Variable mods should be a dict, got {self.mod_variable_mods!r}"
+                f"\n For example {{'[UNIMOD:4]': ['C']}}"
+            )
 
     @lazy
     def fragment_labels(self) -> list[str]:
