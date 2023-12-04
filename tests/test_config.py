@@ -33,6 +33,20 @@ def test_fixed_mod_validation(delta_mass):
                 "mod_variable_mods": [{"[+22.2222]": ["C"]}],  # <- list instead of dict
                 "encoding_mod_alias": {},
             },
+            {
+                "mod_mode": "delta_mass",
+                "mod_fixed_mods": (),
+                "mod_variable_mods": {},
+                "encoding_mod_alias": {},
+                "ion_series": "w",  # <- invalid ion series
+            },
+            {
+                "mod_mode": "delta_mass",
+                "mod_fixed_mods": (),
+                "mod_variable_mods": {},
+                "encoding_mod_alias": {},
+                "ion_series": ("xy",),  # <- invalid ion series, tuple
+            },
         ]
     else:
         valid_config_args = [
