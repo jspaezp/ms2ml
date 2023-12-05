@@ -70,6 +70,9 @@ def test_fasta_adapter_with_deltamass_mods(shared_datadir):
 
     dupes.sort()
     unique_proforma_len = len(seen)
+    explicit_fixed_mods = [x for x in seen if "C[+22" in x]
+
+    assert len(explicit_fixed_mods) == 0, f"Fixed mods found, {explicit_fixed_mods}"
     assert out_mod_len == unique_proforma_len, f"Duplicate proformas found, {dupes}"
     assert "ALPGGRLGGR/2" in seen
     assert "ALPGGRLGGR/3" in seen

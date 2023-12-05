@@ -47,6 +47,9 @@ class Peptide(ProForma):
         self.extras = extras
         super().__init__(sequence, properties)
 
+    def __hash__(self):
+        return hash(self.to_proforma())
+
     @staticmethod
     def pre_parse_mods(seq, config) -> str:
         """Parse the modifications in the sequence."""
@@ -748,8 +751,10 @@ class Peptide(ProForma):
         """
         yield from self.__iter_base
 
+    # TODO: simplify this function, right now it has very high complexity ...
+    # and I dont think it is needed.
     @staticmethod
-    def from_iter(it, config: Config, charge=None):
+    def from_iter(it, config: Config, charge=None, drop_fixed=False):  # noqa: PLR0912
         """Creates a peptide from an iterator of (aa, mod) tuples.
 
         Examples:
@@ -765,9 +770,31 @@ class Peptide(ProForma):
             ... )
             >>> foo.to_proforma()
             '<[UNIMOD:4]@C>AMC[UNIMOD:4]'
+            >>> foo.mass
+            380.11881216611
+
+            TODO: Decide if this is the desired behaviour ,,,
+            I would argue that it should add the mass of the carbamidomethyl twice ...
+
+            >>> foo = Peptide.from_iter(
+            ...     [
+            ...         ("n_term", None),
+            ...         ("A", None),
+            ...         ("M", None),
+            ...         ("C", None),
+            ...         ("c_term", None),
+            ...     ],
+            ...     config=Config(),
+            ... )
+            >>> foo.to_proforma()
+            '<[UNIMOD:4]@C>AMC'
+            >>> foo.mass
+            380.11881216611
+
             >>> foo = Peptide._sample()
             >>> foo.to_proforma()
             '[UNIMOD:1]-PEPT[UNIMOD:21]IDEPINK'
+
             >>> elems = [x for x in foo]
             >>> foo = Peptide.from_iter(elems, config=Config())
             >>> foo.to_proforma()
@@ -776,22 +803,43 @@ class Peptide(ProForma):
         # TODO fix this so it is not redundant generating fixed+variable mod
         # notation on carbamidomethyl
 
+        fmd = config.fixed_mods_dict
         seqs = []
         for aa, mod in it:
-            if mod is not None:
-                if isinstance(mod, str):
-                    pass
-                elif isinstance(mod, float):
-                    mod = f"[+{mod:.6f}]"
-                elif isinstance(mod, list):
-                    mod = "".join(mod)
-
-                if aa == "n_term":
-                    mod = mod + "-"
-                if mod == "c_term":
-                    mod = "-" + mod
-            else:
+            if mod is None:
                 mod = ""
+
+            if drop_fixed:
+                # if aa == "C" and "C" in fmd:
+                #    print(f"aa={aa}, mod={mod}, fmd={fmd}")
+                if aa in fmd:
+                    tfmd = fmd[aa]
+
+                    if isinstance(mod, str) and mod in tfmd:
+                        mod = ""
+                    elif isinstance(mod, float) and any(
+                        abs(mod - fmdaa) < 0.0001  # noqa: PLR2004
+                        for fmdaa in tfmd
+                        if isinstance(fmdaa, float)
+                    ):
+                        mod = ""
+
+            if isinstance(mod, str):
+                pass
+            elif isinstance(mod, float):
+                mod = f"[+{mod:.6f}]"
+            elif isinstance(mod, list):
+                if not all(isinstance(x, str) for x in mod):
+                    raise NotImplementedError(
+                        "Lists of elements other than str are not supported"
+                    )
+                mod = "".join(mod)
+
+            if mod and aa == "n_term":
+                mod = mod + "-"
+            if mod and mod == "c_term":
+                mod = "-" + mod
+
             if aa in ("n_term", "c_term"):
                 aa = ""
 
@@ -840,7 +888,7 @@ class Peptide(ProForma):
             ['AMAM[UNIMOD:35]K', 'AM[UNIMOD:35]AMK']
         """
         iters = get_mod_isoforms(self.__iter_base, self.config.mod_variable_mods)
-        out = [self.from_iter(x, self.config) for x in iters]
+        out = [self.from_iter(x, self.config, drop_fixed=True) for x in iters]
         return out
 
     def get_variable_possible_mods(self):
@@ -858,9 +906,17 @@ class Peptide(ProForma):
             >>> sorted([x.to_proforma() for x in out])
             ['AMAMK/3', 'AMAM[UNIMOD:35]K/3', 'AM[UNIMOD:35]AMK/3',
              'AM[UNIMOD:35]AM[UNIMOD:35]K/3']
+
+            >>> foo = Peptide.from_sequence("ACORNS/3")
+            >>> out = foo.get_variable_possible_mods()
+            >>> sorted([x.to_proforma() for x in out])
+            ['<[UNIMOD:4]@C>ACORNS/3', '<[UNIMOD:4]@C>ACORNS[UNIMOD:21]/3']
         """
 
-        # TODO test with charges!
         iters = get_mod_possible(self.__iter_base, self.config.mod_variable_mods)
-        out = [self.from_iter(x, self.config, charge=self.charge) for x in iters]
-        return out
+        out = {
+            self.from_iter(x, self.config, charge=self.charge, drop_fixed=True)
+            for x in iters
+        }
+
+        return list(out)

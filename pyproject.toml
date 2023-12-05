@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "ms2ml"
-version = "0.0.43"
+version = "0.0.44"
 description = "Provides an intermediate layer between mass spec data and ML applications, such as encoding."
 authors = ["J. Sebastian Paez <jspaezp@users.noreply.github.com>"]
 license = "Apache 2.0"
@@ -11,7 +11,7 @@ repository = "https://github.com/jspaezp/ms2ml"
 
 [tool.poetry.dependencies]
 python = ">3.8,<3.12"
-pyteomics = "^4.5.5"
+pyteomics = "^4.6.3"
 lxml = "^4.9.1"       # Needed due to a non-exclicit dependency in pyteomics
 # torch = { version = "^1.12.1", python = ">=3.8,<3.11" }
 numpy = "^1.24.4"
