@@ -308,7 +308,7 @@ class Config:
         return {aa: i for i, aa in enumerate(self.encoding_aa_order)}
 
     @lazy
-    def fixed_mods_dict(self) -> dict[str, list[str, float]]:
+    def fixed_mods_dict(self) -> dict[str, set[str, float]]:
         """Returns a dictionary of fixed mods.
 
         The keys are the aminoacids and the values are the modifications.
@@ -316,13 +316,18 @@ class Config:
         Examples:
             >>> config = Config()
             >>> config.fixed_mods_dict
-            {'C': ['[UNIMOD:4]']}
+            {'C': {'[UNIMOD:4]'}}
             >>> config = Config(mod_fixed_mods=("[+22.2222]@C",))
-            >>> config.fixed_mods_dict
-            {'C': [22.2222]}
+            >>> tmp = config.fixed_mods_dict
+
+            # {'C': {'[+22.2222]', 22.2222}}
+
             >>> config = Config(mod_fixed_mods=("[+22.0]@C",))
-            >>> config.fixed_mods_dict
-            {'C': [22.0]}
+            >>> tmp = config.fixed_mods_dict
+
+            # {'C': {'[+22.0]', 22.0}}
+            >>> {k: sorted([str(w) for w in v]) for k, v in tmp.items()}
+            {'C': ['22.0', '[+22.0]']}
         """
         out = {}
         for mod in self.mod_fixed_mods:
@@ -335,12 +340,15 @@ class Config:
             if mod_key not in out:
                 out[mod_key] = []
 
+            out[mod_key].append(mod_value)
             try:
                 mod_value = float(mod_value.replace("[", "").replace("]", ""))
             except ValueError:
                 pass
 
             out[mod_key].append(mod_value)
+
+        out = {k: set(v) for k, v in out.items()}
         return out
 
     def _resolve_mod_list(self, x):

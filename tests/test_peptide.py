@@ -79,7 +79,6 @@ def test_peptide_proforma(delta_mass: bool):
 
     for seq in sequences:
         pep = Peptide.from_sequence(seq["input_sequence"], config=config)
-        print(pep.to_proforma())
         assert pep.to_proforma() == seq["expected_out"]
         assert int(1_000 * pep.mass) == int(1_000 * seq["expected_mass"])
 
@@ -162,11 +161,17 @@ def test_variable_possible_mods(input):
     )
     pep = Peptide.from_sequence(input["input_sequence"], config=config)
     out = pep.get_variable_possible_mods()
-    out = [x.to_proforma() for x in out]
-    out.sort()
 
-    unexpected = set(out) - set(input["expected_out"])
-    assert len(unexpected) == 0, f"Unexpected -> {unexpected}"
+    # Check that masses can be calculated ...
+    _ = [x.mass for x in out]
 
-    missing = set(input["expected_out"]) - set(out)
+    proformas = [x.to_proforma() for x in out]
+    proformas.sort()
+
+    unexpected = set(proformas) - set(input["expected_out"])
+    assert (
+        len(unexpected) == 0
+    ), f"From {input['input_sequence']} Unexpected -> {unexpected}"
+
+    missing = set(input["expected_out"]) - set(proformas)
     assert len(missing) == 0, f"Missing -> {missing}"

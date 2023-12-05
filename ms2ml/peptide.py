@@ -130,7 +130,36 @@ class Peptide(ProForma):
             props["fixed_modifications"] = keep
         else:
             props = self.properties
-        return to_proforma(self.sequence, **props)
+
+        fixed_mods = {}
+        for x in props["fixed_modifications"]:
+            for y in x.targets:
+                fixed_mods[y] = x.modification_tag
+
+        seqs = self.sequence.copy()
+        seqs_out = [None] * len(seqs)
+
+        for i, s in enumerate(seqs):
+            if s[1] is None:
+                seqs_out[i] = s
+                continue
+
+            m = s[1]
+            mk = []
+
+            for mod in m:
+                if s[0] in fixed_mods and mod == fixed_mods[s[0]]:
+                    continue
+                else:
+                    mk.append(mod)
+
+            if len(mk) == 0:
+                mk = None
+
+            seqs_out[i] = (s[0], mk)
+
+        out = to_proforma(seqs_out, **props)
+        return out
 
     def to_massdiff_seq(self) -> str:
         """Converts the peptide to a string following the massdiff specifications.
@@ -664,14 +693,17 @@ class Peptide(ProForma):
         for x in mods:
             if hasattr(x, "__iter__"):
                 x = list(set(x))
-                if len(x) > 1:
+                if all(isinstance(y, float) for y in x):
+                    x = sum(x)
+                elif len(x) > 1:
                     error_msg = "Multiple modifications on the"
                     error_msg += " same aminoacid are not supported"
                     error_msg += f" got:({x})"
 
                     # TODO consider is more informative messages are required
                     raise ValueError(error_msg)
-                x = x[0]
+                else:
+                    x = x[0]
 
             vector.append(x)
         return vector
@@ -769,13 +801,7 @@ class Peptide(ProForma):
             ...     config=Config(),
             ... )
             >>> foo.to_proforma()
-            '<[UNIMOD:4]@C>AMC[UNIMOD:4]'
-            >>> foo.mass
-            380.11881216611
-
-            TODO: Decide if this is the desired behaviour ,,,
-            I would argue that it should add the mass of the carbamidomethyl twice ...
-
+            '<[UNIMOD:4]@C>AMC'
             >>> foo = Peptide.from_iter(
             ...     [
             ...         ("n_term", None),
@@ -808,21 +834,19 @@ class Peptide(ProForma):
         for aa, mod in it:
             if mod is None:
                 mod = ""
-
             if drop_fixed:
-                # if aa == "C" and "C" in fmd:
-                #    print(f"aa={aa}, mod={mod}, fmd={fmd}")
                 if aa in fmd:
                     tfmd = fmd[aa]
 
-                    if isinstance(mod, str) and mod in tfmd:
-                        mod = ""
-                    elif isinstance(mod, float) and any(
-                        abs(mod - fmdaa) < 0.0001  # noqa: PLR2004
-                        for fmdaa in tfmd
-                        if isinstance(fmdaa, float)
-                    ):
-                        mod = ""
+                    if mod:
+                        if isinstance(mod, str) and mod in tfmd:
+                            mod = ""
+                        elif isinstance(mod, float) and any(
+                            abs(mod - fmdaa) < 0.001  # noqa: PLR2004
+                            for fmdaa in tfmd
+                            if isinstance(fmdaa, float)
+                        ):
+                            mod = ""
 
             if isinstance(mod, str):
                 pass
@@ -850,6 +874,10 @@ class Peptide(ProForma):
             seq = "".join(seqs)
         else:
             seq = "".join(seqs) + f"/{charge}"
+
+        for i in range(4):
+            pep = Peptide.from_proforma_seq(seq, config=config)
+            seq = pep.to_proforma()
 
         return Peptide.from_proforma_seq(seq, config=config)
 

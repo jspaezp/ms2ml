@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "ms2ml"
-version = "0.0.44"
+version = "0.0.45"
 description = "Provides an intermediate layer between mass spec data and ML applications, such as encoding."
 authors = ["J. Sebastian Paez <jspaezp@users.noreply.github.com>"]
 license = "Apache 2.0"
@@ -99,7 +99,7 @@ target-version = ["py39"]
 line-length = 88
 
 [tool.ruff]
-extend-select = ["I", "PL", "RUF", "NPY"]
+extend-select = ["I", "PL", "RUF", "NPY", "T20", "T100"]
 # TODO add ANN and N
 # PLR0913 = too many arguments
 # PLW2901 = for loop variable over-written
@@ -108,7 +108,7 @@ ignore = ["F811", "PLR0913", "PLW2901", "NPY002"]
 
 [tool.ruff.lint.per-file-ignores]
 "__init__.py" = ["E402"]
-"notebooks/**" = ["PLR2004"]
+"notebooks/**" = ["PLR2004", "T20"]
 "**/{tests}/*" = ["PLR2004", "RUF012"]
 
 [tool.isort]
