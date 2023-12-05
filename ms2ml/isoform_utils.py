@@ -107,7 +107,7 @@ def _prep_sequence(seq_elems):
     for x in seq_elems:
         if not isinstance(x[0], str):
             raise TypeError(f"Sequence element {x} is not a string")
-        if isinstance(x[1], str) or (x[1] is None):
+        if isinstance(x[1], (str, float)) or (x[1] is None):
             out.append((x[0], x[1]))
         elif isinstance(x[1], (list, tuple)):
             if len(x[1]) == 0:
@@ -213,6 +213,21 @@ def get_mod_possible(*args, **kwargs):
     ...     ("c_term", None),
     ... ]
     >>> mods_list = {"[U:21]": "STY", "[U:35]": "M"}
+    >>> out = list(get_mod_possible(seq_elems, mods_list))
+    >>> out
+    [...]
+    >>> len(out)
+    16
+    >>> seq_elems = [
+    ...     ("n_term", None),
+    ...     ("S", None),
+    ...     ("M", None),
+    ...     ("M", None),
+    ...     ("S", ["[+79.99]"]),
+    ...     ("C", ["[+57.12]"]),
+    ...     ("c_term", None),
+    ... ]
+    >>> mods_list = {"[+79.99]": "STY", "[+18.72]": "M"}
     >>> out = list(get_mod_possible(seq_elems, mods_list))
     >>> out
     [...]

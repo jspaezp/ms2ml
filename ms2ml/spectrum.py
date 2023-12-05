@@ -794,7 +794,7 @@ class AnnotatedPeptideSpectrum(Spectrum):
             retention_time=RetentionTime(rt=nan, units='seconds',
             run=None),
             precursor_ion_mobility=None,
-            precursor_peptide=Peptide([...], {...}), precursor_isotope=0)
+            precursor_peptide=Peptide.from_sequence('PEPPINK/2'), precursor_isotope=0)
 
         """
         tmp = [
