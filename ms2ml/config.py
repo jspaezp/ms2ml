@@ -307,6 +307,42 @@ class Config:
     def encoding_aa_order_mapping(self) -> dict[str | None, int]:
         return {aa: i for i, aa in enumerate(self.encoding_aa_order)}
 
+    @lazy
+    def fixed_mods_dict(self) -> dict[str, list[str, float]]:
+        """Returns a dictionary of fixed mods.
+
+        The keys are the aminoacids and the values are the modifications.
+
+        Examples:
+            >>> config = Config()
+            >>> config.fixed_mods_dict
+            {'C': ['[UNIMOD:4]']}
+            >>> config = Config(mod_fixed_mods=("[+22.2222]@C",))
+            >>> config.fixed_mods_dict
+            {'C': [22.2222]}
+            >>> config = Config(mod_fixed_mods=("[+22.0]@C",))
+            >>> config.fixed_mods_dict
+            {'C': [22.0]}
+        """
+        out = {}
+        for mod in self.mod_fixed_mods:
+            mod_key = mod[mod.find("@") + 1 :]
+            mod_value = mod[: mod.find("@")]
+            if len(mod_key) > 1:
+                raise NotImplementedError(
+                    f"Fixed mods with more than one aminoacid are not supported. Got {mod}"
+                )
+            if mod_key not in out:
+                out[mod_key] = []
+
+            try:
+                mod_value = float(mod_value.replace("[", "").replace("]", ""))
+            except ValueError:
+                pass
+
+            out[mod_key].append(mod_value)
+        return out
+
     def _resolve_mod_list(self, x):
         if isinstance(x, list):
             return [self._resolve_mod_list(y) for y in x]
