@@ -67,6 +67,7 @@ class FastaAdapter(BaseAdapter, FastaDataset):
         num_outs = 0
         out_of_mz_range = 0
         skipped = 0
+        seen = set()
         for pep_seq_dict in super().parse():
             for charge in charges:
                 pep_seq_dict["charge"] = charge
@@ -86,6 +87,15 @@ class FastaAdapter(BaseAdapter, FastaDataset):
                     elem_lst = elem.get_variable_possible_mods()
                 else:
                     elem_lst = [elem]
+
+                if self.only_unique:
+                    elem_keep = []
+                    for elem in elem_lst:
+                        if elem.to_proforma() not in seen:
+                            seen.add(elem.to_proforma())
+                            elem_keep.append(elem)
+
+                    elem_lst = elem_keep
 
                 for elem in elem_lst:
                     elem = elem if self.out_hook is None else self.out_hook(elem)
