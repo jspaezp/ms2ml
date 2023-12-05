@@ -247,12 +247,17 @@ class Peptide(ProForma):
         return mass
 
     @property
-    def charge(self) -> int:
+    def charge(self) -> int | None:
+        if self.charge_state is None:
+            return None
         return self.charge_state.charge
 
     @property
     def fragment_masses(self) -> list:
         raise NotImplementedError
+
+    def __repr__(self) -> str:
+        return f"Peptide.from_sequence('{self.ProForma}')"
 
     def __str__(self) -> str:
         return f"Peptide.from_sequence('{self.ProForma}')"
@@ -531,13 +536,7 @@ class Peptide(ProForma):
             >>> onehot = foo.aa_to_onehot()
             >>> mod_onehot = foo.mod_to_onehot()
             >>> Peptide.decode_onehot(config, onehot, mod_onehot)
-            Peptide([('A', None), ('M', None),
-             ('C', [UnimodModification('4', None, None)])],
-             {'n_term': None, 'c_term': None, 'unlocalized_modifications': [],
-              'labile_modifications': [],
-              'fixed_modifications':
-                  [ModificationRule(UnimodModification('4', None, None), ['C'])],
-              'intervals': [], 'isotopes': [], 'group_ids': [], 'charge_state': None})
+            Peptide.from_sequence('<[UNIMOD:4]@C>AMC[UNIMOD:4]')
 
         """
         seq = np.argmax(seq_onehot, axis=1)
@@ -564,13 +563,7 @@ class Peptide(ProForma):
             >>> Peptide.decode_vector(
             ...     foo.config, foo.aa_to_vector(), foo.mod_to_vector()
             ... )
-            Peptide([('A', None), ('M', None),
-             ('C', [UnimodModification('4', None, None)])],
-             {'n_term': None, 'c_term': None, 'unlocalized_modifications': [],
-              'labile_modifications': [],
-              'fixed_modifications':
-                  [ModificationRule(UnimodModification('4', None, None), ['C'])],
-              'intervals': [], 'isotopes': [], 'group_ids': [], 'charge_state': None})
+            Peptide.from_sequence('<[UNIMOD:4]@C>AMC[UNIMOD:4]')
         """
 
         def special_handling(seq, mod):
@@ -756,7 +749,7 @@ class Peptide(ProForma):
         yield from self.__iter_base
 
     @staticmethod
-    def from_iter(it, config: Config):
+    def from_iter(it, config: Config, charge=None):
         """Creates a peptide from an iterator of (aa, mod) tuples.
 
         Examples:
@@ -786,7 +779,13 @@ class Peptide(ProForma):
         seqs = []
         for aa, mod in it:
             if mod is not None:
-                mod = "".join(mod)
+                if isinstance(mod, str):
+                    pass
+                elif isinstance(mod, float):
+                    mod = f"[+{mod:.6f}]"
+                elif isinstance(mod, list):
+                    mod = "".join(mod)
+
                 if aa == "n_term":
                     mod = mod + "-"
                 if mod == "c_term":
@@ -799,7 +798,12 @@ class Peptide(ProForma):
             aa += mod
             seqs.append(aa)
 
-        return Peptide.from_proforma_seq("".join(seqs), config=config)
+        if charge is None:
+            seq = "".join(seqs)
+        else:
+            seq = "".join(seqs) + f"/{charge}"
+
+        return Peptide.from_proforma_seq(seq, config=config)
 
     @lazy
     def __iter_base(self) -> list[tuple[str, list[str] | None]]:
@@ -849,7 +853,14 @@ class Peptide(ProForma):
             ['AMAMK', 'AMAM[UNIMOD:35]K', 'AM[UNIMOD:35]AMK',
              'AM[UNIMOD:35]AM[UNIMOD:35]K']
 
+            >>> foo = Peptide.from_sequence("AMAMK/3")
+            >>> out = foo.get_variable_possible_mods()
+            >>> sorted([x.to_proforma() for x in out])
+            ['AMAMK/3', 'AMAM[UNIMOD:35]K/3', 'AM[UNIMOD:35]AMK/3',
+             'AM[UNIMOD:35]AM[UNIMOD:35]K/3']
         """
+
+        # TODO test with charges!
         iters = get_mod_possible(self.__iter_base, self.config.mod_variable_mods)
-        out = [self.from_iter(x, self.config) for x in iters]
+        out = [self.from_iter(x, self.config, charge=self.charge) for x in iters]
         return out
