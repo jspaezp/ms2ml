@@ -12,7 +12,7 @@ repository = "https://github.com/jspaezp/ms2ml"
 [tool.poetry.dependencies]
 python = ">3.8,<3.12"
 pyteomics = "^4.6.3"
-lxml = "^4.9.1"       # Needed due to a non-exclicit dependency in pyteomics
+lxml = ">=4.9.1,<6.0.0"       # Needed due to a non-exclicit dependency in pyteomics
 # torch = { version = "^1.12.1", python = ">=3.8,<3.11" }
 numpy = "^1.24.4"
 psims = "^1.2.3"
