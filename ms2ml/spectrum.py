@@ -349,7 +349,7 @@ class Spectrum:
     @lazy
     def base_peak(self) -> np.float32:
         """Returns the base peak intensity of the spectrum."""
-        return np.max(self.intensity) if len(self.intensity) else 0
+        return np.max(self.intensity).item() if len(self.intensity) else 0
 
     @base_peak.setter
     def base_peak(self, value) -> None:
@@ -358,7 +358,7 @@ class Spectrum:
     @lazy
     def tic(self) -> np.float32:
         """Returns the total ion current of the spectrum."""
-        return np.sum(self.intensity)
+        return np.sum(self.intensity).item()
 
     @tic.setter
     def tic(self, value) -> None:
@@ -604,7 +604,7 @@ class AnnotatedPeptideSpectrum(Spectrum):
         >>> spectrum["y1^1"]
         200.0
         >>> spectrum.fragments
-        {'y1^1': AnnotatedIon(mass=147.11334,
+        {'y1^1': AnnotatedIon(mass=np.float32(147.11334),
         charge=1, position=1, ion_series='y', intensity=200.0, neutral_loss=None)}
 
     """
@@ -705,7 +705,7 @@ class AnnotatedPeptideSpectrum(Spectrum):
         Examples:
             >>> spec = AnnotatedPeptideSpectrum._sample()
             >>> spec.fragments
-            {'y1^1': AnnotatedIon(mass=147.11334,
+            {'y1^1': AnnotatedIon(mass=np.float32(147.11334),
             charge=1, position=1, ion_series='y', intensity=200.0,
             neutral_loss=None)}
 
@@ -728,11 +728,12 @@ class AnnotatedPeptideSpectrum(Spectrum):
         for label, i, _ in zip(labels, intensities, mzs):
             # TODO implement ambiguity resoluitions
             frag = frags.get(label, None)
+            label = label.item()
             if frag is None:
                 frags[label] = self.precursor_peptide.ion_dict[label]
                 frags[label].intensity = 0.0
 
-            frags[label].intensity += i
+            frags[label].intensity += i.item()
 
         return frags
 
@@ -784,7 +785,7 @@ class AnnotatedPeptideSpectrum(Spectrum):
             >>> AnnotatedPeptideSpectrum.decode_fragments(pep, frags)
             AnnotatedPeptideSpectrum(mz=array([...]),
             intensity=array([...], dtype=float32),
-            ms_level=2, precursor_mz=397.724526907315,
+            ms_level=2, precursor_mz=np.float64(397.724526907315),
             precursor_charge=2,
             instrument=None,
             analyzer=None,
@@ -803,8 +804,9 @@ class AnnotatedPeptideSpectrum(Spectrum):
             if label in peptide.ion_dict
         ]
         masses, intensities = zip(*tmp)
-        masses, intensities = np.array(masses, dtype=np.float64), np.array(
-            intensities, dtype=np.float32
+        masses, intensities = (
+            np.array(masses, dtype=np.float64),
+            np.array(intensities, dtype=np.float32),
         )
         spec = Spectrum(
             mz=masses,

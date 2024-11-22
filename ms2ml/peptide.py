@@ -24,22 +24,22 @@ class Peptide(ProForma):
     Examples:
         >>> p = Peptide.from_sequence("MYPEPTIDE")
         >>> p.mass
-        1093.46377747225
+        np.float64(1093.46377747225)
         >>> p = Peptide.from_sequence("MYPEPTIDE/2")
         >>> p.charge
         2
         >>> p = Peptide.from_sequence("J")
         >>> p.mass
-        131.09462866083
+        np.float64(131.09462866083)
         >>> p = Peptide.from_sequence("X")
         >>> p.mass
-        18.010564683699997
+        np.float64(18.010564683699997)
         >>> p = Peptide.from_sequence("Z")
 
         Note that it does not throw an error ... it should ...
 
         >>> p.mass
-        18.010564683699997
+        np.float64(18.010564683699997)
     """
 
     def __init__(self, sequence, properties, config, extras) -> None:
@@ -72,7 +72,7 @@ class Peptide(ProForma):
         Examples:
             >>> p = Peptide.from_proforma_seq("PEPTIDE")
             >>> p.mass
-            799.3599640267099
+            np.float64(799.3599640267099)
             >>> p = Peptide.from_proforma_seq("PEPTIDE", extras={"test": 1})
             >>> p.extras
             {'test': 1}
@@ -102,7 +102,7 @@ class Peptide(ProForma):
             >>> p = ProForma(seq, props)
             >>> p = Peptide.from_ProForma(p, config)
             >>> p.mass
-            799.3599
+            np.float64(799.3599)
         """
 
         return cls(proforma.sequence, proforma.properties, config, extras=extras)
@@ -247,7 +247,7 @@ class Peptide(ProForma):
         Examples:
             >>> p = Peptide.from_sequence("MYPEPTIDE")
             >>> p.mass
-            1093.46377747225
+            np.float64(1093.46377747225)
         """
         curr_mass = 0.0
 
@@ -396,9 +396,9 @@ class Peptide(ProForma):
         Examples:
             >>> p = Peptide.from_sequence("AMC")
             >>> p.annotated_ion_series("b", 1)
-            [AnnotatedIon(mass=72.044945, charge=1,
+            [AnnotatedIon(mass=np.float32(72.044945), charge=1,
             position=1, ion_series='b', intensity=0, neutral_loss=None),
-            AnnotatedIon(mass=203.08542,
+            AnnotatedIon(mass=np.float32(203.08542),
             charge=1, position=2, ion_series='b', intensity=0, neutral_loss=None)]
         """
         # TODO: Add neutral loss
@@ -433,10 +433,10 @@ class Peptide(ProForma):
         Examples:
             >>> p = Peptide.from_sequence("PEPPINK/2")
             >>> p.ion_dict
-            {'y1^1': AnnotatedIon(mass=147.11334, ...
+            {'y1^1': AnnotatedIon(mass=np.float32(147.11334), ...
             charge=2, position=6, ion_series='b', intensity=0, neutral_loss=None)}
             >>> p.ion_dict["y5^1"].mass
-            568.34537
+            np.float32(568.34537)
         """
         if not hasattr(self, "charge") or self.charge is None:
             raise ValueError("Peptide charge is not set")
@@ -815,7 +815,7 @@ class Peptide(ProForma):
             >>> foo.to_proforma()
             '<[UNIMOD:4]@C>AMC'
             >>> foo.mass
-            380.11881216611
+            np.float64(380.11881216611)
 
             >>> foo = Peptide._sample()
             >>> foo.to_proforma()

@@ -10,11 +10,10 @@ homepage = "https://jspaezp.github.io/ms2ml/main"
 repository = "https://github.com/jspaezp/ms2ml"
 
 [tool.poetry.dependencies]
-python = ">3.8,<3.12"
+python = ">3.9,<3.14"
 pyteomics = "^4.6.3"
-lxml = "^4.9.1"       # Needed due to a non-exclicit dependency in pyteomics
-# torch = { version = "^1.12.1", python = ">=3.8,<3.11" }
-numpy = "^1.24.4"
+lxml = "^4.9.1"                                                      # Needed due to a non-exclicit dependency in pyteomics
+numpy = "^2.0.2"
 psims = "^1.2.3"
 lark = "^1.1.2"
 pandas = "^2.0.1"
@@ -70,9 +69,6 @@ optional = true
 # all of these dependencies explicitly.
 spectrum-utils = { version = "^0.4.2", python = ">3.8,<3.12" }
 matplotlib = "^3.7.4"
-numba = { version = ">=0.58.1", python = ">3.8,<3.12" }
-llvmlite = { version = ">=0.39.1", python = ">3.8,<3.12" }
-numpy = { version = "<1.27.1", python = ">3.8,<3.12" }
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
