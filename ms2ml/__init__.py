@@ -4,11 +4,14 @@ from ms2ml.peptide import Peptide
 from ms2ml.spectrum import AnnotatedPeptideSpectrum, Spectrum
 
 try:
-    from importlib.metadata import version
+    from importlib.metadata import PackageNotFoundError, version
 except ImportError:
-    from importlib_metadata import version
+    from importlib_metadata import PackageNotFoundError, version
 
-__version__ = version("ms2ml")
+try:
+    __version__ = version("ms2ml")
+except PackageNotFoundError:
+    __version__ = "0.0.0"
 
 
 __all__ = [
