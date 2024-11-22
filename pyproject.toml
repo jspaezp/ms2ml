@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "ms2ml"
-version = "0.0.45"
+version = "0.0.46"
 description = "Provides an intermediate layer between mass spec data and ML applications, such as encoding."
 authors = ["J. Sebastian Paez <jspaezp@users.noreply.github.com>"]
 license = "Apache 2.0"
@@ -10,11 +10,10 @@ homepage = "https://jspaezp.github.io/ms2ml/main"
 repository = "https://github.com/jspaezp/ms2ml"
 
 [tool.poetry.dependencies]
-python = ">3.8,<3.12"
+python = ">3.9,<3.14"
 pyteomics = "^4.6.3"
-lxml = "^4.9.1"       # Needed due to a non-exclicit dependency in pyteomics
-# torch = { version = "^1.12.1", python = ">=3.8,<3.11" }
-numpy = "^1.24.4"
+lxml = "^4.9.1"                                                      # Needed due to a non-exclicit dependency in pyteomics
+numpy = "^2.0.2"
 psims = "^1.2.3"
 lark = "^1.1.2"
 pandas = "^2.0.1"
@@ -22,7 +21,7 @@ pandas-stubs = { version = "^2.0.2.230605", python = ">=3.8,<3.11" }
 # uniplot = ">=0.7,<0.9"
 uniplot = "^0.10.2"
 tqdm = "^4.64.1"
-importlib-metadata = "^6.0.0"
+importlib-metadata = ">=6,<9"
 loguru = ">=0.6,<0.8"
 tomli-w = "^1.0.0"
 appdirs = "^1.4.4"
@@ -59,7 +58,7 @@ mkdocs-autorefs = "^0.4.1"
 mkdocstrings = { extras = ["python"], version = ">=0.23,<0.25" }
 mkquartodocs = "^0.5.7"
 mike = "^1.1.2"
-griffe = ">=0.36.9,<0.39.0"
+griffe = ">=0.36.9,<0.42.0"
 
 [tool.poetry.group.plotting]
 optional = true
@@ -70,9 +69,6 @@ optional = true
 # all of these dependencies explicitly.
 spectrum-utils = { version = "^0.4.2", python = ">3.8,<3.12" }
 matplotlib = "^3.7.4"
-numba = { version = ">=0.58.1", python = ">3.8,<3.12" }
-llvmlite = { version = ">=0.39.1", python = ">3.8,<3.12" }
-numpy = { version = "<1.27.1", python = ">3.8,<3.12" }
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

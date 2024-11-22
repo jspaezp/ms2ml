@@ -8,12 +8,16 @@ from pyteomics.mass import Unimod
 from pyteomics.proforma import UnimodResolver
 
 try:
-    from importlib.metadata import version
+    from importlib.metadata import PackageNotFoundError, version
 except ImportError:
-    from importlib_metadata import version
+    from importlib_metadata import PackageNotFoundError, version
 
 
-__version__ = version("ms2ml")
+try:
+    __version__ = version("ms2ml")
+except PackageNotFoundError:
+    __version__ = "0.0.0"
+
 my_appdirs = AppDirs(appname="ms2ml", version=__version__)
 
 with resources.path("ms2ml.unimod", "unimod.xml") as f:
@@ -55,7 +59,7 @@ class MemoizedUnimodResolver:
     Examples:
         >>> MemoizedUnimodResolver.resolve("Phospho")
         {'composition': Composition({'H': 1, 'O': 3, 'P': 1}),
-        'name': 'Phospho', 'id': 21, 'mass': 79.966331, 'provider': 'unimod'}
+        'name': 'Phospho', 'id': 21, 'mass': 79.966331, ...}
         >>> MemoizedUnimodResolver.mod_id_mass(21)
         79.966331
     """
